@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/style.css" />
+  </head>
+  <body>
+    <div class="container-window">
+      <div class="container-header"></div>
+      <div class="container-middle">
+        <form action="/login" method="POST">
+          <div class="login-field">
+            <label for="username" class="label-login">Gebruikersnaam</label>
+            <input class="login-input" type="text" name="username" required />
+            <label for="password" class="label-password label-login"
+              >Wachtwoord</label
+            >
+            <input
+              class="login-input"
+              type="password"
+              name="password"
+              required
+            />
+            <div class="container-button">
+              <input class="login-button" type="submit" value="Login" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="container-footer"></div>
+    </div>
+  </body>
+</html>
