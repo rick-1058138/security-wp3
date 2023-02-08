@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Login</title>
         <link rel="stylesheet" href="../static/style.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     </head>
     <body>
         <header class="main-header">
@@ -35,7 +36,8 @@
                 {% for day in day_list%}
 
                     <div class="rooster-day">
-                        <!-- if statement in class list is to check for the current day, now for testing it checks for 1 -->
+                        <!-- if statement in class list is to check for the current day, now for testing it checks for 1 --> 
+                        <!-- loop.index has to change later to the day of the month -->
                         <p class="rooster-day-title">{{day}} <span class="rooster-day-number {% if loop.index == 1 %} active {% endif %}">{{ loop.index }}</span></p>
                         <section class="rooster-table">
                             {% for time in time_list%}
@@ -43,7 +45,7 @@
                         
                             </div>
                             {% endfor %}
-                            <div class="rooster-content">
+                            <div class="rooster-content" id="rooster-content-{{loop.index}}">
                                 <div class="rooster-content-item">
                                     <div>
                                         <p class="rooster-content-item-title">Les 1</p>
@@ -60,3 +62,34 @@
         </section>
     </body>
 </html>
+<script>
+    function createLessonBlock(day, name, start_time, end_time){
+        // each hour is 100px
+        var block_height = 100;
+        // extra spacing for each block
+        var block_spacing = 5
+        var html_block = $(`                                 
+            <div class="rooster-content-item">
+                <div>
+                    <p class="rooster-content-item-title">${name}</p>
+                    <p class="rooster-content-item-text">${start_time}:00 - ${end_time}:00</p>
+                </div>
+                <p class="rooster-content-item-text">Docent</p>
+            </div>`);
+        parent = document.getElementById("rooster-content-"+day);
+        element = $(parent).append(html_block);
+
+        // this is the first time that is display on the rooster
+        var rooster_first_time = 8
+        // calculate height on rooster
+        jump_blocks = start_time-rooster_first_time;
+        height = jump_blocks*block_height;
+        height = height+block_spacing;
+        html_block.css({ top: height+'px' });
+        
+    }
+
+    createLessonBlock(day=2, name='test', start_time='9', end_time='10');
+    createLessonBlock(day=2, name='test1', start_time='10', end_time='11');
+    createLessonBlock(day=2, name='test2', start_time='11', end_time='12');
+</script>

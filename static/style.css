@@ -96,6 +96,7 @@ body{
     height: 100px;
     border-top: 1px solid lightgray;
     border-right: 1px solid lightgray;
+    box-sizing: border-box;
 }
 
 .rooster-day{
@@ -146,19 +147,15 @@ body{
     background: #ededed;
     padding-right: 5px;
     width: min-content;
+    font-weight: 600;
+    font-size: 14px;
 }
 
 .rooster-content{
     position: absolute;
     top: 0;
-    background-color: #fdfdfd;
-    opacity: 0.75;
-    border-radius: 4px;
-    padding: 7px;
-    margin: 5px;
-    /* width = 100% - margin-left and margin-right  (5px + 5px)*/
-    width: calc(100% - 10px);
-    height: 90px;
+    width: 100%;
+    /* padding: 5px; */
     box-sizing: border-box;
 
 }
@@ -167,7 +164,17 @@ body{
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    height: 100%;
+    background-color: #fdfdfd;
+    opacity: 0.75;
+    border-radius: 4px;
+    padding: 7px;
+    height: 90px;
+    box-sizing: border-box;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: calc(100% - 10px);
+
 }
 
 .rooster-content-item-title{
