@@ -74,3 +74,61 @@ body{
     justify-content: center;
 
 }
+
+.main-header{
+    padding: 20px 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.rooster-container{
+    background-color: #ededed;
+    width: 80%;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.rooster-row{
+    height: 100px;
+    border-top: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+}
+
+.rooster-day{
+    flex: 1;
+}
+
+.rooster-day-row{
+    display: flex;
+}
+
+.rooster-table{
+    width: 100%;
+    border-spacing: 0px;
+}
+
+.rooster-day-title{
+    height: 100px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.rooster-day-number{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rooster-day-number.active{
+    background-color: #d30f4c;
+    color: white;
+}
