@@ -109,6 +109,7 @@ body{
 .rooster-table{
     width: 100%;
     border-spacing: 0px;
+    position: relative;
 }
 
 .rooster-day-title, .rooster-time-title{
@@ -146,3 +147,35 @@ body{
     padding-right: 5px;
     width: min-content;
 }
+
+.rooster-content{
+    position: absolute;
+    top: 0;
+    background-color: #fdfdfd;
+    opacity: 0.75;
+    border-radius: 4px;
+    padding: 7px;
+    margin: 5px;
+    /* width = 100% - margin-left and margin-right  (5px + 5px)*/
+    width: calc(100% - 10px);
+    height: 90px;
+    box-sizing: border-box;
+
+}
+
+.rooster-content-item{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+}
+
+.rooster-content-item-title{
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.rooster-content-item-text{
+    font-size: 12px;
+}
+
