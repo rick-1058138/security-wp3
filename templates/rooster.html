@@ -15,116 +15,39 @@
             </svg>
             <h2>Aanwezigheidstool</h2>
         </header>
+        {% set time_list = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'] %}
+        {% set day_list = ['Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag'] %}
         <section class="rooster-container">
             <div class="rooster-day-row">
-                <div class="rooster-time">
-                    <p class="rooster-day-title">Week 1</p>
+                <div>
+                    <p class="rooster-time-title">Week 1</p>
                     <section class="rooster-table">
+                        {% for time in time_list%}
                         <div class="rooster-row">
-                            8:00
+                            <div class="rooster-time-text">{{time}}</div>
                         </div>
-                        <div class="rooster-row">
-                            9:00
-                        </div>
-                        <div class="rooster-row">
-                            10:00
-                        </div>
-                        <div class="rooster-row">
-                            11:00
-                        </div>
-                        <div class="rooster-row">
-                            12:00
-                        </div>
-                        <div class="rooster-row">
-                            13:00
-                        </div>
-                        <div class="rooster-row">
-                            14:00
-                        </div>
-                        <div class="rooster-row">
-                            15:00
-                        </div>
-                        <div class="rooster-row">
-                            16:00
-                        </div>
-                        <div class="rooster-row">
-                            19:00
-                        </div>
-                        <div class="rooster-row">
-                            20:00
-                        </div>
-                        <div class="rooster-row">
-                            21:00
-                        </div>
-                        <div class="rooster-row">
-                            22:00
-                        </div>
-                        <div class="rooster-row">
-                            23:00
-                        </div>
+                        
+                        {% endfor %}
+                        
 
                     </section>
                 </div>
-                <div class="rooster-day">
-                    <p class="rooster-day-title">Maandag <span class="rooster-day-number active">1</span></p>
-                    <section class="rooster-table">
-                        <div class="rooster-row">
-                            
-                        </div>
-                        <div class="rooster-row">
-                           
-                        </div>
-                        <div class="rooster-row">
-                            
-                        </div>
-                        <div class="rooster-row">
-                           
-                        </div>
-                        <div class="rooster-row">
-                           
-                        </div>
-                        <div class="rooster-row">
-                           
-                        </div>
-                        <div class="rooster-row">
-                          
-                        </div>
-                        <div class="rooster-row">
-                           
-                        </div>
-                        <div class="rooster-row">
-                            
-                        </div>
-                        <div class="rooster-row">
-                         
-                        </div>
-                        <div class="rooster-row">
-                          
-                        </div>
-                        <div class="rooster-row">
-                         
-                        </div>
-                        <div class="rooster-row">
-                         
-                        </div>
-                        <div class="rooster-row">
-                          
-                        </div>
+                {% for day in day_list%}
 
-                    </section>
-                </div>
-                <div class="rooster-day">
-                    <p class="rooster-day-title">Dindag  <span class="rooster-day-number">2</span></p>
-                </div>
-                <div class="rooster-day">
-                    <p class="rooster-day-title">Woensdag <span class="rooster-day-number">3</span></p>
-                </div>
-                <div class="rooster-day">
-                    <p class="rooster-day-title">Donderdag <span class="rooster-day-number">4</span></p>
-                </div>
-                <div class="rooster-day">
-                    <p class="rooster-day-title">Vrijdag <span class="rooster-day-number">5</span></p>
-                </div>
+                    <div class="rooster-day">
+                        <!-- if statement in class list is to check for the current day, now for testing it checks for 1 -->
+                        <p class="rooster-day-title">{{day}} <span class="rooster-day-number {% if loop.index == 1 %} active {% endif %}">{{ loop.index }}</span></p>
+                        <section class="rooster-table">
+                            {% for time in time_list%}
+                            <div class="rooster-row">
+                        
+                            </div>
+                            {% endfor %}
+
+                        </section>
+                    </div>
+                {% endfor %}
+
             </div>
         </section>
     </body>
