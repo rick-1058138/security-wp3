@@ -7,6 +7,8 @@
         <title>Login</title>
         <link rel="stylesheet" href="../static/style.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+
     </head>
     <body>
         <header class="main-header">
@@ -19,9 +21,10 @@
         {% set time_list = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'] %}
         {% set day_list = ['Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag'] %}
         <section class="rooster-container">
+            <input type="week" id="week-calender" />
             <div class="rooster-day-row">
                 <div>
-                    <p class="rooster-time-title">Week 1</p>
+                    <p class="rooster-time-title">Week <span id="week-number"></span></p>
                     <section class="rooster-table">
                         {% for time in time_list%}
                         <div class="rooster-row">
@@ -60,15 +63,61 @@
 
             </div>
         </section>
+        
     </body>
 </html>
-<script>
+<script type="text/javascript">
+    // get current week
+    function getNumberOfWeek() {
+        const today = new Date();
+        const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
+        const pastDaysOfYear = (today - firstDayOfYear) / 86400000;
+        return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+    }
+
+    // update weeknumber in html
+    function updateWeekNumber(number){
+        $('#week-number').text(number)
+    }
+
+    // format weeknumber for calender
+    function formatWeekNumber(weekNumber){
+        // if value is a string it looks something like this '2023-W06' to get weeknumber only everything after 'W' is saved
+        if(typeof weekNumber == 'string'){
+            weekNumber = weekNumber.split('W').pop();
+        }
+        // format the weeknumber with a '0' if number is a single digit
+        else if(weekNumber <=9 ){
+            weekNumber = '0'+weekNumber;
+        }
+        return weekNumber;
+    }
+
+    // get current week and format it
+    var weekNumber = formatWeekNumber(getNumberOfWeek());
+    // set start week on calender when first loaded
+    document.getElementById('week-calender').value = '2023-W'+weekNumber;
+    // update weeknumber in html
+    updateWeekNumber(weekNumber);
+
+    // if calender changes update the week in html
+    $(document).ready(function(){
+        $('#week-calender').on('change', function (e) {
+            let value = $("#week-calender").val();
+            updateWeekNumber(formatWeekNumber(value))
+        });
+    });
+
+    // function to create a lesson block
     function createLessonBlock(day, name, start_time, end_time){
         // each hour is 100px
-        var block_height = 100;
+        let block_height = 100;
+        // each lesson block is 90px in height
+        let lesson_height = 90;
         // extra spacing for each block
-        var block_spacing = 5
-        var html_block = $(`                                 
+        let block_spacing = 5
+        // html code for a lesson
+        let html_block = $(`                                 
             <div class="rooster-content-item">
                 <div>
                     <p class="rooster-content-item-title">${name}</p>
@@ -76,20 +125,28 @@
                 </div>
                 <p class="rooster-content-item-text">Docent</p>
             </div>`);
-        parent = document.getElementById("rooster-content-"+day);
-        element = $(parent).append(html_block);
+        // add lesson to html   
+        let parent = document.getElementById("rooster-content-"+day);
+        let element = $(parent).append(html_block);
 
         // this is the first time that is display on the rooster
-        var rooster_first_time = 8
-        // calculate height on rooster
-        jump_blocks = start_time-rooster_first_time;
-        height = jump_blocks*block_height;
-        height = height+block_spacing;
-        html_block.css({ top: height+'px' });
+        let rooster_first_time = 8
+        // calculate top position on rooster
+        let jump_blocks = start_time-rooster_first_time;
+        let top_pos = jump_blocks*block_height;
+        top_pos = top_pos+block_spacing;
+        html_block.css({ top: top_pos+'px' });
+        
+        // calculate height of lesson block
+        let lesson_blocks = end_time-start_time
+        // calculate extra height, this is the space that is normally between lesson blocks
+        let extra_height = (block_spacing*2)*(lesson_blocks-1)
+        let height = lesson_blocks * lesson_height + extra_height;
+        html_block.css({ height: height+'px' });
         
     }
 
     createLessonBlock(day=2, name='test', start_time='9', end_time='10');
     createLessonBlock(day=2, name='test1', start_time='10', end_time='11');
-    createLessonBlock(day=2, name='test2', start_time='11', end_time='12');
+    createLessonBlock(day=2, name='test2', start_time='11', end_time='15');
 </script>

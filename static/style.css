@@ -126,6 +126,8 @@ body{
     color: #595959;
     font-weight: 600;
     font-size: 14px;
+    flex-direction: row;
+    align-items: start;
 }
 
 .rooster-day-number{
