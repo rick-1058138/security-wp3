@@ -8,7 +8,10 @@
         <link rel="stylesheet" href="../static/style.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
-
+        <!-- CDN example (jsDelivr) -->
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/weekOfYear.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/weekday.js"></script>
     </head>
     <body>
         <header class="main-header">
@@ -19,9 +22,10 @@
             <h2>Aanwezigheidstool</h2>
         </header>
         {% set time_list = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'] %}
-        {% set day_list = ['Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag'] %}
+        {% set day_list = ['Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag', 'Zaterdag', 'Zondag'] %}
         <section class="rooster-container">
-            <input type="week" id="week-calender" />
+            <!-- <input type="week" id="week-calendar" /> -->
+            <input type="date" id="week-calendar" value=""/>
             <div class="rooster-day-row">
                 <div>
                     <p class="rooster-time-title">Week <span id="week-number"></span></p>
@@ -41,7 +45,7 @@
                     <div class="rooster-day">
                         <!-- if statement in class list is to check for the current day, now for testing it checks for 1 --> 
                         <!-- loop.index has to change later to the day of the month -->
-                        <p class="rooster-day-title">{{day}} <span class="rooster-day-number {% if loop.index == 1 %} active {% endif %}">{{ loop.index }}</span></p>
+                        <p class="rooster-day-title">{{day}} <span id="day-{{ loop.index }}" class="rooster-day-number">{{ loop.index }}</span></p>
                         <section class="rooster-table">
                             {% for time in time_list%}
                             <div class="rooster-row">
@@ -67,6 +71,23 @@
     </body>
 </html>
 <script type="text/javascript">
+    // dayjs 
+    // https://day.js.org/docs/en/installation/installation
+
+    const weekOfYear = window.dayjs_plugin_weekOfYear
+    const weekday = window.dayjs_plugin_weekday
+    dayjs.extend(weekOfYear)
+    dayjs.extend(weekday)
+    //const a = dayjs()
+    //console.log(a)
+    //const b = a.add(7, 'day')
+    //console.log(b)
+
+    // first day of current week (monday)
+    dayjs().day(1)
+
+    updateWeekNumber(dayjs(new Date()).week());
+
     // get current week
     function getNumberOfWeek() {
         const today = new Date();
@@ -75,39 +96,46 @@
         return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
     }
 
+    function setCalendarDate(date) {
+        // set start week on calendar when first loaded
+        document.getElementById('week-calendar').value = date;
+    }
+
+    setCalendarDate(dayjs().format('YYYY-MM-DD'));
+
     // update weeknumber in html
     function updateWeekNumber(number){
         $('#week-number').text(number)
     }
 
-    // format weeknumber for calender
-    function formatWeekNumber(weekNumber){
-        // if value is a string it looks something like this '2023-W06' to get weeknumber only everything after 'W' is saved
-        if(typeof weekNumber == 'string'){
-            weekNumber = weekNumber.split('W').pop();
-        }
-        // format the weeknumber with a '0' if number is a single digit
-        else if(weekNumber <=9 ){
-            weekNumber = '0'+weekNumber;
-        }
-        return weekNumber;
+    function setActiveCalendarDay(date){
+        $('.rooster-day-number').removeClass('active');
+
+        console.log('test', dayjs(date).day());
+        let selectedDay = dayjs(date).day()
+        $('#day-'+selectedDay).addClass('active')
+    }
+    setActiveCalendarDay($("#week-calendar").val())
+
+
+
+    // set correct day number in html calendar
+    for(let i = 1; i<=7 ; i++){
+        let day_number = dayjs().weekday(i).$D
+        $('#day-'+i).text(day_number)
+        console.log(day_number)
     }
 
-    // get current week and format it
-    var weekNumber = formatWeekNumber(getNumberOfWeek());
-    // set start week on calender when first loaded
-    document.getElementById('week-calender').value = '2023-W'+weekNumber;
-    // update weeknumber in html
-    updateWeekNumber(weekNumber);
-
-    // if calender changes update the week in html
+    
+    // if calendar changes update the week in html
     $(document).ready(function(){
-        $('#week-calender').on('change', function (e) {
-            let value = $("#week-calender").val();
-            updateWeekNumber(formatWeekNumber(value))
+        $('#week-calendar').on('change', function (e) {
+            let value = $("#week-calendar").val();
+            setActiveCalendarDay(value);
+            updateWeekNumber(dayjs(value).week())
         });
     });
-
+    
     // function to create a lesson block
     function createLessonBlock(day, name, start_time, end_time){
         // each hour is 100px
@@ -118,17 +146,17 @@
         let block_spacing = 5
         // html code for a lesson
         let html_block = $(`                                 
-            <div class="rooster-content-item">
-                <div>
-                    <p class="rooster-content-item-title">${name}</p>
-                    <p class="rooster-content-item-text">${start_time}:00 - ${end_time}:00</p>
-                </div>
-                <p class="rooster-content-item-text">Docent</p>
-            </div>`);
+        <div class="rooster-content-item">
+            <div>
+                <p class="rooster-content-item-title">${name}</p>
+                <p class="rooster-content-item-text">${start_time}:00 - ${end_time}:00</p>
+            </div>
+            <p class="rooster-content-item-text">Docent</p>
+        </div>`);
         // add lesson to html   
         let parent = document.getElementById("rooster-content-"+day);
         let element = $(parent).append(html_block);
-
+        
         // this is the first time that is display on the rooster
         let rooster_first_time = 8
         // calculate top position on rooster
@@ -145,7 +173,7 @@
         html_block.css({ height: height+'px' });
         
     }
-
+    
     createLessonBlock(day=2, name='test', start_time='9', end_time='10');
     createLessonBlock(day=2, name='test1', start_time='10', end_time='11');
     createLessonBlock(day=2, name='test2', start_time='11', end_time='15');
