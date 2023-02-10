@@ -34,6 +34,9 @@ def __init__(self, name):
 def hello_world():
     return render_template('index.html')
 
+@app.route("/login")
+def login():
+   return render_template("login.html")
 
 if __name__ == "__main__":
     app.run(host=FLASK_IP, port=FLASK_PORT, debug=FLASK_DEBUG)
