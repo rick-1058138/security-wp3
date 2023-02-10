@@ -117,14 +117,17 @@
     }
     setActiveCalendarDay($("#week-calendar").val())
 
-
-
-    // set correct day number in html calendar
-    for(let i = 1; i<=7 ; i++){
-        let day_number = dayjs().weekday(i).$D
-        $('#day-'+i).text(day_number)
-        console.log(day_number)
+    function setWeekDayNumbers(date){
+        // set correct day number in html calendar
+        for(let i = 1; i<=7 ; i++){
+            let day_number = dayjs(date).weekday(i).$D
+            $('#day-'+i).text(day_number)
+            console.log(day_number)
+        }
     }
+
+    setWeekDayNumbers(dayjs());
+
 
     
     // if calendar changes update the week in html
@@ -132,6 +135,7 @@
         $('#week-calendar').on('change', function (e) {
             let value = $("#week-calendar").val();
             setActiveCalendarDay(value);
+            setWeekDayNumbers(value);
             updateWeekNumber(dayjs(value).week())
         });
     });
