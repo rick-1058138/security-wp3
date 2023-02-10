@@ -19,9 +19,25 @@ body{
     background-color: #fff7ea;
 }
 
+.container-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.header-logo {
+    width: 75px;
+    height: 75px;
+    padding-left: 30px;
+}
+
 .container-middle {
-
-
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -33,7 +49,6 @@ body{
     display: flex;
     flex-direction: column;
     justify-content: center;
-
 }
 
 .login-input {
@@ -73,5 +88,4 @@ body{
 .container-button {
     display: flex;
     justify-content: center;
-
 }
