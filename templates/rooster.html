@@ -27,53 +27,68 @@
         </header>
         {% set time_list = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'] %}
         {% set day_list = ['Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag', 'Zaterdag', 'Zondag'] %}
-        <section class="rooster-container">
-            <!-- <input type="week" id="week-calendar" /> -->
-            <div class="date-selection-row">
-                <div id="previous-btn" class="change-week-btn"><i class="fa fa-chevron-left" style="font-size:15px"></i></div><input class="rooster-calendar" type="date" id="week-calendar" onfocus="this.showPicker()" value=""/><div id="next-btn" class="change-week-btn reverse"><i class="fa fa-chevron-right" style="font-size:15px"></i></div>
-            </div>
-            <div class="rooster-day-row">
-                <div>
-                    <p class="rooster-time-title">Week <span id="week-number"></span></p>
-                    <section class="rooster-table">
-                        {% for time in time_list%}
-                        <div class="rooster-row">
-                            <div class="rooster-time-text">{{time}}</div>
-                        </div>
-                        
-                        {% endfor %}
-                        
-       
-                    </section>
+        <div class="rooster-wrapper"> 
+            <section class="rooster-sidebar">
+                <div class="menu-toggler">
+                    <i class="fa fa-bars" style="font-size:30px"></i>
                 </div>
-                {% for day in day_list%}
-
-                    <div class="rooster-day">
-                        <!-- if statement in class list is to check for the current day, now for testing it checks for 1 --> 
-                        <!-- loop.index has to change later to the day of the month -->
-                        <p class="rooster-day-title">{{day}} <span id="day-{{ loop.index }}" class="rooster-day-number">{{ loop.index }}</span></p>
+                <div class="sidebar-content">
+                    <a class="rooster-btn">+ Bijeenkomst toevoegen</a>
+                    <p>Klas:</p>
+                    <select name="" id="">
+                        <option value="">Klas 1</option>
+                        <option value="">Klas 2</option>
+                        <option value="">Klas 3</option>
+                    </select>
+                </div>
+            </section>
+            <section class="rooster-container">
+                <!-- <input type="week" id="week-calendar" /> -->
+                <div class="date-selection-row">
+                    <div id="previous-btn" class="change-week-btn"><i class="fa fa-chevron-left" style="font-size:15px"></i></div><input class="rooster-calendar" type="date" id="week-calendar" onfocus="this.showPicker()" value=""/><div id="next-btn" class="change-week-btn reverse"><i class="fa fa-chevron-right" style="font-size:15px"></i></div>
+                </div>
+                <div class="rooster-day-row">
+                    <div>
+                        <p class="rooster-time-title">Week <span id="week-number"></span></p>
                         <section class="rooster-table">
                             {% for time in time_list%}
                             <div class="rooster-row">
-                        
+                                <div class="rooster-time-text">{{time}}</div>
                             </div>
+                            
                             {% endfor %}
-                            <div class="rooster-content" id="rooster-content-{{loop.index}}">
-                                <div class="rooster-content-item">
-                                    <div>
-                                        <p class="rooster-content-item-title">Les 1</p>
-                                        <p class="rooster-content-item-text">8:00 - 9:00</p>
-                                    </div>
-                                    <p class="rooster-content-item-text">Docent</p>
-                                </div>
-                            </div>
+                            
+        
                         </section>
                     </div>
-                {% endfor %}
+                    {% for day in day_list%}
 
-            </div>
-        </section>
-        
+                        <div class="rooster-day">
+                            <!-- if statement in class list is to check for the current day, now for testing it checks for 1 --> 
+                            <!-- loop.index has to change later to the day of the month -->
+                            <p class="rooster-day-title">{{day}} <span id="day-{{ loop.index }}" class="rooster-day-number">{{ loop.index }}</span></p>
+                            <section class="rooster-table">
+                                {% for time in time_list%}
+                                <div class="rooster-row">
+                            
+                                </div>
+                                {% endfor %}
+                                <div class="rooster-content" id="rooster-content-{{loop.index}}">
+                                    <div class="rooster-content-item">
+                                        <div>
+                                            <p class="rooster-content-item-title">Les 1</p>
+                                            <p class="rooster-content-item-text">8:00 - 9:00</p>
+                                        </div>
+                                        <p class="rooster-content-item-text">Docent</p>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </section>
+        </div>
     </body>
 </html>
 <script type="text/javascript">
@@ -161,6 +176,18 @@
             setWeekDayNumbers(value);
             updateWeekNumber(dayjs(value).week())
         });
+        var state = 0
+        $('.menu-toggler').click(function(){
+            state = !state
+            if(state){
+                $('.sidebar-content').css({ width: 'auto'});
+                $('.sidebar-content').show();
+            }else{
+                $('.sidebar-content').css({ width: '0' });
+                $('.sidebar-content').hide();
+
+            }
+        })
     });
     
     // function to create a lesson block

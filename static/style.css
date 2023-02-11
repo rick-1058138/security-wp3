@@ -88,8 +88,7 @@ body{
     background-color: #ededed;
     width: 80%;
     margin: 0 auto;
-    padding: 40px 20px;
-    padding-left: 100px;
+    padding: 60px 40px;
 }
 
 .rooster-row{
@@ -221,7 +220,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
+    padding: 20px;
     gap: 5px;
     height: 40px;
 }
@@ -251,5 +250,54 @@ body{
 .change-week-btn.reverse{
     border-radius: 0 50% 50% 0;
 
+}
+
+.rooster-wrapper{
+    display: flex;
+    gap: 10px;
+}
+
+.rooster-sidebar{
+    background-color: #ededed;
+    padding: 20px;
+    position: absolute;
+    left: 0;
+    overflow: hidden;
+    box-shadow: 0 0 15px 1px rgb(0 0 0 / 10%);
+    border: 1px solid lightgrey;
+}
+
+.sidebar-content{
+    padding-top: 20px;
+    width: 0;
+    overflow: hidden;
+    display: none;
+    transition: 1s;
+}
+
+.menu-toggler{
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-toggler:hover{
+    cursor: pointer;
+}
+
+.rooster-btn{
+    background: white;
+    border-radius: 5px;
+    padding: 10px 10px;
+    border: 1px solid lightgrey;
+    transition: 0.2s;
+    display: inline-block;
+}
+
+.rooster-btn:hover{
+    background-color: rgb(241, 241, 241);
+    cursor: pointer;
 }
 
