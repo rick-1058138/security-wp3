@@ -1,0 +1,25 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    /* border: 1px solid red; */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff7ea;
+}
+
+table {
+    margin: 3em;
+}
+
+.presence-stats {
+    width: 200px;
+}
+
+canvas {
+    width: 200px;
+    height: 200px;
+}
