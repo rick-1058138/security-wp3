@@ -188,3 +188,68 @@ body{
     font-size: 12px;
 }
 
+.rooster-calendar{
+    display: block;
+    padding: 7px;
+    border: 1px solid lightgray;
+    font-family: Poppins,sans-serif;
+    text-align: center;
+    height: 100%;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.rooster-calendar:hover{
+    cursor: pointer;
+    background-color: rgb(241, 241, 241);
+}
+.rooster-calendar:focus{
+    outline: 1px solid transparent;
+}
+
+
+.rooster-calendar::-webkit-calendar-picker-indicator{
+    /* */
+    color: black;
+}
+
+.rooster-calendar::-webkit-calendar-picker-indicator:hover{
+    cursor: pointer;
+}
+
+.date-selection-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    gap: 5px;
+    height: 40px;
+}
+
+.change-week-btn{
+    text-decoration: none;
+    color: #d30f4c;
+    background-color: white;
+    border-radius: 50% 0 0 50%;
+    width: 30px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    border: 1px solid lightgrey;
+    box-sizing: border-box;
+    transition: 0.2s;
+
+}
+
+.change-week-btn:hover{
+    cursor: pointer;
+    background-color: rgb(241, 241, 241);
+}
+
+.change-week-btn.reverse{
+    border-radius: 0 50% 50% 0;
+
+}
+

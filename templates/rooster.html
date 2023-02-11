@@ -12,6 +12,10 @@
         <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/weekOfYear.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/weekday.js"></script>
+
+        <!-- Font awesome - icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     </head>
     <body>
         <header class="main-header">
@@ -25,7 +29,9 @@
         {% set day_list = ['Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag', 'Zaterdag', 'Zondag'] %}
         <section class="rooster-container">
             <!-- <input type="week" id="week-calendar" /> -->
-            <input type="date" id="week-calendar" value=""/>
+            <div class="date-selection-row">
+                <div id="previous-btn" class="change-week-btn"><i class="fa fa-chevron-left" style="font-size:15px"></i></div><input class="rooster-calendar" type="date" id="week-calendar" onfocus="this.showPicker()" value=""/><div id="next-btn" class="change-week-btn reverse"><i class="fa fa-chevron-right" style="font-size:15px"></i></div>
+            </div>
             <div class="rooster-day-row">
                 <div>
                     <p class="rooster-time-title">Week <span id="week-number"></span></p>
@@ -122,7 +128,6 @@
         for(let i = 1; i<=7 ; i++){
             let day_number = dayjs(date).weekday(i).$D
             $('#day-'+i).text(day_number)
-            console.log(day_number)
         }
     }
 
@@ -132,6 +137,24 @@
     
     // if calendar changes update the week in html
     $(document).ready(function(){
+        $("#next-btn").click(function(){
+            let value = $("#week-calendar").val();
+            value = dayjs(value).add(7, 'day').format('YYYY-MM-DD');
+            setCalendarDate(value)
+            setActiveCalendarDay(value);
+            setWeekDayNumbers(value);
+            updateWeekNumber(dayjs(value).week())
+        })
+
+        $("#previous-btn").click(function(){
+            let value = $("#week-calendar").val();
+            value = dayjs(value).subtract(7, 'day').format('YYYY-MM-DD');
+            setCalendarDate(value)
+            setActiveCalendarDay(value);
+            setWeekDayNumbers(value);
+            updateWeekNumber(dayjs(value).week())
+        })
+
         $('#week-calendar').on('change', function (e) {
             let value = $("#week-calendar").val();
             setActiveCalendarDay(value);
