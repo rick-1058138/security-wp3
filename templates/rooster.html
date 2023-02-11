@@ -134,6 +134,11 @@
 
         console.log('test', dayjs(date).day());
         let selectedDay = dayjs(date).day()
+        
+        if(selectedDay == 0){
+            // if day is 0 it is sunday so set it to 7
+            selectedDay = 7
+        }
         $('#day-'+selectedDay).addClass('active')
     }
     setActiveCalendarDay($("#week-calendar").val())
