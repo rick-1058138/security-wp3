@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login</title>
+        <link rel="stylesheet" href="../static/style.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+        <!-- CDN example (jsDelivr) -->
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/weekOfYear.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/weekday.js"></script>
+
+        <!-- Font awesome - icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    </head>
+    <body>
+        <header class="main-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="50px">
+                <path fill="#d30f4c" fill-rule="evenodd" d="M33.26 0H6.74S0 0 0 6.74v26.53S0 40 6.74 40H40V6.74S40 0 33.26 0z"></path>
+                <path fill="#fef7f1" fill-rule="evenodd" d="M35.82 16.45a6 6 0 01-3.13 3.82c-1.79 1-3.45.93-3.93-.08a11.5 11.5 0 002.52-4.5 5.46 5.46 0 00.12-2.36c-.61-3.21-4.67-3.82-9.09-1.39l-.61-3.17-4.7 2.59.75 4a3.43 3.43 0 011.41-.55c1.49-.16 1.91 1.48.94 3.66a9.34 9.34 0 01-1.34 2.15l.88 4.66v.08c.67 3.16 4.74 3.74 9.15 1.27s7.47-6.96 7.03-10.18zM17.3 22a3.76 3.76 0 01-1.63.71c-1.49.15-1.91-1.5-.94-3.68a9.33 9.33 0 011.56-2.38l-.84-4.39-9.2 5.14 2.66 14 9.2-5.13z"></path>
+            </svg>
+            <h2>Aanwezigheidstool</h2>
+        </header>
+        {% set time_list = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'] %}
+        {% set day_list = ['Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag', 'Zaterdag', 'Zondag'] %}
+        <div class="rooster-wrapper"> 
+            <section class="rooster-sidebar">
+                <div class="menu-toggler">
+                    <i class="fa fa-bars" style="font-size:30px"></i>
+                </div>
+                <div class="sidebar-content">
+                    <a class="rooster-btn">+ Bijeenkomst toevoegen</a>
+                    <p class="sidebar-title">Klas:</p>
+                    <select class="custom-select" name="" id="">
+                        <option value="">Klas 1</option>
+                        <option value="">Klas 2</option>
+                        <option value="">Klas 3</option>
+                    </select>
+                </div>
+            </section>
+            <section class="rooster-container">
+                <!-- <input type="week" id="week-calendar" /> -->
+                <div class="date-selection-row">
+                    <div id="previous-btn" class="change-week-btn"><i class="fa fa-chevron-left" style="font-size:15px"></i></div><input class="rooster-calendar" type="date" id="week-calendar" onfocus="this.showPicker()" value=""/><div id="next-btn" class="change-week-btn reverse"><i class="fa fa-chevron-right" style="font-size:15px"></i></div>
+                </div>
+                <div class="rooster-day-row">
+                    <div>
+                        <p class="rooster-time-title">Week <span id="week-number"></span></p>
+                        <section class="rooster-table">
+                            {% for time in time_list%}
+                            <div class="rooster-row">
+                                <div class="rooster-time-text">{{time}}</div>
+                            </div>
+                            
+                            {% endfor %}
+                            
+        
+                        </section>
+                    </div>
+                    {% for day in day_list%}
+
+                        <div class="rooster-day">
+                            <!-- if statement in class list is to check for the current day, now for testing it checks for 1 --> 
+                            <!-- loop.index has to change later to the day of the month -->
+                            <p class="rooster-day-title">{{day}} <span id="day-{{ loop.index }}" class="rooster-day-number">{{ loop.index }}</span></p>
+                            <section class="rooster-table">
+                                {% for time in time_list%}
+                                <div class="rooster-row">
+                            
+                                </div>
+                                {% endfor %}
+                                <div class="rooster-content" id="rooster-content-{{loop.index}}">
+                                    <!-- <div class="rooster-content-item">
+                                        <div>
+                                            <p class="rooster-content-item-title">Les 1</p>
+                                            <p class="rooster-content-item-text">8:00 - 9:00</p>
+                                        </div>
+                                        <p class="rooster-content-item-text">Docent</p>
+                                    </div> -->
+                                </div>
+                            </section>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </section>
+        </div>
+    </body>
+</html>
+<script type="text/javascript">
+    // dayjs 
+    // https://day.js.org/docs/en/installation/installation
+
+    // Maandag = 1
+    // Dinsdag = 2
+    // Woensdag = 3
+    // Donderdag = 4
+    // Vrijdag = 5
+    // Zaterdag = 6
+    // Zondag = 7
+
+
+    const weekOfYear = window.dayjs_plugin_weekOfYear
+    const weekday = window.dayjs_plugin_weekday
+    dayjs.extend(weekOfYear)
+    dayjs.extend(weekday)
+
+    updateWeekNumber(dayjs(new Date()).week());
+
+    function setCalendarDate(date) {
+        // set start week on calendar when first loaded
+        document.getElementById('week-calendar').value = date;
+    }
+    var today = dayjs().format('YYYY-MM-DD');
+    setCalendarDate(today);
+
+    // update weeknumber in html
+    function updateWeekNumber(number){
+        $('#week-number').text(number)
+    }
+
+    function setActiveCalendarDay(date){
+        $('.rooster-day-number').removeClass('active');
+
+        console.log('test', dayjs(date).day());
+        let selectedDay = dayjs(date).day()
+        if(selectedDay == 0){
+            // if day is 0 it is sunday so set it to 7
+            selectedDay = 7
+        }
+
+        $('#day-'+selectedDay).addClass('active')
+    }
+    setActiveCalendarDay($("#week-calendar").val())
+
+    function setWeekDayNumbers(date){
+        // set correct day number in html calendar
+        // if day == 0 it is sunday, so go back to monday so to day 1
+        if(dayjs(date).day() == 0){
+            for(let i = 1; i<=7 ; i++){
+                let day_number = dayjs(date).day(-6).weekday(i).$D
+                $('#day-'+i).text(day_number)
+            }
+        }else{
+            for(let i = 1; i<=7 ; i++){
+                let day_number = dayjs(date).weekday(i).$D
+                $('#day-'+i).text(day_number)
+            }
+        }
+    }
+
+    setWeekDayNumbers(today);
+
+    
+    // if calendar changes update the week in html
+    $(document).ready(function(){
+        $("#next-btn").click(function(){
+            let value = $("#week-calendar").val();
+            value = dayjs(value).add(7, 'day').format('YYYY-MM-DD');
+            setCalendarDate(value)
+            setActiveCalendarDay(value);
+            setWeekDayNumbers(value);
+            updateWeekNumber(dayjs(value).week())
+        })
+
+        $("#previous-btn").click(function(){
+            let value = $("#week-calendar").val();
+            value = dayjs(value).subtract(7, 'day').format('YYYY-MM-DD');
+            setCalendarDate(value)
+            setActiveCalendarDay(value);
+            setWeekDayNumbers(value);
+            updateWeekNumber(dayjs(value).week())
+        })
+
+        $('#week-calendar').on('change', function (e) {
+            let value = $("#week-calendar").val();
+            setActiveCalendarDay(value);
+            setWeekDayNumbers(value);
+            updateWeekNumber(dayjs(value).week())
+        });
+        var state = 0
+        $('.menu-toggler').click(function(){
+            state = !state
+            if(state){
+                $('.sidebar-content').css({ width: 'auto', padding: '20px'});
+                $('.sidebar-content').show();
+            }else{
+                $('.sidebar-content').css({ width: '0', padding: '0px'});
+                $('.sidebar-content').hide();
+
+            }
+        })
+    });
+    
+    // function to create a lesson block
+    function createLessonBlock(day, name, start_time, end_time){
+        // each hour is 100px
+        let block_height = 100;
+        // each lesson block is 90px in height
+        let lesson_height = 90;
+        // extra spacing for each block
+        let block_spacing = 5
+        // html code for a lesson
+        let html_block = $(`                                 
+        <div class="rooster-content-item">
+            <div>
+                <p class="rooster-content-item-title">${name}</p>
+                <p class="rooster-content-item-text">${start_time}:00 - ${end_time}:00</p>
+            </div>
+            <p class="rooster-content-item-text">Docent</p>
+        </div>`);
+        // add lesson to html   
+        let parent = document.getElementById("rooster-content-"+day);
+        let element = $(parent).append(html_block);
+        
+        // this is the first time that is display on the rooster
+        let rooster_first_time = 8
+        // calculate top position on rooster
+        let jump_blocks = start_time-rooster_first_time;
+        let top_pos = jump_blocks*block_height;
+        top_pos = top_pos+block_spacing;
+        html_block.css({ top: top_pos+'px' });
+        
+        // calculate height of lesson block
+        let lesson_blocks = end_time-start_time
+        // calculate extra height, this is the space that is normally between lesson blocks
+        let extra_height = (block_spacing*2)*(lesson_blocks-1)
+        let height = lesson_blocks * lesson_height + extra_height;
+        html_block.css({ height: height+'px' });
+        
+    }
+    
+    createLessonBlock(day=1, name='test', start_time='8', end_time='10');
+    createLessonBlock(day=2, name='test', start_time='9', end_time='10');
+    createLessonBlock(day=3, name='test1', start_time='10', end_time='11');
+    createLessonBlock(day=4, name='test2', start_time='11', end_time='15');
+</script>

@@ -33,6 +33,10 @@ def __init__(self, name):
 def hello_world():
     return render_template('index.html')
 
+@app.route("/rooster")
+def rooster():
+    return render_template('rooster.html')
+
 
 @app.route("/login")
 def login():

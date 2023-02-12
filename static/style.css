@@ -108,3 +108,269 @@ body{
     font-weight: 600;
     letter-spacing: 1px;
 }
+
+.main-header{
+    padding: 20px 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.rooster-container{
+    background-color: #ededed;
+    width: 80%;
+    margin: 0 auto;
+    padding: 60px 40px;
+}
+
+.rooster-row{
+    height: 100px;
+    border-top: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+    box-sizing: border-box;
+}
+
+.rooster-day{
+    flex: 1;
+}
+
+.rooster-day-row{
+    display: flex;
+}
+
+.rooster-table{
+    width: 100%;
+    border-spacing: 0px;
+    position: relative;
+}
+
+.rooster-day-title, .rooster-time-title{
+    height: 75px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.rooster-time-title{
+    color: #595959;
+    font-weight: 600;
+    font-size: 14px;
+    flex-direction: row;
+    align-items: start;
+    min-width: 75px;
+    display: block;
+    text-align: center;
+}
+
+.rooster-day-number{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rooster-day-number.active{
+    background-color: #d30f4c;
+    color: white;
+}
+
+.rooster-time-text{
+    transform: translate(0, -50%);
+    background: #ededed;
+    padding-right: 5px;
+    width: min-content;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.rooster-content{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    /* padding: 5px; */
+    box-sizing: border-box;
+
+}
+
+.rooster-content-item{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    background-color: #fdfdfd;
+    opacity: 0.75;
+    border-radius: 4px;
+    padding: 7px;
+    height: 90px;
+    box-sizing: border-box;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: calc(100% - 10px);
+    transition: .2s;
+    border: 2px solid transparent;
+
+}
+
+.rooster-content-item:hover{
+    opacity: 1;
+    cursor: pointer;
+    background-color: #f3f3f3;
+    border-left: 2px solid #d30f4c;
+}
+
+.rooster-content-item:hover div>.rooster-content-item-title{
+    color:  #d30f4c;
+}
+
+.rooster-content-item-title{
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.rooster-content-item-text{
+    font-size: 12px;
+}
+
+.rooster-calendar{
+    display: block;
+    padding: 7px;
+    border: 1px solid lightgray;
+    font-family: Poppins,sans-serif;
+    text-align: center;
+    height: 100%;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.rooster-calendar:hover{
+    cursor: pointer;
+    background-color: rgb(241, 241, 241);
+}
+.rooster-calendar:focus{
+    outline: 1px solid transparent;
+}
+
+.rooster-calendar::-webkit-calendar-picker-indicator:hover{
+    cursor: pointer;
+}
+
+.date-selection-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    gap: 5px;
+    height: 40px;
+}
+
+.change-week-btn{
+    text-decoration: none;
+    color: #d30f4c;
+    background-color: white;
+    border-radius: 50% 0 0 50%;
+    width: 30px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    border: 1px solid lightgrey;
+    box-sizing: border-box;
+    transition: 0.2s;
+
+}
+
+.change-week-btn:hover{
+    cursor: pointer;
+    background-color: rgb(241, 241, 241);
+}
+
+.change-week-btn.reverse{
+    border-radius: 0 50% 50% 0;
+
+}
+
+.rooster-wrapper{
+    display: flex;
+    gap: 10px;
+}
+
+.rooster-sidebar{
+    background-color: #f5f5f5;
+    position: absolute;
+    left: 0;
+    overflow: hidden;
+    box-shadow: 0 0 15px 1px rgb(0 0 0 / 10%);
+    /* border: 1px solid lightgrey; */
+    border-bottom: 2px solid #d30f4c;
+    z-index: 20;
+}
+
+.sidebar-content{
+    padding-top: 20px;
+    width: 0;
+    overflow: hidden;
+    display: none;
+    transition: 1s;
+}
+
+.menu-toggler{
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .2s;
+    padding: 20px;
+}
+
+.menu-toggler:hover{
+    cursor: pointer;
+    color:  #d30f4c;
+}
+
+.rooster-btn{
+    background-color: #d30f4c;
+    box-shadow: 0 0 15px 1px rgb(0 0 0 / 10%);
+    border-radius: 5px;
+    padding: 15px 10px;
+    transition: 0.2s;
+    display: inline-block;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.rooster-btn:hover{
+    background-color: #b11a4a;
+    color: white;
+    cursor: pointer;
+}
+
+.sidebar-title{
+    padding: 10px 0;
+    font-weight: bold;
+}
+
+.custom-select{
+    padding: 10px;
+    outline: 1px solid transparent;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    width: 100%;
+    transition: .2s;
+}
+
+.custom-select:hover{
+    border-left: 1px solid #d30f4c;
+    cursor: pointer;
+    background-color: rgb(248, 248, 248);
+}
+
+
