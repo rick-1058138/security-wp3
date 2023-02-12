@@ -95,34 +95,28 @@
     // dayjs 
     // https://day.js.org/docs/en/installation/installation
 
+    // Maandag = 1
+    // Dinsdag = 2
+    // Woensdag = 3
+    // Donderdag = 4
+    // Vrijdag = 5
+    // Zaterdag = 6
+    // Zondag = 7
+
+
     const weekOfYear = window.dayjs_plugin_weekOfYear
     const weekday = window.dayjs_plugin_weekday
     dayjs.extend(weekOfYear)
     dayjs.extend(weekday)
-    //const a = dayjs()
-    //console.log(a)
-    //const b = a.add(7, 'day')
-    //console.log(b)
-
-    // first day of current week (monday)
-    dayjs().day(1)
 
     updateWeekNumber(dayjs(new Date()).week());
-
-    // get current week
-    function getNumberOfWeek() {
-        const today = new Date();
-        const firstDayOfYear = new Date(today.getFullYear(), 0, 1);
-        const pastDaysOfYear = (today - firstDayOfYear) / 86400000;
-        return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-    }
 
     function setCalendarDate(date) {
         // set start week on calendar when first loaded
         document.getElementById('week-calendar').value = date;
     }
-
-    setCalendarDate(dayjs().format('YYYY-MM-DD'));
+    var today = dayjs().format('YYYY-MM-DD');
+    setCalendarDate(today);
 
     // update weeknumber in html
     function updateWeekNumber(number){
@@ -134,25 +128,32 @@
 
         console.log('test', dayjs(date).day());
         let selectedDay = dayjs(date).day()
-        
         if(selectedDay == 0){
             // if day is 0 it is sunday so set it to 7
             selectedDay = 7
         }
+
         $('#day-'+selectedDay).addClass('active')
     }
     setActiveCalendarDay($("#week-calendar").val())
 
     function setWeekDayNumbers(date){
         // set correct day number in html calendar
-        for(let i = 1; i<=7 ; i++){
-            let day_number = dayjs(date).weekday(i).$D
-            $('#day-'+i).text(day_number)
+        // if day == 0 it is sunday, so go back to monday so to day 1
+        if(dayjs(date).day() == 0){
+            for(let i = 1; i<=7 ; i++){
+                let day_number = dayjs(date).day(-6).weekday(i).$D
+                $('#day-'+i).text(day_number)
+            }
+        }else{
+            for(let i = 1; i<=7 ; i++){
+                let day_number = dayjs(date).weekday(i).$D
+                $('#day-'+i).text(day_number)
+            }
         }
     }
 
-    setWeekDayNumbers(dayjs());
-
+    setWeekDayNumbers(today);
 
     
     // if calendar changes update the week in html
