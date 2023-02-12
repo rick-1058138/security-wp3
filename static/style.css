@@ -127,6 +127,9 @@ body{
     font-size: 14px;
     flex-direction: row;
     align-items: start;
+    min-width: 75px;
+    display: block;
+    text-align: center;
 }
 
 .rooster-day-number{
@@ -175,7 +178,20 @@ body{
     top: 5px;
     left: 5px;
     width: calc(100% - 10px);
+    transition: .2s;
+    border: 2px solid transparent;
 
+}
+
+.rooster-content-item:hover{
+    opacity: 1;
+    cursor: pointer;
+    background-color: #f3f3f3;
+    border-left: 2px solid #d30f4c;
+}
+
+.rooster-content-item:hover div>.rooster-content-item-title{
+    color:  #d30f4c;
 }
 
 .rooster-content-item-title{
@@ -259,7 +275,6 @@ body{
 
 .rooster-sidebar{
     background-color: #ededed;
-    padding: 20px;
     position: absolute;
     left: 0;
     overflow: hidden;
@@ -281,10 +296,13 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: .2s;
+    padding: 20px;
 }
 
 .menu-toggler:hover{
     cursor: pointer;
+    color:  #d30f4c;
 }
 
 .rooster-btn{

@@ -74,13 +74,13 @@
                                 </div>
                                 {% endfor %}
                                 <div class="rooster-content" id="rooster-content-{{loop.index}}">
-                                    <div class="rooster-content-item">
+                                    <!-- <div class="rooster-content-item">
                                         <div>
                                             <p class="rooster-content-item-title">Les 1</p>
                                             <p class="rooster-content-item-text">8:00 - 9:00</p>
                                         </div>
                                         <p class="rooster-content-item-text">Docent</p>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </section>
                         </div>
@@ -186,10 +186,10 @@
         $('.menu-toggler').click(function(){
             state = !state
             if(state){
-                $('.sidebar-content').css({ width: 'auto'});
+                $('.sidebar-content').css({ width: 'auto', padding: '20px'});
                 $('.sidebar-content').show();
             }else{
-                $('.sidebar-content').css({ width: '0' });
+                $('.sidebar-content').css({ width: '0', padding: '0px'});
                 $('.sidebar-content').hide();
 
             }
@@ -234,7 +234,8 @@
         
     }
     
+    createLessonBlock(day=1, name='test', start_time='8', end_time='10');
     createLessonBlock(day=2, name='test', start_time='9', end_time='10');
-    createLessonBlock(day=2, name='test1', start_time='10', end_time='11');
-    createLessonBlock(day=2, name='test2', start_time='11', end_time='15');
+    createLessonBlock(day=3, name='test1', start_time='10', end_time='11');
+    createLessonBlock(day=4, name='test2', start_time='11', end_time='15');
 </script>
