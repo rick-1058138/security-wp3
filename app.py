@@ -13,21 +13,20 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///' + os.path.join(basedir, 'databases/aanwezigheidstool.db')
+    'sqlite:///' + os.path.join(basedir, 'databases/aanwezigheidstool.db')
 
 app.config['SECRET_KEY'] = "Alien Software"
 
 db = SQLAlchemy(app)
 
+
 class students(db.Model):
-   id = db.Column('student_id', db.Integer, primary_key = True)
-   name = db.Column(db.String(100))
+    id = db.Column('student_id', db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
 
 
 def __init__(self, name):
-   self.name = name
-
-
+    self.name = name
 
 
 @app.route("/")
@@ -37,6 +36,16 @@ def hello_world():
 @app.route("/rooster")
 def rooster():
     return render_template('rooster.html')
+
+
+@app.route("/login")
+def login():
+    return render_template("login.html")
+
+
+@app.route("/code-input")
+def code_input():
+    return render_template("code-input.html")
 
 
 if __name__ == "__main__":
