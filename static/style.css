@@ -89,3 +89,22 @@ body{
     display: flex;
     justify-content: center;
 }
+
+/* Code Input */
+
+.code-input {
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: none;
+    border-bottom: 2px solid black;
+    background-color: #fff7ea;
+    line-height: 1.38;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.label-code {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
