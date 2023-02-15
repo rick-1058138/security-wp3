@@ -29,9 +29,19 @@ def __init__(self, name):
     self.name = name
 
 
+class groups(db.Model):
+    id = db.Column('group_id', db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+
+
+def __init__(self, name):
+    self.name = name
+
+
 @app.route("/")
 def hello_world():
     return render_template('index.html')
+
 
 @app.route("/rooster")
 def rooster():
