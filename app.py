@@ -47,6 +47,10 @@ def login():
 def code_input():
     return render_template("code-input.html")
 
+@app.route("/les_overzicht")
+def les_overzicht():
+    return render_template("les_overzicht.html")
+
 
 if __name__ == "__main__":
     app.run(host=FLASK_IP, port=FLASK_PORT, debug=FLASK_DEBUG)
