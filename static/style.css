@@ -37,6 +37,13 @@ body{
     padding-left: 30px;
 }
 
+.header-logo-button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+  
+
 .container-middle {
     display: flex;
     flex-direction: column;
@@ -374,3 +381,121 @@ body{
 }
 
 
+.table-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    height: 500px;
+}
+  
+  .table-style {
+    width: 80%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  .table-style th,
+  .table-style td {
+    border: 1px solid #d9d9d9;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .table-style th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .table-style tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .table-style td {
+    border: 1px solid #d9d9d9;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .table-style td.aanwezig {
+    color: green;
+  }
+  
+  .table-style td.afwezig {
+    color: red;
+  }
+
+  .teacher-info-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+.teacher-info {
+  width: 80%;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #d9d9d9;
+  font-family: Arial, sans-serif;
+  color: #333;
+  text-align: left;
+}
+
+.teacher-info strong {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.weizigen-btn,
+.start-btn,
+.beamer-btn {
+    width: 150px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #d30f4c;
+    text-align: center;
+    cursor: pointer;
+    margin-right: 10px;
+}
+  
+  /* .beamer-btn {
+    position: absolute;
+    left: 40px;
+    top: 150px;
+    color: #ffffff;
+    background-color: #d30f4c;
+    cursor: pointer;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 0;
+    border: none;
+    width: 100px;
+} */
+  
+.beamer-btn:hover {
+    background-color: #c30f4c; 
+}
+
+.bottom-buttons-container {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+    bottom: 20px;
+    right: 20px;
+
+}
+
+.weizigen-btn:hover,
+.start-btn:hover {
+    background-color: #c30f4c;
+}
