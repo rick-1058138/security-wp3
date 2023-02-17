@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
 LISTEN_ALL = "0.0.0.0"
@@ -37,6 +37,16 @@ class groups(db.Model):
 def __init__(self, name):
     self.name = name
 
+class meeting(db.Model):
+    id = db.Column('meeting_id', db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    start_time = db.Column(db.String(10))
+    end_time = db.Column(db.String(10))
+    date = db.Column(db.Date())
+    status = db.Column(db.String(100))
+    description = db.Column(db.Text())
+    lesson_code = db.Column(db.Integer())
+
 
 @app.route("/")
 def hello_world():
@@ -61,6 +71,20 @@ def code_input():
 def les_overzicht():
     return render_template("les_overzicht.html")
 
+@app.route("/api/meeting", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
+def handle_meeting():
+    if request.method == "GET":
+        return "GET"
+    elif request.method == "POST":
+        return "POST"
+    elif request.method == "PUT":
+        return "PUT"
+    elif request.method == "PATCH":
+        return "PATCH"
+    elif request.method == "DELETE":
+        return "DELETE"
+    else:
+        return "INVALID!"
 
 @app.route("/test")
 def test():
