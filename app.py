@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+import datetime 
 
 LISTEN_ALL = "0.0.0.0"
 FLASK_IP = LISTEN_ALL
@@ -37,8 +38,8 @@ class groups(db.Model):
 def __init__(self, name):
     self.name = name
 
-class meeting(db.Model):
-    id = db.Column('meeting_id', db.Integer, primary_key=True)
+class Meeting(db.Model):
+    meeting_id = db.Column('meeting_id', db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     start_time = db.Column(db.String(10))
     end_time = db.Column(db.String(10))
@@ -46,6 +47,21 @@ class meeting(db.Model):
     status = db.Column(db.String(100))
     description = db.Column(db.Text())
     lesson_code = db.Column(db.Integer())
+
+    def __init__(self, name, start_time, end_time, date, status, description, lesson_code):
+        self.name = name
+        self.start_time = start_time
+        self.end_time = end_time
+        self.date = date
+        self.status = status
+        self.description = description
+        self.lesson_code = lesson_code
+
+    @classmethod
+    def create(cls, **kwargs):
+        obj = cls(**kwargs)
+        db.session.add(obj)
+        db.session.commit()
 
 
 @app.route("/")
@@ -71,10 +87,20 @@ def code_input():
 def les_overzicht():
     return render_template("les_overzicht.html")
 
+def result_to_dict(sql_result):
+    result_dict = []
+    for row in sql_result:
+        result_dict.append(({column.name: str(getattr(row, column.name)) for column in row.__table__.columns}))
+    return result_dict
+
 @app.route("/api/meeting", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
 def handle_meeting():
     if request.method == "GET":
-        return "GET"
+        meetings = Meeting.query.all()
+        for meeting in meetings:
+            print(meeting.meeting_id)
+        dict = {"result": result_to_dict(meetings)}
+        return jsonify(dict)
     elif request.method == "POST":
         return "POST"
     elif request.method == "PUT":
@@ -85,6 +111,11 @@ def handle_meeting():
         return "DELETE"
     else:
         return "INVALID!"
+
+@app.route("/testmeeting")
+def test_meeting():
+    Meeting.create(name="test", start_time="9:00", end_time="10:00", date=datetime.date(1987, 6,15), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+    return "Meeting toegevoegd"
 
 @app.route("/test")
 def test():
