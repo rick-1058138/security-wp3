@@ -48,14 +48,14 @@ class Meeting(db.Model):
     description = db.Column(db.Text())
     lesson_code = db.Column(db.Integer())
 
-    def __init__(self, name, start_time, end_time, date, status, description, lesson_code):
-        self.name = name
-        self.start_time = start_time
-        self.end_time = end_time
-        self.date = date
-        self.status = status
-        self.description = description
-        self.lesson_code = lesson_code
+    # def __init__(self, name, start_time, end_time, date, status, description, lesson_code):
+    #     self.name = name
+    #     self.start_time = start_time
+    #     self.end_time = end_time
+    #     self.date = date
+    #     self.status = status
+    #     self.description = description
+    #     self.lesson_code = lesson_code
 
     @classmethod
     def create(cls, **kwargs):
@@ -97,8 +97,8 @@ def result_to_dict(sql_result):
 def handle_meeting():
     if request.method == "GET":
         meetings = Meeting.query.all()
-        for meeting in meetings:
-            print(meeting.meeting_id)
+        # for meeting in meetings:
+        #     print(meeting.meeting_id)
         dict = {"result": result_to_dict(meetings)}
         return jsonify(dict)
     elif request.method == "POST":
