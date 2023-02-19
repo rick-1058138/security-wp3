@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,31 +12,68 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
 
+# app.config['SQLALCHEMY_DATABASE_URI'] =\
+#     'sqlite:///' + os.path.join(basedir, 'databases/aanwezigheidstool.db')
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-    'sqlite:///' + os.path.join(basedir, 'databases/aanwezigheidstool.db')
-
-app.config['SECRET_KEY'] = "Alien Software"
-
+app.config['SECRET_KEY'] = 'Alien Software'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+app.app_context().push()
 db = SQLAlchemy(app)
 
 
-class students(db.Model):
-    id = db.Column('student_id', db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), nullable=False,
+                           default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    posts = db.relationship('Post', backref='author', lazy=True)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
 
 
-def __init__(self, name):
-    self.name = name
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False,
+                            default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Post('{self.title}', '{self.date_posted}')"
 
 
-class groups(db.Model):
-    id = db.Column('group_id', db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+# class Student(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     name = db.Column(db.String(20), nullable=False)
+#     student_id = db.relationship('StudentForGroup', backref='idk', lazy=True)
+
+#     def __repr__(self):
+#         return f"Student('{self.name}')"
 
 
-def __init__(self, name):
-    self.name = name
+# class StudentsForGroup:
+#     id = db.Column(db.Integer, primary_key=True)
+#     student_id = db.Column(db.Integer, db.ForeignKey(
+#         'student.id'), nullable=False)
+#     group_id = db.Column(db.Integer, db.ForeignKey(
+#         'group.id'), nullable=False)
+
+
+# class Group(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     start_date = db.Column(db.DateTime, nullable=False,
+#                            default=datetime.cestnow())
+#     end_date = db.Column(db.DateTime, nullable=False,
+#                          defaulr=datetime.cestnow())
+#     group_id = db.relationship('StudentForGroup', backref='idk', lazy=True)
+
+#     def __repr__(self):
+#         return f"Group('{self.start_date}', '{self.end_date}')"
 
 
 @app.route("/")
@@ -57,17 +95,18 @@ def login():
 def code_input():
     return render_template("code-input.html")
 
+
 @app.route("/les_overzicht")
 def les_overzicht():
     return render_template("les_overzicht.html")
 
 
-@app.route("/test")
-def test():
-    student = students(name='Klaas')
-    db.session.add(student)
-    db.session.commit()
-    return '1'
+# @app.route("/test")
+# def test():
+#     student = students(name='Klaas')
+#     db.session.add(student)
+#     db.session.commit()
+#     return '1'
 
 
 if __name__ == "__main__":
