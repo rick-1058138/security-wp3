@@ -116,8 +116,29 @@ def handle_meeting():
         return jsonify({"result": result, "error": error})
         # return request.get_json()
     elif request.method == "PUT":
+        # update whole row
         return "PUT"
     elif request.method == "PATCH":
+        # update part of row
+        body = request.json
+        try:
+            meeting = Meeting.query.filter_by(meeting_id=body['id']).first()
+            # meeting.description = body['description']
+            for item in body:
+                print(item, body[item])
+                # sets the column name used in request
+                # result : meeting.item = body[item] // meeting.(column name) = value given
+                setattr(meeting, item, body[item])
+
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            error = str(e)
+        return jsonify({"result": result, "error": error})
+
+
         return "PATCH"
     elif request.method == "DELETE":
         return "DELETE"
