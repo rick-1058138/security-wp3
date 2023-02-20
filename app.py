@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,31 +12,33 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
 
+# app.config['SQLALCHEMY_DATABASE_URI'] =\
+#     'sqlite:///' + os.path.join(basedir, 'databases/aanwezigheidstool.db')
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-    'sqlite:///' + os.path.join(basedir, 'databases/aanwezigheidstool.db')
-
-app.config['SECRET_KEY'] = "Alien Software"
-
+app.config['SECRET_KEY'] = 'Alien Software'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aanwezigheidstool.db'
+app.app_context().push()
 db = SQLAlchemy(app)
 
 
-class students(db.Model):
-    id = db.Column('student_id', db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+class Student(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+
+    def __repr__(self):
+        return f"Student('{self.name}')"
 
 
-def __init__(self, name):
-    self.name = name
+class Group(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.DateTime, nullable=False,
+                           default=datetime.utcnow())
+    end_date = db.Column(db.DateTime, nullable=False,
+                         default=datetime.utcnow())
 
-
-class groups(db.Model):
-    id = db.Column('group_id', db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-
-
-def __init__(self, name):
-    self.name = name
+    def __repr__(self):
+        return f"Group('{self.start_date}', '{self.end_date}')"
 
 
 @app.route("/")
@@ -73,12 +76,12 @@ def welcome_page():
     return render_template('welcome_page.html')
 
 
-@app.route("/test")
-def test():
-    student = students(name='Klaas')
-    db.session.add(student)
-    db.session.commit()
-    return '1'
+# @app.route("/test")
+# def test():
+#     student = students(name='Klaas')
+#     db.session.add(student)
+#     db.session.commit()
+#     return '1'
 
 
 if __name__ == "__main__":
