@@ -1,10 +1,12 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     margin: 0;
     /* border: 1px solid red; */
 }
 
-body{
-    font-family: Poppins,sans-serif;
+body {
+    font-family: Poppins, sans-serif;
 }
 
 /* Login page */
@@ -42,7 +44,7 @@ body{
     background: transparent;
     cursor: pointer;
 }
-  
+
 
 .container-middle {
     display: flex;
@@ -116,7 +118,7 @@ body{
     letter-spacing: 1px;
 }
 
-.main-header{
+.main-header {
     padding: 20px 10px;
     display: flex;
     gap: 10px;
@@ -125,35 +127,36 @@ body{
     margin: 0 auto;
 }
 
-.rooster-container{
+.rooster-container {
     background-color: #ededed;
     width: 80%;
     margin: 0 auto;
     padding: 60px 40px;
 }
 
-.rooster-row{
+.rooster-row {
     height: 100px;
     border-top: 1px solid lightgray;
     border-right: 1px solid lightgray;
     box-sizing: border-box;
 }
 
-.rooster-day{
+.rooster-day {
     flex: 1;
 }
 
-.rooster-day-row{
+.rooster-day-row {
     display: flex;
 }
 
-.rooster-table{
+.rooster-table {
     width: 100%;
     border-spacing: 0px;
     position: relative;
 }
 
-.rooster-day-title, .rooster-time-title{
+.rooster-day-title,
+.rooster-time-title {
     height: 75px;
     padding: 5px;
     display: flex;
@@ -162,7 +165,7 @@ body{
     gap: 10px;
 }
 
-.rooster-time-title{
+.rooster-time-title {
     color: #595959;
     font-weight: 600;
     font-size: 14px;
@@ -173,7 +176,7 @@ body{
     text-align: center;
 }
 
-.rooster-day-number{
+.rooster-day-number {
     width: 45px;
     height: 45px;
     border-radius: 50%;
@@ -182,12 +185,12 @@ body{
     align-items: center;
 }
 
-.rooster-day-number.active{
+.rooster-day-number.active {
     background-color: #d30f4c;
     color: white;
 }
 
-.rooster-time-text{
+.rooster-time-text {
     transform: translate(0, -50%);
     background: #ededed;
     padding-right: 5px;
@@ -196,7 +199,7 @@ body{
     font-size: 14px;
 }
 
-.rooster-content{
+.rooster-content {
     position: absolute;
     top: 0;
     width: 100%;
@@ -205,7 +208,7 @@ body{
 
 }
 
-.rooster-content-item{
+.rooster-content-item {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -224,50 +227,51 @@ body{
 
 }
 
-.rooster-content-item:hover{
+.rooster-content-item:hover {
     opacity: 1;
     cursor: pointer;
     background-color: #f3f3f3;
     border-left: 2px solid #d30f4c;
 }
 
-.rooster-content-item:hover div>.rooster-content-item-title{
-    color:  #d30f4c;
+.rooster-content-item:hover div>.rooster-content-item-title {
+    color: #d30f4c;
 }
 
-.rooster-content-item-title{
+.rooster-content-item-title {
     font-weight: 600;
     font-size: 13px;
 }
 
-.rooster-content-item-text{
+.rooster-content-item-text {
     font-size: 12px;
 }
 
-.rooster-calendar{
+.rooster-calendar {
     display: block;
     padding: 7px;
     border: 1px solid lightgray;
-    font-family: Poppins,sans-serif;
+    font-family: Poppins, sans-serif;
     text-align: center;
     height: 100%;
     box-sizing: border-box;
     transition: 0.2s;
 }
 
-.rooster-calendar:hover{
+.rooster-calendar:hover {
     cursor: pointer;
     background-color: rgb(241, 241, 241);
 }
-.rooster-calendar:focus{
+
+.rooster-calendar:focus {
     outline: 1px solid transparent;
 }
 
-.rooster-calendar::-webkit-calendar-picker-indicator:hover{
+.rooster-calendar::-webkit-calendar-picker-indicator:hover {
     cursor: pointer;
 }
 
-.date-selection-row{
+.date-selection-row {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -276,7 +280,7 @@ body{
     height: 40px;
 }
 
-.change-week-btn{
+.change-week-btn {
     text-decoration: none;
     color: #d30f4c;
     background-color: white;
@@ -293,22 +297,22 @@ body{
 
 }
 
-.change-week-btn:hover{
+.change-week-btn:hover {
     cursor: pointer;
     background-color: rgb(241, 241, 241);
 }
 
-.change-week-btn.reverse{
+.change-week-btn.reverse {
     border-radius: 0 50% 50% 0;
 
 }
 
-.rooster-wrapper{
+.rooster-wrapper {
     display: flex;
     gap: 10px;
 }
 
-.rooster-sidebar{
+.rooster-sidebar {
     background-color: #f5f5f5;
     position: absolute;
     left: 0;
@@ -319,7 +323,7 @@ body{
     z-index: 20;
 }
 
-.sidebar-content{
+.sidebar-content {
     padding-top: 20px;
     width: 0;
     overflow: hidden;
@@ -327,7 +331,7 @@ body{
     transition: 1s;
 }
 
-.menu-toggler{
+.menu-toggler {
     width: 40px;
     height: 40px;
     display: flex;
@@ -337,12 +341,12 @@ body{
     padding: 20px;
 }
 
-.menu-toggler:hover{
+.menu-toggler:hover {
     cursor: pointer;
-    color:  #d30f4c;
+    color: #d30f4c;
 }
 
-.rooster-btn{
+.rooster-btn {
     background-color: #d30f4c;
     box-shadow: 0 0 15px 1px rgb(0 0 0 / 10%);
     border-radius: 5px;
@@ -354,18 +358,18 @@ body{
     margin-bottom: 40px;
 }
 
-.rooster-btn:hover{
+.rooster-btn:hover {
     background-color: #b11a4a;
     color: white;
     cursor: pointer;
 }
 
-.sidebar-title{
+.sidebar-title {
     padding: 10px 0;
     font-weight: bold;
 }
 
-.custom-select{
+.custom-select {
     padding: 10px;
     outline: 1px solid transparent;
     border: 1px solid lightgrey;
@@ -374,7 +378,7 @@ body{
     transition: .2s;
 }
 
-.custom-select:hover{
+.custom-select:hover {
     border-left: 1px solid #d30f4c;
     cursor: pointer;
     background-color: rgb(248, 248, 248);
@@ -390,64 +394,64 @@ body{
     left: 0px;
     height: 500px;
 }
-  
-  .table-style {
+
+.table-style {
     width: 80%;
     border-collapse: collapse;
     font-family: Arial, sans-serif;
     color: #333;
-  }
-  
-  .table-style th,
-  .table-style td {
+}
+
+.table-style th,
+.table-style td {
     border: 1px solid #d9d9d9;
     padding: 8px;
     text-align: left;
-  }
-  
-  .table-style th {
+}
+
+.table-style th {
     background-color: #f2f2f2;
     font-weight: bold;
-  }
-  
-  .table-style tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
+}
 
-  .table-style td {
+.table-style tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table-style td {
     border: 1px solid #d9d9d9;
     padding: 8px;
     text-align: left;
-  }
-  
-  .table-style td.aanwezig {
-    color: green;
-  }
-  
-  .table-style td.afwezig {
-    color: red;
-  }
+}
 
-  .teacher-info-container {
+.table-style td.aanwezig {
+    color: green;
+}
+
+.table-style td.afwezig {
+    color: red;
+}
+
+.teacher-info-container {
     width: 100%;
     display: flex;
     justify-content: center;
-  }
+}
 
 .teacher-info {
-  width: 80%;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border: 1px solid #d9d9d9;
-  font-family: Arial, sans-serif;
-  color: #333;
-  text-align: left;
+    width: 80%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #d9d9d9;
+    font-family: Arial, sans-serif;
+    color: #333;
+    text-align: left;
 }
 
 .teacher-info strong {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 10px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
 }
 
 .weizigen-btn,
@@ -465,8 +469,8 @@ body{
     cursor: pointer;
     margin-right: 10px;
 }
-  
-  /* .beamer-btn {
+
+/* .beamer-btn {
     position: absolute;
     left: 40px;
     top: 150px;
@@ -479,9 +483,9 @@ body{
     border: none;
     width: 100px;
 } */
-  
+
 .beamer-btn:hover {
-    background-color: #c30f4c; 
+    background-color: #c30f4c;
 }
 
 .bottom-buttons-container {
@@ -498,4 +502,90 @@ body{
 .weizigen-btn:hover,
 .start-btn:hover {
     background-color: #c30f4c;
+}
+
+
+.table-my-overview {
+    margin: 3em;
+    width: 50%;
+
+}
+
+.presence-stats {
+    width: 400px;
+}
+
+.my-chart {
+    width: 400px;
+    height: 400px;
+}
+
+.precentage-absence {
+    color: #d30f4c;
+}
+
+.container-window-welcome {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff7ea;
+}
+
+.container-middle-welcome {
+    display: flex;
+    width: 90vw;
+    height: 90vh;
+}
+
+.welcome {
+    font-size: 5rem;
+    font-weight: 500;
+    position: absolute;
+    left: 400px;
+
+}
+
+.question {
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+
+
+}
+
+.textarea_answer {
+    width: 100%;
+    margin-top: 400px;
+    margin-bottom: 100px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: 2px solid black;
+    background-color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.save_button {
+    color: #ffffff;
+    background-color: #d30f4c;
+    cursor: pointer;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 500px;
+    margin-bottom: 30px;
+    margin-top: 40px;
+    border: none;
+    width: 100px;
+}
+
+.container-btn-welcome {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 0;
 }
