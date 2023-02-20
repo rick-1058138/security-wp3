@@ -76,13 +76,5 @@ def welcome_page():
     return render_template('welcome_page.html')
 
 
-# @app.route("/test")
-# def test():
-#     student = students(name='Klaas')
-#     db.session.add(student)
-#     db.session.commit()
-#     return '1'
-
-
 if __name__ == "__main__":
     app.run(host=FLASK_IP, port=FLASK_PORT, debug=FLASK_DEBUG)
