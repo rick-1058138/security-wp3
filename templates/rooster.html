@@ -91,7 +91,7 @@
         </div>
     </body>
 </html>
-<script type="text/javascript">
+<script type="application/javascript">
     // dayjs -> https://day.js.org/docs/en/installation/installation
     // Maandag = 1
     // Dinsdag = 2
@@ -122,6 +122,10 @@
             dataType: "json",  
             success: function(response_data){
                 console.log(response_data);
+                for(item of response_data.result){
+                    console.log(item.meeting_id, item)
+                    createLessonBlock(day=dayjs(item.date).day(), name=item.name, start_time=formatTimeToNumber(item.start_time), end_time=formatTimeToNumber(item.end_time));
+                }
             },
             error : function(request,error){
                 alert("request failed");
@@ -129,6 +133,13 @@
         })
     }
     getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
+
+    // format time from HH:MM to H
+    function formatTimeToNumber(time){
+        // Use mockup date to be able format time to 9 or 10 instead of "9:00" or "10:00"
+        hour = dayjs('2000-01-01T'+time).format('H')
+        return hour
+    }
 
     // set start week on calendar when first loaded
     function setCalendarDate(date) {

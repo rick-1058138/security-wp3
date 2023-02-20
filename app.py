@@ -114,7 +114,7 @@ def handle_meeting():
 
 @app.route("/testmeeting")
 def test_meeting():
-    Meeting.create(name="test", start_time="9:00", end_time="10:00", date=datetime.date(1987, 6,15), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.date(1987, 6,16), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
     return "Meeting toegevoegd"
 
 @app.route("/test")
