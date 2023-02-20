@@ -1,7 +1,8 @@
 import os
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
-import datetime 
+# import datetime 
+from datetime import datetime
 
 LISTEN_ALL = "0.0.0.0"
 FLASK_IP = LISTEN_ALL
@@ -102,7 +103,18 @@ def handle_meeting():
         dict = {"result": result_to_dict(meetings)}
         return jsonify(dict)
     elif request.method == "POST":
-        return "POST"
+        body = request.json
+        try:
+            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=datetime.now(), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+            db.session.add(meeting)
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            error = str(e)
+        return jsonify({"result": result, "error": error})
+        # return request.get_json()
     elif request.method == "PUT":
         return "PUT"
     elif request.method == "PATCH":
@@ -117,12 +129,12 @@ def test_meeting():
     Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.date(1987, 6,16), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
     return "Meeting toegevoegd"
 
-@app.route("/test")
-def test():
-    student = students(name='Klaas')
-    db.session.add(student)
-    db.session.commit()
-    return '1'
+# @app.route("/test")
+# def test():
+#     student = students(name='Klaas')
+#     db.session.add(student)
+#     db.session.commit()
+#     return '1'
 
 
 if __name__ == "__main__":
