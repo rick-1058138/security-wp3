@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import os
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
@@ -39,24 +40,25 @@ class groups(db.Model):
 def __init__(self, name):
     self.name = name
 
+@dataclass
 class Meeting(db.Model):
-    meeting_id = db.Column('meeting_id', db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    start_time = db.Column(db.String(10))
-    end_time = db.Column(db.String(10))
-    date = db.Column(db.Date())
-    status = db.Column(db.String(100))
-    description = db.Column(db.Text())
-    lesson_code = db.Column(db.Integer())
+    meeting_id:int = db.Column('meeting_id', db.Integer, primary_key=True)
+    name:str = db.Column(db.String(100))
+    start_time:str = db.Column(db.String(10))
+    end_time:str = db.Column(db.String(10))
+    date:str = db.Column(db.Date())
+    status:str = db.Column(db.String(100))
+    description:str = db.Column(db.Text())
+    lesson_code:int = db.Column(db.Integer())
 
-    # def __init__(self, name, start_time, end_time, date, status, description, lesson_code):
-    #     self.name = name
-    #     self.start_time = start_time
-    #     self.end_time = end_time
-    #     self.date = date
-    #     self.status = status
-    #     self.description = description
-    #     self.lesson_code = lesson_code
+    def __init__(self, name, start_time, end_time, date, status, description, lesson_code):
+        self.name = name
+        self.start_time = start_time
+        self.end_time = end_time
+        self.date = date
+        self.status = status
+        self.description = description
+        self.lesson_code = lesson_code
 
     @classmethod
     def create(cls, **kwargs):
@@ -94,14 +96,22 @@ def result_to_dict(sql_result):
         result_dict.append(({column.name: str(getattr(row, column.name)) for column in row.__table__.columns}))
     return result_dict
 
-@app.route("/api/meeting", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
-def handle_meeting():
+@app.route("/api/meeting/", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
+@app.route("/api/meeting/<id>", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
+def handle_meeting(id = None):
     if request.method == "GET":
-        meetings = Meeting.query.all()
-        # for meeting in meetings:
-        #     print(meeting.meeting_id)
-        dict = {"result": result_to_dict(meetings)}
-        return jsonify(dict)
+        if id == None:
+            meetings = Meeting.query.all()
+            # for meeting in meetings:
+            #     print(meeting.meeting_id)
+            # dict = {"result": result_to_dict(meetings)}
+            return jsonify(meetings)
+        else:
+            print(id)
+            meeting = db.session.query(Meeting).get(1)
+            # meeting = Meeting.query.filter_by(meeting_id=id).first()
+            # dict = {"result": result_to_dict(meeting)}
+            return jsonify(meeting)
     elif request.method == "POST":
         body = request.json
         try:
@@ -137,6 +147,7 @@ def handle_meeting():
             result = "error"
             error = str(e)
         return jsonify({"result": result, "error": error})
+        
 
 
         return "PATCH"
