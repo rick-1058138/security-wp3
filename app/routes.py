@@ -49,10 +49,10 @@ def handle_meeting(id = None):
     if request.method == "GET":
         if id == None:
             meetings = Meeting.query.all()
-            return jsonify(meetings)
+            return jsonify({"result": meetings})
         else:
             meeting = Meeting.query.filter_by(meeting_id=id).first()
-            return jsonify(meeting)
+            return jsonify({"result": meeting})
 
     elif request.method == "POST":
         body = request.json
