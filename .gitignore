@@ -1,34 +1,3 @@
-Skip to content
-Search or jump to…
-Pull requests
-Issues
-Codespaces
-Marketplace
-Explore
- 
-@rick-1058138 
-Rac-Software-Development
-/
-werkplaats-2-mvc-software-inc
-Private
-Cannot fork because forking is disabled.
-Code
-Issues
-Pull requests
-Actions
-Projects
-Security
-Insights
-Settings
-werkplaats-2-mvc-software-inc/.gitignore
-@Falco-0941881
-Falco-0941881 Feature: Created user table
-Latest commit 18299e2 on Nov 24, 2022
- History
- 2 contributors
-@github-classroom@Falco-0941881
-143 lines (117 sloc)  2.06 KB
-
 # IntelliJ project files
 .idea
 *.iml
@@ -173,18 +142,5 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 databases/-- SQLite.sql
-Footer
-© 2023 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
-werkplaats-2-mvc-software-inc/.gitignore at main · Rac-Software-Development/werkplaats-2-mvc-software-inc
+
+.DS_Store

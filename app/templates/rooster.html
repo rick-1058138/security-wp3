@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="../static/style.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
-        <!-- CDN example (jsDelivr) -->
+        <!-- Dayjs -->
         <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/weekOfYear.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/weekday.js"></script>
@@ -91,10 +91,8 @@
         </div>
     </body>
 </html>
-<script type="text/javascript">
-    // dayjs 
-    // https://day.js.org/docs/en/installation/installation
-
+<script type="application/javascript">
+    // dayjs -> https://day.js.org/docs/en/installation/installation
     // Maandag = 1
     // Dinsdag = 2
     // Woensdag = 3
@@ -103,30 +101,62 @@
     // Zaterdag = 6
     // Zondag = 7
 
-
     const weekOfYear = window.dayjs_plugin_weekOfYear
     const weekday = window.dayjs_plugin_weekday
     dayjs.extend(weekOfYear)
     dayjs.extend(weekday)
 
-    updateWeekNumber(dayjs(new Date()).week());
+    var currentWeekMonday = dayjs().day(1).format('YYYY-MM-DD')
+    var currentWeekSunday = dayjs().day(7).format('YYYY-MM-DD')
+    var today = dayjs().format('YYYY-MM-DD');
 
+
+
+    // AJAX request to get meetings
+    function getMeetings(startDate, endDate, group){
+        console.log(startDate, endDate, group)
+
+        $.ajax({ 
+            type: "GET",
+            url: "/api/meeting",
+            dataType: "json",  
+            success: function(response_data){
+                console.log(response_data);
+                for(item of response_data.result){
+                    console.log(item.meeting_id, item)
+                    createLessonBlock(day=dayjs(item.date).day(), name=item.name, start_time=formatTimeToNumber(item.start_time), end_time=formatTimeToNumber(item.end_time));
+                }
+            },
+            error : function(request,error){
+                alert("request failed");
+            }
+        })
+    }
+    getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
+
+    // format time from HH:MM to H
+    function formatTimeToNumber(time){
+        // Use mockup date to be able format time to 9 or 10 instead of "9:00" or "10:00"
+        hour = dayjs('2000-01-01T'+time).format('H')
+        return hour
+    }
+
+    // set start week on calendar when first loaded
     function setCalendarDate(date) {
-        // set start week on calendar when first loaded
         document.getElementById('week-calendar').value = date;
     }
-    var today = dayjs().format('YYYY-MM-DD');
     setCalendarDate(today);
 
     // update weeknumber in html
     function updateWeekNumber(number){
         $('#week-number').text(number)
     }
+    updateWeekNumber(dayjs(new Date()).week());
 
+    // sets active day of week on calendar
     function setActiveCalendarDay(date){
         $('.rooster-day-number').removeClass('active');
 
-        console.log('test', dayjs(date).day());
         let selectedDay = dayjs(date).day()
         if(selectedDay == 0){
             // if day is 0 it is sunday so set it to 7
@@ -137,7 +167,13 @@
     }
     setActiveCalendarDay($("#week-calendar").val())
 
+    // sets day numbers on calendar & updates the start and end day variables of the selected week
     function setWeekDayNumbers(date){
+        // Update variables of start and end day of week
+        currentWeekMonday = dayjs(date).day(1).format('YYYY-MM-DD')
+        currentWeekSunday = dayjs(date).day(7).format('YYYY-MM-DD')
+        console.log(currentWeekMonday, currentWeekSunday)
+
         // set correct day number in html calendar
         // if day == 0 it is sunday, so go back to monday so to day 1
         if(dayjs(date).day() == 0){
@@ -152,7 +188,6 @@
             }
         }
     }
-
     setWeekDayNumbers(today);
 
     
