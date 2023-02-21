@@ -102,16 +102,11 @@ def handle_meeting(id = None):
     if request.method == "GET":
         if id == None:
             meetings = Meeting.query.all()
-            # for meeting in meetings:
-            #     print(meeting.meeting_id)
-            # dict = {"result": result_to_dict(meetings)}
             return jsonify(meetings)
         else:
-            print(id)
-            meeting = db.session.query(Meeting).get(1)
-            # meeting = Meeting.query.filter_by(meeting_id=id).first()
-            # dict = {"result": result_to_dict(meeting)}
+            meeting = Meeting.query.filter_by(meeting_id=id).first()
             return jsonify(meeting)
+
     elif request.method == "POST":
         body = request.json
         try:
@@ -125,6 +120,7 @@ def handle_meeting(id = None):
             error = str(e)
         return jsonify({"result": result, "error": error})
         # return request.get_json()
+
     elif request.method == "PUT":
         # update whole row
         return "PUT"
@@ -133,7 +129,6 @@ def handle_meeting(id = None):
         body = request.json
         try:
             meeting = Meeting.query.filter_by(meeting_id=body['id']).first()
-            # meeting.description = body['description']
             for item in body:
                 print(item, body[item])
                 # sets the column name used in request
@@ -148,11 +143,18 @@ def handle_meeting(id = None):
             error = str(e)
         return jsonify({"result": result, "error": error})
         
-
-
-        return "PATCH"
     elif request.method == "DELETE":
-        return "DELETE"
+        try:
+            Meeting.query.filter_by(meeting_id=id).delete()
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            error = str(e)
+
+        return jsonify({"result": result, "error": error})
+
     else:
         return "INVALID!"
 
