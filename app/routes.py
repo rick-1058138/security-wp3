@@ -117,12 +117,13 @@ def test_meeting():
 #     db.session.commit()
 #     return '1'
 
-
+# show list list of all students
 @app.route('/students', methods=['GET'])
 def get_students():
     students = Student.query.all()
     return jsonify([{'id': student.id, 'name': student.name} for student in students])
 
+# add a student
 @app.route('/students', methods=['POST'])
 def create_student():
     name = request.json['name']
@@ -131,11 +132,13 @@ def create_student():
     db.session.commit()
     return jsonify({'id': student.id, 'name': student.name})
 
+# show a specifiek student 
 @app.route('/students/<int:id>', methods=['GET'])
 def get_student(id):
     student = Student.query.get_or_404(id)
     return jsonify({'id': student.id, 'name': student.name})
 
+# delete a student
 @app.route('/students/<int:id>', methods=['DELETE'])
 def delete_student(id):
     student = Student.query.get_or_404(id)
