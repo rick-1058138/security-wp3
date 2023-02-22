@@ -620,11 +620,12 @@ body {
 }
 
 .qrcode{
-    width: 200px;
-    height: 200px;
     background-color: lightgrey;
     box-shadow: 0px 0px 12px 3px #3a3a3a10;
+}
 
+.qrcode>img{
+    display: block;
 }
 
 .meeting-code{

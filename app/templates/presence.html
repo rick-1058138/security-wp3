@@ -18,11 +18,14 @@
         </svg>
         <h2>Aanwezigheidstool</h2>
     </header>
+    {% set lesson_code = 123456 %}
     <div class="top-row">
-        <div class="qrcode"></div>
+        <div class="qrcode">
+            <img src="{{ qrcode(request.url) }}">
+        </div>
         <div>
             <h2 class="meeting-code-text">Les code:</h2>
-            <p class="meeting-code">123456</p>
+            <p class="meeting-code">{{lesson_code}}</p>
         </div>
     </div>
     <h2 class="info-header">Meld je present met bovenstaande QR-code of meeting code</h2>
