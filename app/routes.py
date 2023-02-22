@@ -116,3 +116,29 @@ def test_meeting():
 #     db.session.add(student)
 #     db.session.commit()
 #     return '1'
+
+
+@app.route('/students', methods=['GET'])
+def get_students():
+    students = Student.query.all()
+    return jsonify([{'id': student.id, 'name': student.name} for student in students])
+
+@app.route('/students', methods=['POST'])
+def create_student():
+    name = request.json['name']
+    student = Student(name=name)
+    db.session.add(student)
+    db.session.commit()
+    return jsonify({'id': student.id, 'name': student.name})
+
+@app.route('/students/<int:id>', methods=['GET'])
+def get_student(id):
+    student = Student.query.get_or_404(id)
+    return jsonify({'id': student.id, 'name': student.name})
+
+@app.route('/students/<int:id>', methods=['DELETE'])
+def delete_student(id):
+    student = Student.query.get_or_404(id)
+    db.session.delete(student)
+    db.session.commit()
+    return jsonify({"message": "Student {} ID: {} is verwijderd".format(student.name, student.id)})
