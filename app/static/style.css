@@ -11,6 +11,26 @@ body {
 
 /* Login page */
 
+.color-red{
+    color: #d30f4c;
+
+}
+
+.back-link{
+    color: black;
+    text-decoration: none;
+    border-bottom: 1px solid #d30f4c;
+    margin-top: 20px;
+    padding: 0 10px;
+    transition: 0.2s;
+}
+
+.back-link:hover{
+    cursor: pointer;
+    opacity: 0.8;
+    scale: 1.05;
+}
+
 .container-window {
     width: 100vw;
     height: 100vh;
@@ -588,4 +608,10 @@ body {
     flex-direction: column;
     position: absolute;
     bottom: 0;
+}
+
+.error-header{
+    color: #d30f4c;
+    font-size: 60px;
+    margin-bottom: 30px;
 }

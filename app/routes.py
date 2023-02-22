@@ -3,6 +3,12 @@ from app import app, db
 from app.models import Student, Group, Meeting
 from datetime import datetime
 
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
+    
 @app.route("/")
 def hello_world():
     return render_template('index.html')
@@ -12,6 +18,10 @@ def hello_world():
 def rooster():
     return render_template('rooster.html')
 
+@app.route("/aanwezigheid/<id>")
+def presence(id = None):
+    print(id)
+    return render_template('presence.html')
 
 @app.route("/login")
 def login():
