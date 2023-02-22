@@ -7,6 +7,7 @@
 
 body {
     font-family: Poppins, sans-serif;
+    background-color: #fff7ea;
 }
 
 /* Login page */
@@ -148,10 +149,11 @@ body {
 }
 
 .rooster-container {
-    background-color: #ededed;
+    background-color: #ededed81;
     width: 80%;
     margin: 0 auto;
     padding: 60px 40px;
+    box-shadow: 0px 0px 12px 3px #44444414;
 }
 
 .rooster-row {
@@ -213,10 +215,11 @@ body {
 .rooster-time-text {
     transform: translate(0, -50%);
     background: #ededed;
-    padding-right: 5px;
+    padding: 2px 5px;
     width: min-content;
     font-weight: 600;
     font-size: 14px;
+    border-radius: 10px;
 }
 
 .rooster-content {
@@ -614,4 +617,90 @@ body {
     color: #d30f4c;
     font-size: 60px;
     margin-bottom: 30px;
+}
+
+.qrcode{
+    width: 200px;
+    height: 200px;
+    background-color: lightgrey;
+    box-shadow: 0px 0px 12px 3px #3a3a3a10;
+
+}
+
+.meeting-code{
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 40px;
+    letter-spacing: 8px;
+    display: inline-block;
+    font-weight: bold;
+    height: min-content;
+    background-color: white;
+    box-shadow: 0px 0px 12px 3px #3a3a3a10;
+
+}
+
+.meeting-code-text{
+    padding: 5px 0;
+    font-size: 30px;
+}
+
+.student-box{
+    font-size: 18px;
+    padding: 30px;
+    /* border: 1px solid lightgrey; */
+    display: flex;
+    gap: 10px;
+    width: 80%;
+    margin: 0 auto;
+    min-width: 500px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 12px 3px #3a3a3a10;
+    /* border: 1px solid rgb(231, 231, 231); */
+    min-height: 400px;
+    align-content: start;
+    flex-wrap: wrap;
+    background-color: #fffcf7;
+
+}
+
+.student-box-item{
+    /* border: 1px solid rgb(231, 231, 231); */
+    box-shadow: 0px 0px 12px 3px #3a3a3a10;
+    padding: 8px 14px;
+    border-radius: 2px;
+    height: max-content;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+}
+
+.top-row{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 80%;
+    margin: 0 auto;
+    min-width: 500px;
+}
+
+.info-header{
+    padding: 10px;
+    /* width: max-content; */
+    min-width: 500px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.fa-check{
+    color: rgb(20, 155, 20);
+    margin-bottom: 1px;
+}
+
+.divider{
+    background-color: rgb(223, 223, 223);
+    height: 16px;
+    width: 1px;
 }
