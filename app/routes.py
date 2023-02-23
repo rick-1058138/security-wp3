@@ -1,6 +1,6 @@
-from flask import jsonify, render_template, request
+from flask import abort, jsonify, redirect, render_template, request
 from app import app, db
-from app.models import Student, Group, Meeting
+from app.models import Student, Group, Meeting, StudentMeeting
 from datetime import datetime
 
 
@@ -22,6 +22,44 @@ def rooster():
 def presence(id = None):
     print(id)
     return render_template('presence.html')
+
+@app.route('/aanmelden/<code>')
+def setpresence(code = None):
+    # check if code exists else throw 404 not found error
+    exists = db.session.query(
+        Meeting.query.filter_by(lesson_code=code).exists()
+    ).scalar()
+    if exists:
+        meeting = Meeting.query.filter_by(lesson_code=code).first()
+    else:
+        abort(404)
+
+
+
+    #UPDATE: if user logs in then execute below
+    # get user id
+    # fake user id for now
+    user_id = 3
+
+    student_present = db.session.query(
+        StudentMeeting.query.filter_by(meeting_id=meeting.id, student_id=user_id).exists()
+    ).scalar()
+    print(student_present)
+    if student_present:
+        # student is already present return to home
+        return redirect('/')
+    else:
+        # add student to meeting
+        student = StudentMeeting(student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now())
+        db.session.add(student)
+        db.session.commit()
+
+        # student is added so return to home
+        # UPDATE add message/alert that student is present/succesfully added to the meeting
+        return redirect('/')
+    
+
+
 
 @app.route("/login")
 def login():
@@ -61,7 +99,7 @@ def handle_meeting(id = None):
             meetings = Meeting.query.all()
             return jsonify({"result": meetings})
         else:
-            meeting = Meeting.query.filter_by(meeting_id=id).first()
+            meeting = Meeting.query.filter_by(id=id).first()
             return jsonify({"result": meeting})
 
     elif request.method == "POST":
@@ -85,7 +123,7 @@ def handle_meeting(id = None):
         # update part of row
         body = request.json
         try:
-            meeting = Meeting.query.filter_by(meeting_id=body['id']).first()
+            meeting = Meeting.query.filter_by(id=body['id']).first()
             for item in body:
                 print(item, body[item])
                 # sets the column name used in request
@@ -102,7 +140,7 @@ def handle_meeting(id = None):
         
     elif request.method == "DELETE":
         try:
-            Meeting.query.filter_by(meeting_id=id).delete()
+            Meeting.query.filter_by(id=id).delete()
             db.session.commit()
             result = "ok"
             error = ""
@@ -117,15 +155,15 @@ def handle_meeting(id = None):
 
 @app.route("/testmeeting")
 def test_meeting():
-    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.date(1987, 6,16), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
     return "Meeting toegevoegd"
 
-# @app.route("/test")
-# def test():
-#     student = students(name='Klaas')
-#     db.session.add(student)
-#     db.session.commit()
-#     return '1'
+@app.route("/test")
+def test():
+    student = StudentMeeting(student_id=2, id=1, checkin_date=datetime.now())
+    db.session.add(student)
+    db.session.commit()
+    return 'Student aan meeting toegevoegd'
 
 # show list list of all students
 @app.route('/students', methods=['GET'])
