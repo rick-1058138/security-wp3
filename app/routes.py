@@ -3,6 +3,7 @@ from app import app, db
 from app.models import Student, Group, Meeting
 from datetime import datetime
 
+
 @app.route("/")
 def hello_world():
     return render_template('index.html')
@@ -37,15 +38,18 @@ def overview_page():
 def welcome_page():
     return render_template('welcome_page.html')
 
+
 def result_to_dict(sql_result):
     result_dict = []
     for row in sql_result:
-        result_dict.append(({column.name: str(getattr(row, column.name)) for column in row.__table__.columns}))
+        result_dict.append(({column.name: str(getattr(row, column.name))
+                           for column in row.__table__.columns}))
     return result_dict
+
 
 @app.route("/api/meeting/", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
 @app.route("/api/meeting/<id>", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
-def handle_meeting(id = None):
+def handle_meeting(id=None):
     if request.method == "GET":
         if id == None:
             meetings = Meeting.query.all()
@@ -57,7 +61,8 @@ def handle_meeting(id = None):
     elif request.method == "POST":
         body = request.json
         try:
-            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=datetime.now(), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=datetime.now(
+            ), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
             db.session.add(meeting)
             db.session.commit()
             result = "ok"
@@ -89,7 +94,7 @@ def handle_meeting(id = None):
             result = "error"
             error = str(e)
         return jsonify({"result": result, "error": error})
-        
+
     elif request.method == "DELETE":
         try:
             Meeting.query.filter_by(meeting_id=id).delete()
@@ -105,9 +110,11 @@ def handle_meeting(id = None):
     else:
         return "INVALID!"
 
+
 @app.route("/testmeeting")
 def test_meeting():
-    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.date(1987, 6,16), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.date(
+        1987, 6, 16), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
     return "Meeting toegevoegd"
 
 # @app.route("/test")
@@ -123,6 +130,7 @@ def get_students():
     students = Student.query.all()
     return jsonify([{'id': student.id, 'name': student.name} for student in students])
 
+
 @app.route('/students', methods=['POST'])
 def create_student():
     name = request.json['name']
@@ -131,10 +139,12 @@ def create_student():
     db.session.commit()
     return jsonify({'id': student.id, 'name': student.name})
 
+
 @app.route('/students/<int:id>', methods=['GET'])
 def get_student(id):
     student = Student.query.get_or_404(id)
     return jsonify({'id': student.id, 'name': student.name})
+
 
 @app.route('/students/<int:id>', methods=['DELETE'])
 def delete_student(id):
@@ -142,3 +152,47 @@ def delete_student(id):
     db.session.delete(student)
     db.session.commit()
     return jsonify({"message": "Student {} ID: {} is verwijderd".format(student.name, student.id)})
+
+
+@app.route('/api/group', methods=['GET'])
+def get_group():
+    group = Group.query.all()
+    return jsonify({"result": group})
+
+
+@app.route('/api/group', methods=['POST'])
+def create_group():
+    body = request.json
+    group = Group(start_date=body["start_date"],
+                  end_date=body["end_date"], name=body["name"])
+    db.session.add(group)
+    db.session.commit()
+    result = "OK"
+    return jsonify({"result": result})
+
+
+@app.route('/api/group/<id>', methods=['PATCH'])
+def update_group(id=None):
+    body = request.json
+    group = Group.query.filter_by(id=id).first()
+    print(body)
+    for item in body:
+        print(item, body[item])
+        setattr(group, item, body[item])
+    db.session.commit()
+    result = 'OK'
+    return jsonify({"result": result})
+
+
+@app.route('/api/group/<id>', methods=['GET'])
+def get_group_by_id(id=None):
+    group = Group.query.get_or_404(id)
+    return jsonify({'result': group})
+
+
+@app.route('/api/group/<id>', methods=['DELETE'])
+def delete_group(id=None):
+    group = Group.query.get_or_404(id)
+    db.session.delete(group)
+    db.session.commit()
+    return jsonify({"message": "Group {group} is verwijderd"})
