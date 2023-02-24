@@ -18,13 +18,19 @@ def hello_world():
 def rooster():
     return render_template('rooster.html')
 
-@app.route("/aanwezigheid/<id>")
-def presence(id = None):
-    print(id)
-    return render_template('presence.html')
+@app.route("/aanwezigheid/<code>")
+def presence(code = None):
+    # check if code exists else throw 404 not found error
+    exists = db.session.query(
+        Meeting.query.filter_by(lesson_code=code).exists()
+    ).scalar()
+    if exists:
+        return render_template('presence.html')
+    else:
+        abort(404)
 
-@app.route('/aanmelden/<code>')
-def setpresence(code = None):
+@app.route('/aanmelden/<code>/<user_id>')
+def setpresence(code = None, user_id = None):
     # check if code exists else throw 404 not found error
     exists = db.session.query(
         Meeting.query.filter_by(lesson_code=code).exists()
@@ -34,12 +40,10 @@ def setpresence(code = None):
     else:
         abort(404)
 
-
-
-    #UPDATE: if user logs in then execute below
-    # get user id
-    # fake user id for now
-    user_id = 3
+    # UPDATE: if user logs in then execute below
+    # UPDATE: get user id from session
+    
+    # user id is from url for now
 
     student_present = db.session.query(
         StudentMeeting.query.filter_by(meeting_id=meeting.id, student_id=user_id).exists()
@@ -90,6 +94,25 @@ def result_to_dict(sql_result):
     for row in sql_result:
         result_dict.append(({column.name: str(getattr(row, column.name)) for column in row.__table__.columns}))
     return result_dict
+
+@app.route("/api/studentmeeting/<code>")
+def handle_studentmeeting(code = None):
+    try:
+        meeting = Meeting.query.filter_by(lesson_code=code).first()
+        # print(meeting.students[0].student)
+        result = meeting.students
+
+        student_dict = []
+        for row in meeting.students:
+            student_dict.append(row.student)
+
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+
+
+    return jsonify({"result": result, "students": student_dict, "error": error})
 
 @app.route("/api/meeting/", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
 @app.route("/api/meeting/<id>", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))

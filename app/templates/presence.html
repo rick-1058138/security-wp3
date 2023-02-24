@@ -22,8 +22,11 @@
     </header>
     {% set lesson_code = 123456 %}
     <div class="top-row">
+        <!-- When application is opened on the network wide url, then scanning qr-code works  -->
         <div class="qrcode">
-            <img src="{{ qrcode(request.url) }}">
+            <!-- <img src="{{ qrcode(request.url) }}"> -->
+            <img src="{{ qrcode(url_for('setpresence',code = lesson_code, user_id = 2, _external=True)) }}">
+    
         </div>
         <div>
             <h2 class="meeting-code-text">Les code:</h2>
@@ -32,14 +35,14 @@
     </div>
     <h2 class="info-header">Meld je present met bovenstaande QR-code of meeting code</h2>
     <div class="student-box" id="student-box">
-        {% set names = ['Rick','Celèste','Sam', 'Marinda', 'Mark', 'Klaas', 'Jan', 'Peter', 'Rick','Celèste','Sam', 'Marinda', 'Mark', 'Klaas', 'Jan', 'Peter'] %}
+        <!-- {% set names = ['Rick','Celèste','Sam', 'Marinda', 'Mark', 'Klaas', 'Jan', 'Peter', 'Rick','Celèste','Sam', 'Marinda', 'Mark', 'Klaas', 'Jan', 'Peter'] %}
         {% for name in names%}
             <div class="student-box-item">
                 <i class="fa fa-check" style="font-size: 16px;"></i> 
                 <div class="divider"></div>
                 {{ name }}
             </div>
-        {% endfor %}
+        {% endfor %} -->
     </div>
 </body>
 </html>
@@ -101,15 +104,44 @@
     console.log(test_data.result)
     function checkStudents(data){
         console.log("checking...")
-        for( student of data.result)
+        for(student of data)
         if(!studentIdArray.includes(student.id)){
             addStudent(student.name, student.id);
         }
-        setTimeout(function(){
-            checkStudents(test_data)
-        }, 1000);
+        //setTimeout(function(){
+         //   checkStudents(test_data)
+        //}, 1000);
     }
 
 
-    checkStudents(test_data)
+    // checkStudents(test_data)
+    meetingCode = 123456
+
+    
+    function getStudentsForMeeting(meetingCode){
+        $.ajax({ 
+            type: "GET",
+            url: "/api/studentmeeting/"+meetingCode,
+            dataType: "json",  
+            success: function(responseData){
+                console.log(responseData);
+                for(item of responseData.result){
+                    studentId = item.student_id
+                    // console.log(studentId)
+                    // Find id of students in array of student objects
+                    let student = responseData.students.find(o => o.id === studentId)
+                    console.log(student)
+                    checkStudents(responseData.students)
+                }
+            },
+            error : function(request,error){
+                alert("request failed");
+            }
+        })
+
+        setTimeout(function(){
+            getStudentsForMeeting(meetingCode)
+        }, 1000);
+    }
+    getStudentsForMeeting(meetingCode)
 </script>

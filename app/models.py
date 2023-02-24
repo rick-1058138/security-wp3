@@ -14,19 +14,21 @@ class Group(db.Model):
         return f"Group('{self.start_date}', '{self.end_date}')"
 
 # many to many relationship for students and meetings
+@dataclass
 class StudentMeeting(db.Model):
-    id = db.Column(db.Integer, primary_key=True)    
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
-    meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))
-    checkin_date = db.Column(db.DateTime)
+    id:int = db.Column(db.Integer, primary_key=True)    
+    student_id:int = db.Column(db.Integer, db.ForeignKey('student.id'))
+    meeting_id:int = db.Column(db.Integer, db.ForeignKey('meeting.id'))
+    checkin_date:str = db.Column(db.DateTime)
 
     student = db.relationship('Student', back_populates='meetings')
     meeting = db.relationship('Meeting', back_populates='students')
     # meetings = db.relationship('Meeting', backref='student', lazy=True)
 
+@dataclass
 class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
+    id:int = db.Column(db.Integer, primary_key=True)
+    name:str = db.Column(db.String(20), nullable=False)
 
     meetings = db.relationship('StudentMeeting', back_populates='student')
 
