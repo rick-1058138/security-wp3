@@ -1,4 +1,4 @@
-from flask import abort, jsonify, redirect, render_template, request
+from flask import abort, flash, jsonify, redirect, render_template, request
 from app import app, db
 from app.models import Student, Group, Meeting, StudentMeeting
 from datetime import datetime
@@ -43,27 +43,25 @@ def setpresence(code = None, user_id = None):
     # UPDATE: if user logs in then execute below
     # UPDATE: get user id from session
     
-    # user id is from url for now
+    # user id is from url for now, till user sessions are added
 
     student_present = db.session.query(
         StudentMeeting.query.filter_by(meeting_id=meeting.id, student_id=user_id).exists()
     ).scalar()
     print(student_present)
     if student_present:
-        # student is already present return to home
+        # student is already present return to home, with message
+        flash("Je was al aangemeld voor deze les")
         return redirect('/')
     else:
         # add student to meeting
         student = StudentMeeting(student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now())
         db.session.add(student)
         db.session.commit()
-
-        # student is added so return to home
-        # UPDATE add message/alert that student is present/succesfully added to the meeting
+        # student is added so return to home, with a message
+        flash("Je bent aangemeld in de les!")
         return redirect('/')
     
-
-
 
 @app.route("/login")
 def login():
@@ -89,20 +87,15 @@ def overview_page():
 def welcome_page():
     return render_template('welcome_page.html')
 
-def result_to_dict(sql_result):
-    result_dict = []
-    for row in sql_result:
-        result_dict.append(({column.name: str(getattr(row, column.name)) for column in row.__table__.columns}))
-    return result_dict
-
 @app.route("/api/studentmeeting/<code>")
 def handle_studentmeeting(code = None):
+    student_dict = []
     try:
-        meeting = Meeting.query.filter_by(lesson_code=code).first()
-        # print(meeting.students[0].student)
+        # get the meeting correlated with the meeting code
+        meeting = Meeting.query.filter_by(meeting_code=code).first()
         result = meeting.students
 
-        student_dict = []
+        # loop through students objects that are in the meeting and add them to student_dict
         for row in meeting.students:
             student_dict.append(row.student)
 
@@ -110,7 +103,6 @@ def handle_studentmeeting(code = None):
     except Exception as e:
         result = "error"
         error = str(e)
-
 
     return jsonify({"result": result, "students": student_dict, "error": error})
 
@@ -137,7 +129,6 @@ def handle_meeting(id = None):
             result = "error"
             error = str(e)
         return jsonify({"result": result, "error": error})
-        # return request.get_json()
 
     elif request.method == "PUT":
         # update whole row
@@ -176,17 +167,17 @@ def handle_meeting(id = None):
     else:
         return "INVALID!"
 
-@app.route("/testmeeting")
-def test_meeting():
-    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
-    return "Meeting toegevoegd"
+# @app.route("/testmeeting")
+# def test_meeting():
+#     Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+#     return "Meeting toegevoegd"
 
-@app.route("/test")
-def test():
-    student = StudentMeeting(student_id=2, id=1, checkin_date=datetime.now())
-    db.session.add(student)
-    db.session.commit()
-    return 'Student aan meeting toegevoegd'
+# @app.route("/test")
+# def test():
+#     student = StudentMeeting(student_id=2, id=1, checkin_date=datetime.now())
+#     db.session.add(student)
+#     db.session.commit()
+#     return 'Student aan meeting toegevoegd'
 
 # show list list of all students
 @app.route('/students', methods=['GET'])

@@ -705,3 +705,45 @@ body {
     height: 16px;
     width: 1px;
 }
+
+.message-container{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.message{
+    background: white;
+    margin: 10px;
+    border-left: 8px solid lightgrey;
+    box-shadow: 0 0 17px 0px #0000000f;
+}
+
+.message-text{
+    padding: 20px 20px;
+}
+
+.message.success{
+    border-left: 8px solid green;
+}
+
+.message>.progress-bar{
+    width: 100%;
+    display: block;
+    height: 2px;
+}
+
+.message>.progress-bar>.inner-bar{
+    width: 100%;
+    background: #bfbfbf;
+    height: 2px;
+    display: block;
+    animation-name: progress-bar;
+    animation-duration: 4.5s;
+    animation-timing-function: linear;
+}
+
+@keyframes progress-bar {
+    from {width: 100%;}
+    to {width: 0%;}
+}
