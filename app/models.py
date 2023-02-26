@@ -3,14 +3,6 @@ from app import db
 from dataclasses import dataclass
 
 
-class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False)
-
-    def __repr__(self):
-        return f"Student('{self.name}')"
-
-
 @dataclass
 class Group(db.Model):
     id: int = db.Column(db.Integer, primary_key=True)
@@ -21,17 +13,39 @@ class Group(db.Model):
     def __repr__(self):
         return f"Group('{self.start_date}', '{self.end_date}')"
 
+# many to many relationship for students and meetings
+@dataclass
+class StudentMeeting(db.Model):
+    id:int = db.Column(db.Integer, primary_key=True)    
+    student_id:int = db.Column(db.Integer, db.ForeignKey('student.id'))
+    meeting_id:int = db.Column(db.Integer, db.ForeignKey('meeting.id'))
+    checkin_date:str = db.Column(db.DateTime)
+
+    student = db.relationship('Student', back_populates='meetings')
+    meeting = db.relationship('Meeting', back_populates='students')
+    # meetings = db.relationship('Meeting', backref='student', lazy=True)
+
+@dataclass
+class Student(db.Model):
+    id:int = db.Column(db.Integer, primary_key=True)
+    name:str = db.Column(db.String(20), nullable=False)
+
+    meetings = db.relationship('StudentMeeting', back_populates='student')
+
+    def __repr__(self):
+        return f"Student('{self.name}')"
 
 @dataclass
 class Meeting(db.Model):
-    meeting_id: int = db.Column('meeting_id', db.Integer, primary_key=True)
-    name: str = db.Column(db.String(100))
-    start_time: str = db.Column(db.String(10))
-    end_time: str = db.Column(db.String(10))
-    date: str = db.Column(db.Date())
-    status: str = db.Column(db.String(100))
-    description: str = db.Column(db.Text())
-    lesson_code: int = db.Column(db.Integer())
+    id:int = db.Column(db.Integer, primary_key=True)
+    name:str = db.Column(db.String(100))
+    start_time:str = db.Column(db.String(10))
+    end_time:str = db.Column(db.String(10))
+    date:str = db.Column(db.Date())
+    status:str = db.Column(db.String(100))
+    description:str = db.Column(db.Text())
+    lesson_code:int = db.Column(db.Integer())
+    students = db.relationship('StudentMeeting', back_populates='meeting')
 
     def __init__(self, name, start_time, end_time, date, status, description, lesson_code):
         self.name = name
@@ -47,3 +61,4 @@ class Meeting(db.Model):
         obj = cls(**kwargs)
         db.session.add(obj)
         db.session.commit()
+

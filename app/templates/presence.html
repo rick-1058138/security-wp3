@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aanwezigheid</title>
+    <link rel="stylesheet" href="../static/style.css" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <!-- Font awesome - icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="50px">
+            <path fill="#d30f4c" fill-rule="evenodd" d="M33.26 0H6.74S0 0 0 6.74v26.53S0 40 6.74 40H40V6.74S40 0 33.26 0z"></path>
+            <path fill="#fef7f1" fill-rule="evenodd" d="M35.82 16.45a6 6 0 01-3.13 3.82c-1.79 1-3.45.93-3.93-.08a11.5 11.5 0 002.52-4.5 5.46 5.46 0 00.12-2.36c-.61-3.21-4.67-3.82-9.09-1.39l-.61-3.17-4.7 2.59.75 4a3.43 3.43 0 011.41-.55c1.49-.16 1.91 1.48.94 3.66a9.34 9.34 0 01-1.34 2.15l.88 4.66v.08c.67 3.16 4.74 3.74 9.15 1.27s7.47-6.96 7.03-10.18zM17.3 22a3.76 3.76 0 01-1.63.71c-1.49.15-1.91-1.5-.94-3.68a9.33 9.33 0 011.56-2.38l-.84-4.39-9.2 5.14 2.66 14 9.2-5.13z"></path>
+        </svg>
+        <h2>Aanwezigheidstool</h2>
+    </header>
+    {% set lesson_code = 123456 %}
+    <div class="top-row">
+        <!-- When application is opened on the network wide url, then scanning qr-code works  -->
+        <div class="qrcode">
+            <!-- <img src="{{ qrcode(request.url) }}"> -->
+            <img src="{{ qrcode(url_for('setpresence',code = lesson_code, user_id = 2, _external=True)) }}">
+    
+        </div>
+        <div>
+            <h2 class="meeting-code-text">Les code:</h2>
+            <p class="meeting-code">{{lesson_code}}</p>
+        </div>
+    </div>
+    <h2 class="info-header">Meld je present met bovenstaande QR-code of meeting code</h2>
+    <div class="student-box" id="student-box">
+        <!-- {% set names = ['Rick','Celèste','Sam', 'Marinda', 'Mark', 'Klaas', 'Jan', 'Peter', 'Rick','Celèste','Sam', 'Marinda', 'Mark', 'Klaas', 'Jan', 'Peter'] %}
+        {% for name in names%}
+            <div class="student-box-item">
+                <i class="fa fa-check" style="font-size: 16px;"></i> 
+                <div class="divider"></div>
+                {{ name }}
+            </div>
+        {% endfor %} -->
+    </div>
+</body>
+</html>
+
+<script type="application/javascript">
+    const newspaperSpinning = [
+    { transform: 'rotate(0) scale(1)' },
+    { transform: 'rotate(360deg) scale(0)' }
+    ];
+
+    const newspaperTiming = {
+    duration: 2000,
+    iterations: 1,
+    }
+
+    var studentIdArray = []
+    function addStudent(name, id){
+        studentIdArray.push(id);
+        let html_block = $(`                                 
+        <div class="student-box-item">
+            <i class="fa fa-check" style="font-size: 16px;"></i> 
+            <div class="divider"></div>
+            ${name}
+        </div>`);
+        // add lesson to html   
+        let parent = document.getElementById("student-box");
+        let element = $(parent).append(html_block);
+        html_block.css({ opacity: '0', translate: '0 100%', transition: '1s'});
+        
+        html_block.animate({
+            opacity: 1
+          }, function() {
+            html_block.css({ opacity: '1', translate: '0 0'});
+        });
+        
+    }
+
+    var test_data = {
+        "result":[
+            {
+                "name": "test",
+                "id": 1
+            },
+            {
+                "name": "naam",
+                "id": 2
+            },
+            {
+                "name": "naam",
+                "id": 2
+            },
+            {
+                "name": "Peter",
+                "id": 3
+            },
+
+        ]
+    }
+    console.log(test_data.result)
+    function checkStudents(data){
+        console.log("checking...")
+        for(student of data)
+        if(!studentIdArray.includes(student.id)){
+            addStudent(student.name, student.id);
+        }
+        //setTimeout(function(){
+         //   checkStudents(test_data)
+        //}, 1000);
+    }
+
+
+    // checkStudents(test_data)
+    meetingCode = 123456
+
+    
+    function getStudentsForMeeting(meetingCode){
+        $.ajax({ 
+            type: "GET",
+            url: "/api/studentmeeting/"+meetingCode,
+            dataType: "json",  
+            success: function(responseData){
+                console.log(responseData);
+                for(item of responseData.result){
+                    studentId = item.student_id
+                    // console.log(studentId)
+                    // Find id of students in array of student objects
+                    let student = responseData.students.find(o => o.id === studentId)
+                    console.log(student)
+                    checkStudents(responseData.students)
+                }
+            },
+            error : function(request,error){
+                alert("request failed");
+            }
+        })
+
+        setTimeout(function(){
+            getStudentsForMeeting(meetingCode)
+        }, 1000);
+    }
+    getStudentsForMeeting(meetingCode)
+</script>

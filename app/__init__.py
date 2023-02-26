@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_qrcode import QRcode
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -14,5 +15,7 @@ app.config['SECRET_KEY'] = 'Alien Software'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aanwezigheidstool.db'
 app.app_context().push()
 db = SQLAlchemy(app)
+QRcode(app)
+
 
 from app import routes

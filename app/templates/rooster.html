@@ -123,7 +123,7 @@
             success: function(response_data){
                 console.log(response_data);
                 for(item of response_data.result){
-                    console.log(item.meeting_id, item)
+                    console.log(item.id, item)
                     createLessonBlock(day=dayjs(item.date).day(), name=item.name, start_time=formatTimeToNumber(item.start_time), end_time=formatTimeToNumber(item.end_time));
                 }
             },

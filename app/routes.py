@@ -1,8 +1,14 @@
-from flask import jsonify, render_template, request
+from flask import abort, flash, jsonify, redirect, render_template, request
 from app import app, db
-from app.models import Student, Group, Meeting
+from app.models import Student, Group, Meeting, StudentMeeting
 from datetime import datetime
 
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # return custom 404 page when 404 error occures
+    return render_template('404.html'), 404
 
 @app.route("/")
 def hello_world():
@@ -13,6 +19,50 @@ def hello_world():
 def rooster():
     return render_template('rooster.html')
 
+@app.route("/aanwezigheid/<code>")
+def presence(code = None):
+    # check if code exists else throw 404 not found error
+    exists = db.session.query(
+        Meeting.query.filter_by(lesson_code=code).exists()
+    ).scalar()
+    if exists:
+        return render_template('presence.html')
+    else:
+        abort(404)
+
+@app.route('/aanmelden/<code>/<user_id>')
+def setpresence(code = None, user_id = None):
+    # check if code exists else throw 404 not found error
+    exists = db.session.query(
+        Meeting.query.filter_by(lesson_code=code).exists()
+    ).scalar()
+    if exists:
+        meeting = Meeting.query.filter_by(lesson_code=code).first()
+    else:
+        abort(404)
+
+    # UPDATE: if user logs in then execute below
+    # UPDATE: get user id from session
+    
+    # user id is from url for now, till user sessions are added
+
+    student_present = db.session.query(
+        StudentMeeting.query.filter_by(meeting_id=meeting.id, student_id=user_id).exists()
+    ).scalar()
+    print(student_present)
+    if student_present:
+        # student is already present return to home, with message
+        flash("Je was al aangemeld voor deze les")
+        return redirect('/')
+    else:
+        # add student to meeting
+        student = StudentMeeting(student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now())
+        db.session.add(student)
+        db.session.commit()
+        # student is added so return to home, with a message
+        flash("Je bent aangemeld in de les!")
+        return redirect('/')
+    
 
 @app.route("/login")
 def login():
@@ -38,13 +88,24 @@ def overview_page():
 def welcome_page():
     return render_template('welcome_page.html')
 
+@app.route("/api/studentmeeting/<code>")
+def handle_studentmeeting(code = None):
+    student_dict = []
+    try:
+        # get the meeting correlated with the meeting code
+        meeting = Meeting.query.filter_by(meeting_code=code).first()
+        result = meeting.students
 
-def result_to_dict(sql_result):
-    result_dict = []
-    for row in sql_result:
-        result_dict.append(({column.name: str(getattr(row, column.name))
-                           for column in row.__table__.columns}))
-    return result_dict
+        # loop through students objects that are in the meeting and add them to student_dict
+        for row in meeting.students:
+            student_dict.append(row.student)
+
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+
+    return jsonify({"result": result, "students": student_dict, "error": error})
 
 
 @app.route("/api/meeting/", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
@@ -55,7 +116,7 @@ def handle_meeting(id=None):
             meetings = Meeting.query.all()
             return jsonify({"result": meetings})
         else:
-            meeting = Meeting.query.filter_by(meeting_id=id).first()
+            meeting = Meeting.query.filter_by(id=id).first()
             return jsonify({"result": meeting})
 
     elif request.method == "POST":
@@ -71,7 +132,6 @@ def handle_meeting(id=None):
             result = "error"
             error = str(e)
         return jsonify({"result": result, "error": error})
-        # return request.get_json()
 
     elif request.method == "PUT":
         # update whole row
@@ -80,7 +140,7 @@ def handle_meeting(id=None):
         # update part of row
         body = request.json
         try:
-            meeting = Meeting.query.filter_by(meeting_id=body['id']).first()
+            meeting = Meeting.query.filter_by(id=body['id']).first()
             for item in body:
                 print(item, body[item])
                 # sets the column name used in request
@@ -97,7 +157,7 @@ def handle_meeting(id=None):
 
     elif request.method == "DELETE":
         try:
-            Meeting.query.filter_by(meeting_id=id).delete()
+            Meeting.query.filter_by(id=id).delete()
             db.session.commit()
             result = "ok"
             error = ""
@@ -110,19 +170,17 @@ def handle_meeting(id=None):
     else:
         return "INVALID!"
 
-
-@app.route("/testmeeting")
-def test_meeting():
-    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.date(
-        1987, 6, 16), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
-    return "Meeting toegevoegd"
+# @app.route("/testmeeting")
+# def test_meeting():
+#     Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+#     return "Meeting toegevoegd"
 
 # @app.route("/test")
 # def test():
-#     student = students(name='Klaas')
+#     student = StudentMeeting(student_id=2, id=1, checkin_date=datetime.now())
 #     db.session.add(student)
 #     db.session.commit()
-#     return '1'
+#     return 'Student aan meeting toegevoegd'
 
 # show list list of all students
 

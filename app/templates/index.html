@@ -6,9 +6,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/style.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <title>Document</title>
 </head>
 <body>
     <h1>Aanwezigheidstool</h1>
+
+    <!-- Check for flash messages  -->
+    {% with messages = get_flashed_messages() %}  
+        {% if messages %}  
+            <div class="message-container">
+                {% for message in messages %}  
+                    <div class="message success">
+                        <p class="message-text">{{ message }}</p>
+                        <span class="progress-bar"><span class="inner-bar"></span></span>
+                    </div>  
+                {% endfor %}  
+            </div>
+            <script type="application/javascript">
+                window.setTimeout(function() {
+                    $(".message").fadeTo(500, 0, function(){
+                        $(this).hide()
+                    }) 
+                }, 4000);
+            </script>
+        {% endif %}  
+    {% endwith %}  
 </body>
 </html>
+
