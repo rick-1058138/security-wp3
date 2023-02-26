@@ -20,17 +20,17 @@
         </svg>
         <h2>Aanwezigheidstool</h2>
     </header>
-    {% set lesson_code = 123456 %}
+    {% set meeting_code = 123456 %}
     <div class="top-row">
         <!-- When application is opened on the network wide url, then scanning qr-code works  -->
         <div class="qrcode">
             <!-- <img src="{{ qrcode(request.url) }}"> -->
-            <img src="{{ qrcode(url_for('setpresence',code = lesson_code, user_id = 2, _external=True)) }}">
+            <img src="{{ qrcode(url_for('setpresence',code = meeting_code, user_id = 2, _external=True)) }}">
     
         </div>
         <div>
             <h2 class="meeting-code-text">Les code:</h2>
-            <p class="meeting-code">{{lesson_code}}</p>
+            <p class="meeting-code">{{meeting_code}}</p>
         </div>
     </div>
     <h2 class="info-header">Meld je present met bovenstaande QR-code of meeting code</h2>
@@ -67,7 +67,7 @@
             <div class="divider"></div>
             ${name}
         </div>`);
-        // add lesson to html   
+        // add meeting to html   
         let parent = document.getElementById("student-box");
         let element = $(parent).append(html_block);
         html_block.css({ opacity: '0', translate: '0 100%', transition: '1s'});

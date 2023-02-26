@@ -23,7 +23,7 @@ def rooster():
 def presence(code = None):
     # check if code exists else throw 404 not found error
     exists = db.session.query(
-        Meeting.query.filter_by(lesson_code=code).exists()
+        Meeting.query.filter_by(meeting_code=code).exists()
     ).scalar()
     if exists:
         return render_template('presence.html')
@@ -34,10 +34,10 @@ def presence(code = None):
 def setpresence(code = None, user_id = None):
     # check if code exists else throw 404 not found error
     exists = db.session.query(
-        Meeting.query.filter_by(lesson_code=code).exists()
+        Meeting.query.filter_by(meeting_code=code).exists()
     ).scalar()
     if exists:
-        meeting = Meeting.query.filter_by(lesson_code=code).first()
+        meeting = Meeting.query.filter_by(meeting_code=code).first()
     else:
         abort(404)
 
@@ -123,7 +123,7 @@ def handle_meeting(id=None):
         body = request.json
         try:
             meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=datetime.now(
-            ), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+            ), status="niet begonnen", description="dit is een meeting", meeting_code=123456)
             db.session.add(meeting)
             db.session.commit()
             result = "ok"
@@ -172,7 +172,7 @@ def handle_meeting(id=None):
 
 # @app.route("/testmeeting")
 # def test_meeting():
-#     Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", lesson_code=123456)
+#     Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", meeting_code=123456)
 #     return "Meeting toegevoegd"
 
 # @app.route("/test")

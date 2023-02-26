@@ -44,17 +44,17 @@ class Meeting(db.Model):
     date:str = db.Column(db.Date())
     status:str = db.Column(db.String(100))
     description:str = db.Column(db.Text())
-    lesson_code:int = db.Column(db.Integer())
+    meeting_code:int = db.Column(db.Integer())
     students = db.relationship('StudentMeeting', back_populates='meeting')
 
-    def __init__(self, name, start_time, end_time, date, status, description, lesson_code):
+    def __init__(self, name, start_time, end_time, date, status, description, meeting_code):
         self.name = name
         self.start_time = start_time
         self.end_time = end_time
         self.date = date
         self.status = status
         self.description = description
-        self.lesson_code = lesson_code
+        self.meeting_code = meeting_code
 
     @classmethod
     def create(cls, **kwargs):
