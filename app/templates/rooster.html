@@ -233,6 +233,11 @@
     
     // function to create a lesson block
     function createLessonBlock(day, name, start_time, end_time){
+        console.log(day, name, start_time, end_time)
+        // if day == 0 set it to 7 so that it is sunday
+        if(day == 0){
+            day = 7
+        }
         // each hour is 100px
         let block_height = 100;
         // each lesson block is 90px in height
