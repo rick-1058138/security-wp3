@@ -1,6 +1,6 @@
 from flask import abort, flash, jsonify, redirect, render_template, request
 from app import app, db
-from app.models import Student, Group, Meeting, StudentMeeting
+from app.models import Student, Group, Meeting, StudentMeeting, Teacher
 from datetime import datetime
 
 
@@ -216,6 +216,18 @@ def delete_student(id):
     db.session.commit()
     return jsonify({"message": "Student {} ID: {} is verwijderd".format(student.name, student.id)})
 
+# Show all teachers
+@app.route('/api/teacher', methods=['GET'])
+def get_teacher():
+    teachers = Teacher.query.all()
+    teacher_list = []
+    for teacher in teachers:
+        teacher_list.append(
+            {'name': teacher.name}
+        )
+
+    print(teacher_list)
+    return jsonify({"result": teacher_list})
 
 @app.route('/api/group', methods=['GET'])
 def get_group():
