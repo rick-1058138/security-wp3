@@ -3,6 +3,7 @@ from app import app, db
 from app.models import Student, Group, Meeting, StudentMeeting, Teacher
 from datetime import datetime
 
+from random import randint
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -132,8 +133,8 @@ def handle_meeting(id=None):
     elif request.method == "POST":
         body = request.json
         try:
-            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=datetime.now(
-            ), status="niet begonnen", description="dit is een meeting", meeting_code=123456)
+            date_object = datetime.strptime(body['date'], '%Y-%m-%d').date()
+            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=date_object, status="niet begonnen", description=body["description"], meeting_code=randint(10_000_000, 99_999_999))
             db.session.add(meeting)
             db.session.commit()
             result = "ok"
