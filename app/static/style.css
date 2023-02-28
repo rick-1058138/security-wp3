@@ -10,6 +10,10 @@ body {
     background-color: #fff7ea;
 }
 
+textarea, input{
+    font-family: Poppins, sans-serif;
+}
+
 /* Login page */
 
 .color-red{
@@ -373,12 +377,12 @@ body {
     background-color: #d30f4c;
     box-shadow: 0 0 15px 1px rgb(0 0 0 / 10%);
     border-radius: 5px;
-    padding: 15px 10px;
+    padding: 12px 10px;
     transition: 0.2s;
     display: inline-block;
     color: white;
     font-weight: bold;
-    margin-bottom: 40px;
+    font-size: 14px;
 }
 
 .rooster-btn:hover {
@@ -747,3 +751,95 @@ body {
     from {width: 100%;}
     to {width: 0%;}
 }
+
+.popup{
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.363);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup:hover{
+    cursor: pointer;
+}
+
+.popup-container>h1{
+    margin-bottom: 10px;
+}
+
+.popup-container{
+    min-width: 300px;
+    margin: 0 auto;
+    background-color: rgb(243, 243, 243);
+    padding: 40px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.popup-container:hover{
+    cursor: auto;
+}
+
+.popup-container form{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.form-row{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input{
+    width: 100%;
+    padding: 8px 5px;
+    border: 1px solid lightgrey;
+    font-size: 16px;
+    font-weight: 500;
+    outline: transparent;
+    box-sizing: border-box;
+}
+
+
+.form-select, .form-date{
+    padding: 8px 5px;
+    outline: transparent;
+    box-sizing: border-box;
+    border: 1px solid lightgrey;
+
+}
+
+
+.form-submit {
+    background-color: #d30f4c;
+    box-shadow: inset 0 0 0 0 rgb(0 0 0 / 0%);
+    border-radius: 5px;
+    padding: 15px 10px;
+    transition: 0.2s;
+    display: inline-block;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 40px;
+    border: none;
+}
+
+.form-submit:hover {
+    color: white;
+    cursor: pointer;
+    box-shadow: inset 0px 0px 20px 20px rgb(0 0 0 / 15%);
+
+}
+
+.error{
+    color: red;
+}
+
+
