@@ -246,6 +246,14 @@ def delete_teacher(id):
     db.session.commit()
     return jsonify({"message": "Docent {} ID: {} is verwijderd".format(teacher.name, teacher.id)})
 
+# Update teacher
+@app.route('/api/teacher/<int:id>', methods=['PUT'])
+def update_teacher(id):
+    teacher = Teacher.query.get_or_404(id)
+    teacher.name = request.json['name']
+    db.session.commit()
+    return jsonify({'id': teacher.id, 'name': teacher.name})
+
 
 
 @app.route('/api/group', methods=['GET'])
