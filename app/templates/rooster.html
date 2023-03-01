@@ -141,32 +141,7 @@
     </body>
 </html>
 <script type="application/javascript">
-
-    function toggleNewMeetingPopup(){
-        $('#popup').toggle();
-    }
-
-    $('#new-meeting-btn').click(function(){
-        toggleNewMeetingPopup()
-    })
-
-    $('#popup').click(function(e){
-        // check if the click is on the background or the popup 
-        if (e.target == this){
-            toggleNewMeetingPopup()
-        }
-    })
-
-
-    $('.date-change').on('change', function (e) {
-        let start = $('#start-input').val()
-        let end = $('#end-input').val()
-        let date = $('#date-input').val()
-        date = dayjs(date).format('dddd D MMMM YYYY');
-        $('#selectedDate').text(`${date} van ${start} tot ${end}`);
-    });
-
-    <!-- on change  -->
+    
 
     // dayjs -> https://day.js.org/docs/en/installation/installation
     // Maandag = 1
@@ -199,8 +174,34 @@
     var currentWeekSunday = dayjs().day(7).format('YYYY-MM-DD')
     var today = dayjs().format('YYYY-MM-DD');
     
+    
+
+// <======= Meeting popup ========>
     // set new meeting popup date to today on load
     $('#date-input').val(today)
+
+    function toggleNewMeetingPopup(){
+        $('#popup').toggle();
+    }
+
+    $('#new-meeting-btn').click(function(){
+        toggleNewMeetingPopup()
+    })
+
+    $('#popup').click(function(e){
+        // check if the click is on the background or the popup 
+        if (e.target == this){
+            toggleNewMeetingPopup()
+        }
+    })
+
+    $('.date-change').on('change', function (e) {
+        let start = $('#start-input').val()
+        let end = $('#end-input').val()
+        let date = $('#date-input').val()
+        date = dayjs(date).format('dddd D MMMM YYYY');
+        $('#selectedDate').text(`${date} van ${start} tot ${end}`);
+    });
 
     // AJAX request to save new meetings
     $(document).ready(function(){
@@ -249,6 +250,7 @@
             });
         });
     });
+// <======= ============ ========>
 
     // AJAX request to get meetings
     function getMeetings(startDate, endDate, group){
@@ -270,7 +272,6 @@
             }
         })
     }
-    getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
 
     // remove meetings from calendar
     function removeMeetings(){
@@ -298,7 +299,6 @@
     function updateWeekNumber(number){
         $('#week-number').text(number)
     }
-    updateWeekNumber(dayjs(new Date()).week());
 
     // sets active day of week on calendar
     function setActiveCalendarDay(date){
@@ -312,7 +312,6 @@
 
         $('#day-'+selectedDay).addClass('active')
     }
-    setActiveCalendarDay($("#week-calendar").val())
 
     // sets day numbers on calendar & updates the start and end day variables of the selected week
     function setWeekDayNumbers(date){
@@ -335,8 +334,6 @@
             }
         }
     }
-    setWeekDayNumbers(today);
-
     
     // if calendar changes update the week in html
     $(document).ready(function(){
@@ -344,40 +341,22 @@
             let value = $("#week-calendar").val();
             value = dayjs(value).add(7, 'day').format('YYYY-MM-DD');
             setCalendarDate(value)
-            setActiveCalendarDay(value);
-            setWeekDayNumbers(value);
-            updateWeekNumber(dayjs(value).week())
-            // remove meetings
-            removeMeetings()
-            // fill the new meetings
-            getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
 
+            refreshCalendar(value)
         })
 
         $("#previous-btn").click(function(){
             let value = $("#week-calendar").val();
             value = dayjs(value).subtract(7, 'day').format('YYYY-MM-DD');
             setCalendarDate(value)
-            setActiveCalendarDay(value);
-            setWeekDayNumbers(value);
-            updateWeekNumber(dayjs(value).week())
-            // remove meetings
-            removeMeetings()
-            // fill the new meetings
-            getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
 
+            refreshCalendar(value)
         })
 
         $('#week-calendar').on('change', function (e) {
             let value = $("#week-calendar").val();
-            setActiveCalendarDay(value);
-            setWeekDayNumbers(value);
-            updateWeekNumber(dayjs(value).week())
-            // remove meetings
-            removeMeetings()
-            // fill the new meetings
-            getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
 
+            refreshCalendar(value)
         });
         var state = 0
         $('.menu-toggler').click(function(){
@@ -392,6 +371,18 @@
             }
         })
     });
+
+    function refreshCalendar(value){
+        setActiveCalendarDay(value);
+        setWeekDayNumbers(value);
+        updateWeekNumber(dayjs(value).week())
+        // remove meetings
+        removeMeetings()
+        // fill the new meetings
+        getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
+    }
+    // fill calendar with data on load
+    refreshCalendar(today)
     
     // function to create a lesson block
     function createLessonBlock(day, name, start_time, end_time){
