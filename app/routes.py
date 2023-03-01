@@ -119,6 +119,16 @@ def handle_studentmeeting(code=None):
     return jsonify({"result": result, "students": student_dict, "error": error})
 
 
+@app.route("/api/meeting/between/<start>/<end>")
+def meetings_between(start, end):
+    try:
+        result = Meeting.query.filter(Meeting.date.between(start, end)).all()
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "error": error})
+
 @app.route("/api/meeting/", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
 @app.route("/api/meeting/<id>", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
 def handle_meeting(id=None):

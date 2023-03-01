@@ -217,6 +217,7 @@
                 date : $('#date-input').val(),
                 description : $('#description-input').val(),
             }
+
             $.ajax({
                 method: "POST",
                 url: "/api/meeting/",
@@ -252,10 +253,10 @@
     // AJAX request to get meetings
     function getMeetings(startDate, endDate, group){
         console.log(startDate, endDate, group)
-
         $.ajax({ 
             type: "GET",
-            url: "/api/meeting",
+            url: "/api/meeting/between/"+startDate+"/"+endDate,
+            contentType: "application/json",
             dataType: "json",  
             success: function(response_data){
                 console.log(response_data);
@@ -265,11 +266,20 @@
                 }
             },
             error : function(request,error){
-                alert("request failed");
+                console.log(request)
             }
         })
     }
     getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
+
+    // remove meetings from calendar
+    function removeMeetings(){
+        for(let i = 1; i<=7 ; i++){
+            dayContainer = document.getElementById("rooster-content-"+i);
+            dayContainer.innerHTML = ''
+        }
+    }
+
 
     // format time from HH:MM to H
     function formatTimeToNumber(time){
@@ -337,6 +347,11 @@
             setActiveCalendarDay(value);
             setWeekDayNumbers(value);
             updateWeekNumber(dayjs(value).week())
+            // remove meetings
+            removeMeetings()
+            // fill the new meetings
+            getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
+
         })
 
         $("#previous-btn").click(function(){
@@ -346,6 +361,11 @@
             setActiveCalendarDay(value);
             setWeekDayNumbers(value);
             updateWeekNumber(dayjs(value).week())
+            // remove meetings
+            removeMeetings()
+            // fill the new meetings
+            getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
+
         })
 
         $('#week-calendar').on('change', function (e) {
@@ -353,6 +373,11 @@
             setActiveCalendarDay(value);
             setWeekDayNumbers(value);
             updateWeekNumber(dayjs(value).week())
+            // remove meetings
+            removeMeetings()
+            // fill the new meetings
+            getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
+
         });
         var state = 0
         $('.menu-toggler').click(function(){
