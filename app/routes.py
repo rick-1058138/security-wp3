@@ -207,7 +207,6 @@ def get_student(id):
     student = Student.query.get_or_404(id)
     return jsonify({'id': student.id, 'name': student.name})
 
-
 # delete a student
 @app.route('/students/<int:id>', methods=['DELETE'])
 def delete_student(id):
@@ -224,12 +223,28 @@ def get_teachers():
     teachers = Teacher.query.all()
     return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
 
+# Add teacher
+@app.route('/api/teacher', methods=['POST'])
+def create_teacher():
+    name = request.json['name']
+    teacher = Teacher(name=name)
+    db.session.add(teacher)
+    db.session.commit()
+    return jsonify({'id': teacher.id, 'name': teacher.name})
+
 # Show specific teacher
 @app.route('/api/teacher/<int:id>', methods=['GET'])
 def get_teacher(id):
     teacher = Teacher.query.get_or_404(id)
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
+# Delete teacher
+@app.route('/api/teacher/<int:id>', methods=['DELETE'])
+def delete_teacher(id):
+    teacher = Teacher.query.get_or_404(id)
+    db.session.delete(teacher)
+    db.session.commit()
+    return jsonify({"message": "Docent {} ID: {} is verwijderd".format(teacher.name, teacher.id)})
 
 
 
