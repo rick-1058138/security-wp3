@@ -1,6 +1,6 @@
 from flask import abort, flash, jsonify, redirect, render_template, request
 from app import app, db
-from app.models import Student, Group, Meeting, StudentMeeting
+from app.models import Student, Group, Meeting, StudentMeeting, Teacher
 from datetime import datetime
 
 
@@ -201,12 +201,11 @@ def create_student():
     return jsonify({'id': student.id, 'name': student.name})
 
 
-# show a specifiek student
+# show a specific student
 @app.route('/students/<int:id>', methods=['GET'])
 def get_student(id):
     student = Student.query.get_or_404(id)
     return jsonify({'id': student.id, 'name': student.name})
-
 
 # delete a student
 @app.route('/students/<int:id>', methods=['DELETE'])
@@ -215,6 +214,46 @@ def delete_student(id):
     db.session.delete(student)
     db.session.commit()
     return jsonify({"message": "Student {} ID: {} is verwijderd".format(student.name, student.id)})
+
+
+
+# Show all teachers
+@app.route('/api/teacher', methods=['GET'])
+def get_teachers():
+    teachers = Teacher.query.all()
+    return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
+
+# Add teacher
+@app.route('/api/teacher', methods=['POST'])
+def create_teacher():
+    name = request.json['name']
+    teacher = Teacher(name=name)
+    db.session.add(teacher)
+    db.session.commit()
+    return jsonify({'id': teacher.id, 'name': teacher.name})
+
+# Show specific teacher
+@app.route('/api/teacher/<int:id>', methods=['GET'])
+def get_teacher(id):
+    teacher = Teacher.query.get_or_404(id)
+    return jsonify({'id': teacher.id, 'name': teacher.name})
+
+# Delete teacher
+@app.route('/api/teacher/<int:id>', methods=['DELETE'])
+def delete_teacher(id):
+    teacher = Teacher.query.get_or_404(id)
+    db.session.delete(teacher)
+    db.session.commit()
+    return jsonify({"message": "Docent {} ID: {} is verwijderd".format(teacher.name, teacher.id)})
+
+# Update teacher
+@app.route('/api/teacher/<int:id>', methods=['PUT'])
+def update_teacher(id):
+    teacher = Teacher.query.get_or_404(id)
+    teacher.name = request.json['name']
+    db.session.commit()
+    return jsonify({'id': teacher.id, 'name': teacher.name})
+
 
 
 @app.route('/api/group', methods=['GET'])
