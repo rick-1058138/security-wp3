@@ -86,6 +86,3 @@ class Teacher(db.Model):
 
     def __repr__(self):
         return f"Teacher('{self.name}')"
-
-    def __repr__(self):
-        return f"Teacher('{self.name}')"

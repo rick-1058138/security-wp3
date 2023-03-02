@@ -47,8 +47,9 @@
                     </div>
                     <div class="form-row">
                         <label>Klas / Klassen:</label>
+                        <!-- Groups are added in here with ajax request  -->
                         <select class="group-select" name="groups[]" multiple="multiple" id="group-input">
-                            <!-- Groups are added in here with ajax request  -->
+
                         </select>
                     </div>
                     <div class="form-row">
@@ -329,17 +330,14 @@
         }).then(function(){
             console.log("groups: ", groupsArray)
             for(group of groupsArray){
-                let html_block = $(`                                 
-                <option value="${group.id}">${group.name}</option>
-                `);
-                // add group to select   
-                let formSelect = document.getElementById("group-input");
+                // add groups to places where a list of all groups is needed 
+                let html_block = `<option value="${group.id}">${group.name}</option>`
 
-                let filter = document.getElementById("group-filter");
-                let formgroup = $(formSelect).append(html_block);
-                let filtergroup = $(filter).append(html_block);
+                let formgroup = $("#group-input").append(html_block);
+                let filtergroup = $("#group-filter").append(html_block);
             }
-            $('.group-select').select2();
+            $('#group-input').select2();
+            $('#group-filter').select2();
         })
     }
     getGroups()
