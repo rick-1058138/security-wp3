@@ -235,8 +235,6 @@ def get_teachers():
     return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
 
 # Add teacher
-
-
 @app.route('/api/teacher', methods=['POST'])
 def create_teacher():
     name = request.json['name']
@@ -246,16 +244,12 @@ def create_teacher():
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
 # Show specific teacher
-
-
 @app.route('/api/teacher/<int:id>', methods=['GET'])
 def get_teacher(id):
     teacher = Teacher.query.get_or_404(id)
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
 # Delete teacher
-
-
 @app.route('/api/teacher/<int:id>', methods=['DELETE'])
 def delete_teacher(id):
     teacher = Teacher.query.get_or_404(id)
@@ -264,8 +258,6 @@ def delete_teacher(id):
     return jsonify({"message": "Docent {} ID: {} is verwijderd".format(teacher.name, teacher.id)})
 
 # Update teacher
-
-
 @app.route('/api/teacher/<int:id>', methods=['PUT'])
 def update_teacher(id):
     teacher = Teacher.query.get_or_404(id)
