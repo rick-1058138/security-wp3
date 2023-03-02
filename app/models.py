@@ -10,6 +10,8 @@ class Group(db.Model):
     end_date: str = db.Column(db.String(10), nullable=False)
     name: str = db.Column(db.String(50))
 
+    meetings = db.relationship('GroupMeeting', back_populates='group')
+
     def __repr__(self):
         return f"Group('{self.start_date}', '{self.end_date}')"
 
@@ -25,6 +27,17 @@ class StudentMeeting(db.Model):
     meeting = db.relationship('Meeting', back_populates='students')
     # meetings = db.relationship('Meeting', backref='student', lazy=True)
 
+# many to many relationship for groups and meetings
+@dataclass
+class GroupMeeting(db.Model):
+    id:int = db.Column(db.Integer, primary_key=True)    
+    group_id:int = db.Column(db.Integer, db.ForeignKey('group.id'))
+    meeting_id:int = db.Column(db.Integer, db.ForeignKey('meeting.id'))
+
+    group = db.relationship('Group', back_populates='meetings')
+    meeting = db.relationship('Meeting', back_populates='groups')
+
+
 @dataclass
 class Student(db.Model):
     id:int = db.Column(db.Integer, primary_key=True)
@@ -32,6 +45,9 @@ class Student(db.Model):
 
     meetings = db.relationship('StudentMeeting', back_populates='student')
 
+    def __init__(self, name):
+        self.name = name
+            
     def __repr__(self):
         return f"Student('{self.name}')"
 
@@ -46,6 +62,7 @@ class Meeting(db.Model):
     description:str = db.Column(db.Text())
     meeting_code:int = db.Column(db.Integer())
     students = db.relationship('StudentMeeting', back_populates='meeting')
+    groups = db.relationship('GroupMeeting', back_populates='meeting')
 
     def __init__(self, name, start_time, end_time, date, status, description, meeting_code):
         self.name = name

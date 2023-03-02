@@ -1,6 +1,6 @@
 from flask import abort, flash, jsonify, redirect, render_template, request
 from app import app, db
-from app.models import Student, Group, Meeting, StudentMeeting, Teacher
+from app.models import Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting
 from datetime import datetime
 
 from random import randint
@@ -94,6 +94,22 @@ def welcome_page():
     return render_template('welcome_page.html')
 
 
+@app.route("/api/groupmeeting", methods=["POST"])
+def handle_groupmeeting():
+    if request.method == "POST":
+        body = request.json
+        try:
+            item = GroupMeeting(group_id=body['group_id'], meeting_id=body['meeting_id'])
+            db.session.add(item)
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            error = str(e)
+        return jsonify({"result": result, "meeting": item, "error": error})
+
+
 @app.route("/base")
 def base():
     return render_template('base.html')
@@ -152,7 +168,7 @@ def handle_meeting(id=None):
         except Exception as e:
             result = "error"
             error = str(e)
-        return jsonify({"result": result, "error": error})
+        return jsonify({"result": result, "meeting": meeting, "error": error})
 
     elif request.method == "PUT":
         # update whole row
@@ -196,12 +212,28 @@ def handle_meeting(id=None):
 #     Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", meeting_code=123456)
 #     return "Meeting toegevoegd"
 
-# @app.route("/test")
-# def test():
-#     student = StudentMeeting(student_id=2, id=1, checkin_date=datetime.now())
-#     db.session.add(student)
-#     db.session.commit()
-#     return 'Student aan meeting toegevoegd'
+@app.route("/testdata")
+def test():
+    rick = Student('Rick')
+    db.session.add(rick)
+    db.session.commit()
+
+    celeste = Student("Celèste")
+    db.session.add(celeste)
+    sam = Student("Sam")
+    db.session.add(sam)
+    marinda = Student("Marinda")
+    db.session.add(marinda)
+
+    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", meeting_code=randint(10_000_000, 99_999_999))
+    group = Group(start_date="2023-3-2",
+                  end_date="2024-3-2", name="Klas 1")
+    db.session.add(group)
+    studentmeeting = StudentMeeting(student=rick, meeting_id=1, checkin_date=datetime.now())
+    db.session.add(studentmeeting)
+
+    db.session.commit()
+    return 'Test data toegevoegd aan de database'
 
 # show list list of all students
 

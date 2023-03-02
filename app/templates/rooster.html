@@ -17,6 +17,10 @@
         <!-- Font awesome - icons -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+        <!-- select2 - https://select2.org/getting-started/installation  -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     </head>
     <body>
         <header class="main-header">
@@ -40,6 +44,12 @@
                     <div class="form-row">
                         <label>Beschrijving (optioneel)</label>
                         <textarea class="form-input" type="text" name="description" id="description-input"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label>Klas / Klassen:</label>
+                        <select class="group-select" name="groups[]" multiple="multiple" id="group-input">
+                            <!-- Groups are added in here with ajax request  -->
+                        </select>
                     </div>
                     <div class="form-row">
                         <label>Begin / eind tijd</label>
@@ -82,11 +92,10 @@
                 </div>
                 <div class="sidebar-content">
                     <!-- <a class="rooster-btn">+ Bijeenkomst toevoegen</a> -->
-                    <p class="sidebar-title">Klas:</p>
-                    <select class="custom-select" name="" id="">
-                        <option value="">Klas 1</option>
-                        <option value="">Klas 2</option>
-                        <option value="">Klas 3</option>
+                    <p>Filter op:</p>
+                    <p class="sidebar-title">Klas</p>
+                    <select class="group-select" name="group" id="group-filter">
+                        
                     </select>
                 </div>
             </section>
@@ -141,8 +150,6 @@
     </body>
 </html>
 <script type="application/javascript">
-    
-
     // dayjs -> https://day.js.org/docs/en/installation/installation
     // Maandag = 1
     // Dinsdag = 2
@@ -201,55 +208,84 @@
         let date = $('#date-input').val()
         date = dayjs(date).format('dddd D MMMM YYYY');
         $('#selectedDate').text(`${date} van ${start} tot ${end}`);
+        console.log("group(s):", $('#group-input').val())
+
     });
 
     // AJAX request to save new meetings
-    $(document).ready(function(){
-        $("#meeting-submit").click(function (e)
-        {
-            e.preventDefault();
+    $("#meeting-submit").click(function (e)
+    {
+        e.preventDefault();
 
-            // check if the input is valid using a 'valid' property
- 
-            var meeting = {
-                name : $('#name-input').val(),
-                start_time : $('#start-input').val(),
-                end_time : $('#end-input').val(),
-                date : $('#date-input').val(),
-                description : $('#description-input').val(),
-            }
+        // check if the input is valid using a 'valid' property
+        var groups = $('#group-input').val()
 
-            $.ajax({
-                method: "POST",
-                url: "/api/meeting/",
-                data : JSON.stringify(meeting),
-                contentType: "application/json",
-                dataType: 'json',
-                beforeSend: function() {     
-                    // check if all input fields are filled           
-                    $empty = $('#new-meeting').find("input").filter(function() {
-                        return this.value === "";
-                    });
-                    if($empty.length) {
-                        $('#form-error').text("Vul alle vereiste velden in")
-                        return false;
-                    }else{
-                        return true;
-                    };
-                },
-                success:function(result)
-                {
-                    // close popup
-                    toggleNewMeetingPopup()
-                    console.log(result);
-                    getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
-                },
-                error : function(request,error){
-                    alert("request failed", error);
+        var meeting = {
+            name : $('#name-input').val(),
+            start_time : $('#start-input').val(),
+            end_time : $('#end-input').val(),
+            date : $('#date-input').val(),
+            description : $('#description-input').val(),
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "/api/meeting/",
+            data : JSON.stringify(meeting),
+            contentType: "application/json",
+            dataType: 'json',
+            beforeSend: function() {     
+                // check if all input fields are filled           
+                $empty = $('#new-meeting').find("input").filter(function() {
+                    return this.value === "";
+                });
+                if($empty.length) {
+                    $('#form-error').text("Vul alle vereiste velden in")
+                    return false;
+                }else{
+                    return true;
+                };
+            },
+            success:function(result)
+            {
+                // close popup
+                toggleNewMeetingPopup()
+                console.log(result);
+                console.log("meeting id: ",result.meeting.id)
+                // UPDATE: add all groups connected to this meeting to db
+                for(group of groups){
+                    addGroupToMeeting(group, result.meeting.id)
                 }
-            });
+                getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
+            },
+            error : function(request,error){
+                alert("request failed", error);
+            }
         });
     });
+
+    // add group to meeting
+    function addGroupToMeeting(groupId, meetingId){
+        var groupMeeting = {
+            group_id : groupId,
+            meeting_id : meetingId
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "/api/groupmeeting",
+            data : JSON.stringify(groupMeeting),
+            contentType: "application/json",
+            dataType: 'json',
+            success:function(result)
+            {
+                console.log("group added: ", result)
+            },
+            error : function(request,error){
+                alert("request failed", error);
+            }
+        });
+    }
 // <======= ============ ========>
 
     // AJAX request to get meetings
@@ -272,6 +308,43 @@
             }
         })
     }
+    groupsArray = []
+    // AJAX request to get groups
+    function getGroups(){
+        $.ajax({ 
+            type: "GET",
+            url: "/api/group",
+            contentType: "application/json",
+            dataType: "json",  
+            success: function(response_data){
+                console.log(response_data);
+                for(item of response_data.result){
+                    console.log(item.id, item)
+                    groupsArray.push(item)
+                }
+            },
+            error : function(request,error){
+                console.log(request)
+            }
+        }).then(function(){
+            console.log("groups: ", groupsArray)
+            for(group of groupsArray){
+                let html_block = $(`                                 
+                <option value="${group.id}">${group.name}</option>
+                `);
+                // add group to select   
+                let formSelect = document.getElementById("group-input");
+
+                let filter = document.getElementById("group-filter");
+                let formgroup = $(formSelect).append(html_block);
+                let filtergroup = $(filter).append(html_block);
+            }
+            $('.group-select').select2();
+        })
+    }
+    getGroups()
+
+    
 
     // remove meetings from calendar
     function removeMeetings(){
