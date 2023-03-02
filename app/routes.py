@@ -4,11 +4,11 @@ from app.models import Student, Group, Meeting, StudentMeeting, Teacher
 from datetime import datetime
 
 
-
 @app.errorhandler(404)
 def page_not_found(e):
     # return custom 404 page when 404 error occures
     return render_template('404.html'), 404
+
 
 @app.route("/")
 def hello_world():
@@ -19,8 +19,9 @@ def hello_world():
 def rooster():
     return render_template('rooster.html')
 
+
 @app.route("/aanwezigheid/<code>")
-def presence(code = None):
+def presence(code=None):
     # check if code exists else throw 404 not found error
     exists = db.session.query(
         Meeting.query.filter_by(meeting_code=code).exists()
@@ -30,8 +31,9 @@ def presence(code = None):
     else:
         abort(404)
 
+
 @app.route('/aanmelden/<code>/<user_id>')
-def setpresence(code = None, user_id = None):
+def setpresence(code=None, user_id=None):
     # check if code exists else throw 404 not found error
     exists = db.session.query(
         Meeting.query.filter_by(meeting_code=code).exists()
@@ -43,11 +45,12 @@ def setpresence(code = None, user_id = None):
 
     # UPDATE: if user logs in then execute below
     # UPDATE: get user id from session
-    
+
     # user id is from url for now, till user sessions are added
 
     student_present = db.session.query(
-        StudentMeeting.query.filter_by(meeting_id=meeting.id, student_id=user_id).exists()
+        StudentMeeting.query.filter_by(
+            meeting_id=meeting.id, student_id=user_id).exists()
     ).scalar()
     print(student_present)
     if student_present:
@@ -56,13 +59,14 @@ def setpresence(code = None, user_id = None):
         return redirect('/')
     else:
         # add student to meeting
-        student = StudentMeeting(student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now())
+        student = StudentMeeting(
+            student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now())
         db.session.add(student)
         db.session.commit()
         # student is added so return to home, with a message
         flash("Je bent aangemeld in de les!")
         return redirect('/')
-    
+
 
 @app.route("/login")
 def login():
@@ -88,8 +92,14 @@ def overview_page():
 def welcome_page():
     return render_template('welcome_page.html')
 
+
+@app.route("/base")
+def rooster():
+    return render_template('base.html')
+
+
 @app.route("/api/studentmeeting/<code>")
-def handle_studentmeeting(code = None):
+def handle_studentmeeting(code=None):
     student_dict = []
     try:
         # get the meeting correlated with the meeting code
@@ -208,13 +218,14 @@ def get_student(id):
     return jsonify({'id': student.id, 'name': student.name})
 
 # delete a student
+
+
 @app.route('/students/<int:id>', methods=['DELETE'])
 def delete_student(id):
     student = Student.query.get_or_404(id)
     db.session.delete(student)
     db.session.commit()
     return jsonify({"message": "Student {} ID: {} is verwijderd".format(student.name, student.id)})
-
 
 
 # Show all teachers
@@ -224,6 +235,8 @@ def get_teachers():
     return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
 
 # Add teacher
+
+
 @app.route('/api/teacher', methods=['POST'])
 def create_teacher():
     name = request.json['name']
@@ -233,12 +246,16 @@ def create_teacher():
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
 # Show specific teacher
+
+
 @app.route('/api/teacher/<int:id>', methods=['GET'])
 def get_teacher(id):
     teacher = Teacher.query.get_or_404(id)
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
 # Delete teacher
+
+
 @app.route('/api/teacher/<int:id>', methods=['DELETE'])
 def delete_teacher(id):
     teacher = Teacher.query.get_or_404(id)
@@ -247,13 +264,14 @@ def delete_teacher(id):
     return jsonify({"message": "Docent {} ID: {} is verwijderd".format(teacher.name, teacher.id)})
 
 # Update teacher
+
+
 @app.route('/api/teacher/<int:id>', methods=['PUT'])
 def update_teacher(id):
     teacher = Teacher.query.get_or_404(id)
     teacher.name = request.json['name']
     db.session.commit()
     return jsonify({'id': teacher.id, 'name': teacher.name})
-
 
 
 @app.route('/api/group', methods=['GET'])
