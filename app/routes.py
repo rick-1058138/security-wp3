@@ -94,7 +94,7 @@ def welcome_page():
 
 
 @app.route("/base")
-def rooster():
+def base():
     return render_template('base.html')
 
 
