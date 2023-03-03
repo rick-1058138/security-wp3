@@ -1,7 +1,8 @@
 from flask import abort, flash, jsonify, redirect, render_template, request
 from app import app, db
-from app.models import Student, Group, Meeting, StudentMeeting, GroupMeeting, Teacher
+from app.models import Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting
 from datetime import datetime
+
 from random import randint
 
 @app.errorhandler(404)
@@ -9,6 +10,9 @@ def page_not_found(e):
     # return custom 404 page when 404 error occures
     return render_template('404.html'), 404
 
+@app.route("/admin")
+def admin():
+    return render_template('admin.html')
 
 @app.route("/")
 def hello_world():
@@ -91,6 +95,22 @@ def overview_page():
 @app.route("/welcome_page")
 def welcome_page():
     return render_template('welcome_page.html')
+
+
+@app.route("/api/groupmeeting", methods=["POST"])
+def handle_groupmeeting():
+    if request.method == "POST":
+        body = request.json
+        try:
+            item = GroupMeeting(group_id=body['group_id'], meeting_id=body['meeting_id'])
+            db.session.add(item)
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            error = str(e)
+        return jsonify({"result": result, "meeting": item, "error": error})
 
 
 @app.route("/base")
@@ -275,8 +295,6 @@ def get_teachers():
     return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
 
 # Add teacher
-
-
 @app.route('/api/teacher', methods=['POST'])
 def create_teacher():
     name = request.json['name']
@@ -286,16 +304,12 @@ def create_teacher():
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
 # Show specific teacher
-
-
 @app.route('/api/teacher/<int:id>', methods=['GET'])
 def get_teacher(id):
     teacher = Teacher.query.get_or_404(id)
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
 # Delete teacher
-
-
 @app.route('/api/teacher/<int:id>', methods=['DELETE'])
 def delete_teacher(id):
     teacher = Teacher.query.get_or_404(id)
@@ -304,8 +318,6 @@ def delete_teacher(id):
     return jsonify({"message": "Docent {} ID: {} is verwijderd".format(teacher.name, teacher.id)})
 
 # Update teacher
-
-
 @app.route('/api/teacher/<int:id>', methods=['PUT'])
 def update_teacher(id):
     teacher = Teacher.query.get_or_404(id)
