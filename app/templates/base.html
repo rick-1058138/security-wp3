@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Aanwezigheidstool</title>
+      <link   rel="stylesheet" href="../static/style.css" />
+    </head>
+    <body>
+      <nav class="header-container">
+        <div class="header-inner">
+          <div class="header-left">
+            <button class="header-logo-button">
+                <img
+                  class="header-logo"
+                  src="../static/images/logo.png"
+                  alt="Hogeschool Rotterdam"
+                />
+              </button>
+          </div>
+          <div class="header-right">
+            <ul class="menu">
+                <li><a class="menuItem" href="#">Home</a></li>
+                <li><a class="menuItem" href="#">Aanwezigheid</a></li>
+                <li><a class="menuItem" href="#">Rooster</a></li>
+                <li><a class="menuItem" href="#">Instellingen</a></li>
+                <li><a class="menuItem" href="#">Uitloggen</a></li>
+              </ul>
+              <button class="hamburger">
+              <i class="menuIcon material-icons">menu</i>
+              <i class="closeIccon material-icons">close </i>
+            </button>
+          </div>
+        </div>
+        <script>
+          const menu = document.querySelector(".menu");
+const menuItems = document.querySelectorAll(".menuItem");
+const hamburger= document.querySelector(".hamburger");
+const closeIcon= document.querySelector(".closeIcon");
+const menuIcon = document.querySelector(".menuIcon");
+
+function toggleMenu() {
+  if (menu.classList.contains("showMenu")) {
+    menu.classList.remove("showMenu");
+    closeIcon.style.display = "none";
+    menuIcon.style.display = "block";
+  } else {
+    menu.classList.add("showMenu");
+    closeIcon.style.display = "block";
+    menuIcon.style.display = "none";
+  }
+}
+
+hamburger.addEventListener("click", toggleMenu);
+        </script>
+    <div class="background">
+      {% block content %} {% endblock %}
+    </div>
+    </body>
+</html>

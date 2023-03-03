@@ -1,14 +1,18 @@
 from flask import abort, flash, jsonify, redirect, render_template, request
 from app import app, db
-from app.models import Student, Group, Meeting, StudentMeeting
+from app.models import Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting
 from datetime import datetime
 
-
+from random import randint
 
 @app.errorhandler(404)
 def page_not_found(e):
     # return custom 404 page when 404 error occures
     return render_template('404.html'), 404
+
+@app.route("/admin")
+def admin():
+    return render_template('admin.html')
 
 @app.route("/")
 def hello_world():
@@ -19,8 +23,9 @@ def hello_world():
 def rooster():
     return render_template('rooster.html')
 
+
 @app.route("/aanwezigheid/<code>")
-def presence(code = None):
+def presence(code=None):
     # check if code exists else throw 404 not found error
     exists = db.session.query(
         Meeting.query.filter_by(meeting_code=code).exists()
@@ -30,8 +35,9 @@ def presence(code = None):
     else:
         abort(404)
 
+
 @app.route('/aanmelden/<code>/<user_id>')
-def setpresence(code = None, user_id = None):
+def setpresence(code=None, user_id=None):
     # check if code exists else throw 404 not found error
     exists = db.session.query(
         Meeting.query.filter_by(meeting_code=code).exists()
@@ -43,11 +49,12 @@ def setpresence(code = None, user_id = None):
 
     # UPDATE: if user logs in then execute below
     # UPDATE: get user id from session
-    
+
     # user id is from url for now, till user sessions are added
 
     student_present = db.session.query(
-        StudentMeeting.query.filter_by(meeting_id=meeting.id, student_id=user_id).exists()
+        StudentMeeting.query.filter_by(
+            meeting_id=meeting.id, student_id=user_id).exists()
     ).scalar()
     print(student_present)
     if student_present:
@@ -56,13 +63,14 @@ def setpresence(code = None, user_id = None):
         return redirect('/')
     else:
         # add student to meeting
-        student = StudentMeeting(student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now())
+        student = StudentMeeting(
+            student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now())
         db.session.add(student)
         db.session.commit()
         # student is added so return to home, with a message
         flash("Je bent aangemeld in de les!")
         return redirect('/')
-    
+
 
 @app.route("/login")
 def login():
@@ -88,8 +96,30 @@ def overview_page():
 def welcome_page():
     return render_template('welcome_page.html')
 
+
+@app.route("/api/groupmeeting", methods=["POST"])
+def handle_groupmeeting():
+    if request.method == "POST":
+        body = request.json
+        try:
+            item = GroupMeeting(group_id=body['group_id'], meeting_id=body['meeting_id'])
+            db.session.add(item)
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            error = str(e)
+        return jsonify({"result": result, "meeting": item, "error": error})
+
+
+@app.route("/base")
+def base():
+    return render_template('base.html')
+
+
 @app.route("/api/studentmeeting/<code>")
-def handle_studentmeeting(code = None):
+def handle_studentmeeting(code=None):
     student_dict = []
     try:
         # get the meeting correlated with the meeting code
@@ -108,6 +138,16 @@ def handle_studentmeeting(code = None):
     return jsonify({"result": result, "students": student_dict, "error": error})
 
 
+@app.route("/api/meeting/between/<start>/<end>")
+def meetings_between(start, end):
+    try:
+        result = Meeting.query.filter(Meeting.date.between(start, end)).all()
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "error": error})
+
 @app.route("/api/meeting/", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
 @app.route("/api/meeting/<id>", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
 def handle_meeting(id=None):
@@ -122,8 +162,8 @@ def handle_meeting(id=None):
     elif request.method == "POST":
         body = request.json
         try:
-            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=datetime.now(
-            ), status="niet begonnen", description="dit is een meeting", meeting_code=123456)
+            date_object = datetime.strptime(body['date'], '%Y-%m-%d').date()
+            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=date_object, status="niet begonnen", description=body["description"], meeting_code=randint(10_000_000, 99_999_999))
             db.session.add(meeting)
             db.session.commit()
             result = "ok"
@@ -131,7 +171,7 @@ def handle_meeting(id=None):
         except Exception as e:
             result = "error"
             error = str(e)
-        return jsonify({"result": result, "error": error})
+        return jsonify({"result": result, "meeting": meeting, "error": error})
 
     elif request.method == "PUT":
         # update whole row
@@ -175,12 +215,28 @@ def handle_meeting(id=None):
 #     Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", meeting_code=123456)
 #     return "Meeting toegevoegd"
 
-# @app.route("/test")
-# def test():
-#     student = StudentMeeting(student_id=2, id=1, checkin_date=datetime.now())
-#     db.session.add(student)
-#     db.session.commit()
-#     return 'Student aan meeting toegevoegd'
+@app.route("/testdata")
+def test():
+    rick = Student('Rick')
+    db.session.add(rick)
+    db.session.commit()
+
+    celeste = Student("Celèste")
+    db.session.add(celeste)
+    sam = Student("Sam")
+    db.session.add(sam)
+    marinda = Student("Marinda")
+    db.session.add(marinda)
+
+    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", meeting_code=randint(10_000_000, 99_999_999))
+    group = Group(start_date="2023-3-2",
+                  end_date="2024-3-2", name="Klas 1")
+    db.session.add(group)
+    studentmeeting = StudentMeeting(student=rick, meeting_id=1, checkin_date=datetime.now())
+    db.session.add(studentmeeting)
+
+    db.session.commit()
+    return 'Test data toegevoegd aan de database'
 
 # show list list of all students
 
@@ -201,20 +257,59 @@ def create_student():
     return jsonify({'id': student.id, 'name': student.name})
 
 
-# show a specifiek student
+# show a specific student
 @app.route('/students/<int:id>', methods=['GET'])
 def get_student(id):
     student = Student.query.get_or_404(id)
     return jsonify({'id': student.id, 'name': student.name})
 
-
 # delete a student
+
+
 @app.route('/students/<int:id>', methods=['DELETE'])
 def delete_student(id):
     student = Student.query.get_or_404(id)
     db.session.delete(student)
     db.session.commit()
     return jsonify({"message": "Student {} ID: {} is verwijderd".format(student.name, student.id)})
+
+
+# Show all teachers
+@app.route('/api/teacher', methods=['GET'])
+def get_teachers():
+    teachers = Teacher.query.all()
+    return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
+
+# Add teacher
+@app.route('/api/teacher', methods=['POST'])
+def create_teacher():
+    name = request.json['name']
+    teacher = Teacher(name=name)
+    db.session.add(teacher)
+    db.session.commit()
+    return jsonify({'id': teacher.id, 'name': teacher.name})
+
+# Show specific teacher
+@app.route('/api/teacher/<int:id>', methods=['GET'])
+def get_teacher(id):
+    teacher = Teacher.query.get_or_404(id)
+    return jsonify({'id': teacher.id, 'name': teacher.name})
+
+# Delete teacher
+@app.route('/api/teacher/<int:id>', methods=['DELETE'])
+def delete_teacher(id):
+    teacher = Teacher.query.get_or_404(id)
+    db.session.delete(teacher)
+    db.session.commit()
+    return jsonify({"message": "Docent {} ID: {} is verwijderd".format(teacher.name, teacher.id)})
+
+# Update teacher
+@app.route('/api/teacher/<int:id>', methods=['PUT'])
+def update_teacher(id):
+    teacher = Teacher.query.get_or_404(id)
+    teacher.name = request.json['name']
+    db.session.commit()
+    return jsonify({'id': teacher.id, 'name': teacher.name})
 
 
 @app.route('/api/group', methods=['GET'])

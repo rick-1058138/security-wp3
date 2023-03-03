@@ -10,14 +10,87 @@ body {
     background-color: #fff7ea;
 }
 
+textarea, input{
+    font-family: Poppins, sans-serif;
+}
+
+/*nav-bar*/
+
+.header-container {
+    background: white;
+    box-shadow: 0 3px 8px 0 rgba(4, 31, 116, 0.3);
+    min-height: 70px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 999;
+}
+
+.header-left {
+    border-style: none;
+    height: auto;
+    max-width: 500px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.hamburger {
+    position: fixed;
+    z-index: 100;
+    top: 1rem;
+    right: 1rem;
+    padding: 4px;
+    border: black solid 1px;
+    background: white;
+    cursor: pointer;
+}
+
+.closeIcon {
+    display: none;
+}
+
+.menu {
+    position: fixed;
+    transform: translateY(-100%);
+    transition: transform 0.2s;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99;
+    background: black;
+    color: white;
+    list-style: none;
+    padding-top: 4rem;
+}
+
+.menuItem {
+    display: block;
+    margin: 2rem 4rem;
+    font-size: 1.8rem;
+    color: white;
+    text-decoration: none;
+}
+
+.menuItem:hover {
+    text-decoration: underline;
+}
+
+
+.showMenu {
+    transform: translateY(0);
+}
+
+
+
 /* Login page */
 
-.color-red{
+.color-red {
     color: #d30f4c;
 
 }
 
-.back-link{
+.back-link {
     color: black;
     text-decoration: none;
     border-bottom: 1px solid #d30f4c;
@@ -26,7 +99,7 @@ body {
     transition: 0.2s;
 }
 
-.back-link:hover{
+.back-link:hover {
     cursor: pointer;
     opacity: 0.8;
     scale: 1.05;
@@ -68,6 +141,9 @@ body {
 
 
 .container-middle {
+    margin-top: 200px;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -138,6 +214,50 @@ body {
     font-weight: 600;
     letter-spacing: 1px;
 }
+
+/* Admin page */
+
+.admin-add-student-form{
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+
+.admin-add-student-input{
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: none;
+    border-bottom: 2px solid black;
+    background-color: #fff7ea;
+    line-height: 1.38;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.admin-add-student-label{
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.admin-add-student-button{
+    color: #ffffff;
+    background-color: #d30f4c;
+    cursor: pointer;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 500px;
+    margin-bottom: 30px;
+    margin-top: 40px;
+    border: none;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+
 
 .main-header {
     padding: 20px 10px;
@@ -373,12 +493,12 @@ body {
     background-color: #d30f4c;
     box-shadow: 0 0 15px 1px rgb(0 0 0 / 10%);
     border-radius: 5px;
-    padding: 15px 10px;
+    padding: 12px 10px;
     transition: 0.2s;
     display: inline-block;
     color: white;
     font-weight: bold;
-    margin-bottom: 40px;
+    font-size: 14px;
 }
 
 .rooster-btn:hover {
@@ -613,22 +733,22 @@ body {
     bottom: 0;
 }
 
-.error-header{
+.error-header {
     color: #d30f4c;
     font-size: 60px;
     margin-bottom: 30px;
 }
 
-.qrcode{
+.qrcode {
     background-color: lightgrey;
     box-shadow: 0px 0px 12px 3px #3a3a3a10;
 }
 
-.qrcode>img{
+.qrcode>img {
     display: block;
 }
 
-.meeting-code{
+.meeting-code {
     padding: 10px 20px;
     border-radius: 10px;
     font-size: 40px;
@@ -641,12 +761,12 @@ body {
 
 }
 
-.meeting-code-text{
+.meeting-code-text {
     padding: 5px 0;
     font-size: 30px;
 }
 
-.student-box{
+.student-box {
     font-size: 18px;
     padding: 30px;
     /* border: 1px solid lightgrey; */
@@ -665,7 +785,7 @@ body {
 
 }
 
-.student-box-item{
+.student-box-item {
     /* border: 1px solid rgb(231, 231, 231); */
     box-shadow: 0px 0px 12px 3px #3a3a3a10;
     padding: 8px 14px;
@@ -678,7 +798,7 @@ body {
     font-size: 20px;
 }
 
-.top-row{
+.top-row {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -687,7 +807,7 @@ body {
     min-width: 500px;
 }
 
-.info-header{
+.info-header {
     padding: 10px;
     /* width: max-content; */
     min-width: 500px;
@@ -695,45 +815,45 @@ body {
     text-align: center;
 }
 
-.fa-check{
+.fa-check {
     color: rgb(20, 155, 20);
     margin-bottom: 1px;
 }
 
-.divider{
+.divider {
     background-color: rgb(223, 223, 223);
     height: 16px;
     width: 1px;
 }
 
-.message-container{
+.message-container {
     position: absolute;
     top: 0;
     right: 0;
 }
 
-.message{
+.message {
     background: white;
     margin: 10px;
     border-left: 8px solid lightgrey;
     box-shadow: 0 0 17px 0px #0000000f;
 }
 
-.message-text{
+.message-text {
     padding: 20px 20px;
 }
 
-.message.success{
+.message.success {
     border-left: 8px solid green;
 }
 
-.message>.progress-bar{
+.message>.progress-bar {
     width: 100%;
     display: block;
     height: 2px;
 }
 
-.message>.progress-bar>.inner-bar{
+.message>.progress-bar>.inner-bar {
     width: 100%;
     background: #bfbfbf;
     height: 2px;
@@ -747,3 +867,151 @@ body {
     from {width: 100%;}
     to {width: 0%;}
 }
+
+.popup{
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.363);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup:hover{
+    cursor: pointer;
+}
+
+.popup-container>h1{
+    margin-bottom: 10px;
+}
+
+.popup-container{
+    min-width: 300px;
+    margin: 0 auto;
+    background-color: rgb(243, 243, 243);
+    padding: 40px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.popup-container:hover{
+    cursor: auto;
+}
+
+.popup-container form{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.form-row{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-input{
+    width: 100%;
+    padding: 8px 5px;
+    border: 1px solid lightgrey;
+    font-size: 16px;
+    font-weight: 500;
+    outline: transparent;
+    box-sizing: border-box;
+}
+
+
+.form-select, .form-date{
+    padding: 8px 5px;
+    outline: transparent;
+    box-sizing: border-box;
+    border: 1px solid lightgrey;
+
+}
+
+
+.form-submit {
+    background-color: #d30f4c;
+    box-shadow: inset 0 0 0 0 rgb(0 0 0 / 0%);
+    border-radius: 5px;
+    padding: 15px 10px;
+    transition: 0.2s;
+    display: inline-block;
+    color: white;
+    font-weight: bold;
+    margin-bottom: 40px;
+    border: none;
+}
+
+.form-submit:hover {
+    color: white;
+    cursor: pointer;
+    box-shadow: inset 0px 0px 20px 20px rgb(0 0 0 / 15%);
+
+}
+
+.error{
+    color: red;
+}
+
+
+
+/* Search group select styling (rooster page) */
+span.select2{
+    display: block;
+    min-width: 150px;
+    margin: 10px 0;
+    max-width: 250px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    background-color: transparent;
+    border: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.452) !important;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    color: white !important;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    padding: 0 4px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    line-height: 30px;
+    padding: 0 8px !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__display {
+    padding: 10px 15px !important;
+    line-height: 30px !important;
+}
+
+.select2-container--default .select2-search--inline .select2-search__field {
+    height: 30px !important;
+    line-height: 30px;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #d30f4c !important;
+    color: white !important;
+    border: none !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover, .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:focus {
+    background-color: #bd1449 !important;
+    color: rgba(255, 255, 255, 0.568);
+    outline: none;
+}
+
+.select2-container--default .select2-selection--multiple {
+    border: 1px solid lightgrey !important;
+    border-radius: 0 !important;
+}
+
+
+/* ========================================= */
