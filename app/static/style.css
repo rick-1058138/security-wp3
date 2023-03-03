@@ -141,6 +141,9 @@ textarea, input{
 
 
 .container-middle {
+    margin-top: 200px;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -211,6 +214,50 @@ textarea, input{
     font-weight: 600;
     letter-spacing: 1px;
 }
+
+/* Admin page */
+
+.admin-add-student-form{
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 30px;
+}
+
+.admin-add-student-input{
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border: none;
+    border-bottom: 2px solid black;
+    background-color: #fff7ea;
+    line-height: 1.38;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.admin-add-student-label{
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.admin-add-student-button{
+    color: #ffffff;
+    background-color: #d30f4c;
+    cursor: pointer;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 500px;
+    margin-bottom: 30px;
+    margin-top: 40px;
+    border: none;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+}
+
+
 
 .main-header {
     padding: 20px 10px;
