@@ -33,18 +33,18 @@
           <div class="admin-title">
             <h1 class="admin-title">Student toevoegen</h1>
           </div>
-          <form class="admin-add-student-form">
-            <label for="admin-student-number" class="admin-add-student-label">Student nummer
-              <input type="text" name="admin-student-number" class="admin-add-student-input" required>
+          <form class="admin-form">
+            <label for="admin-student-number" class="admin-input-label">Student nummer
+              <input type="text" name="admin-student-number" class="admin-input-field" required>
             </label>
-            <label for="admin-student-name" class="admin-add-student-label">Naam student
-              <input type="text" name="admin-student-name" class="admin-add-student-input" required>
+            <label for="admin-student-name" class="admin-input-label">Naam student
+              <input type="text" name="admin-student-name" class="admin-input-field" required>
             </label>
-            <label for="admin-student-email" class="admin-add-student-label">E-mail student
-              <input type="text" name="admin-student-email" class="admin-add-student-input" required>
+            <label for="admin-student-email" class="admin-input-label">E-mail student
+              <input type="email" name="admin-student-email" class="admin-input-field" required>
             </label>
-            <div class="admin-add-student-button-container">
-              <input class="admin-add-student-button" type="submit" value="Opslaan" />
+            <div class="admin-button-container">
+              <input class="admin-save-button" type="submit" value="Opslaan" />
             </div>
           </form>
         </div>
@@ -53,18 +53,21 @@
           <div class="admin-title">
             <h1>Docent toevoegen</h1>
           </div>
-          <form class="admin-add-student-form">
-            <label for="admin-student-number" class="admin-add-student-label">Student nummer
-              <input type="text" name="admin-student-number" class="admin-add-student-input" required>
+          <form class="admin-form">
+            <label for="admin-teacher-name" class="admin-input-label">Naam docent
+              <input type="text" name="admin-teacher-name" class="admin-input-field" required>
             </label>
-            <label for="admin-student-name" class="admin-add-student-label">Naam student
-              <input type="text" name="admin-student-name" class="admin-add-student-input" required>
+            <label for="admin-teacher-email" class="admin-input-label">E-mail docent
+              <input type="email" name="admin-teacher-email" class="admin-input-field" required>
             </label>
-            <label for="admin-student-email" class="admin-add-student-label">E-mail student
-              <input type="text" name="admin-student-email" class="admin-add-student-input" required>
+            <label for="admin-teacher-admin" class="admin-input-label">Admin? <br>
+              <br>
+              <input type="radio" name="admin-teacher-admin-button" class="admin-teacher-radio-button" required> Ja
+              <br>
+              <input type="radio" name="admin-teacher-admin-button" class="admin-teacher-radio-button" required> Nee
             </label>
-            <div class="admin-add-student-button-container">
-              <input class="admin-add-student-button" type="submit" value="Opslaan" />
+            <div class="admin-button-container">
+              <input class="admin-save-button" type="submit" value="Opslaan" />
             </div>
           </form>
         </div>
@@ -73,18 +76,18 @@
           <div class="admin-title">
             <h1>Klas toevoegen</h1>
           </div>
-          <form class="admin-add-student-form">
-            <label for="admin-student-number" class="admin-add-student-label">Student nummer
-              <input type="text" name="admin-student-number" class="admin-add-student-input" required>
+          <form class="admin-form">
+            <label for="admin-group-id" class="admin-input-label">Naam klas
+              <input type="text" name="admin-group-id" class="admin-input-field" required>
             </label>
-            <label for="admin-student-name" class="admin-add-student-label">Naam student
-              <input type="text" name="admin-student-name" class="admin-add-student-input" required>
+            <label for="admin-group-start" class="admin-input-label">Start datum
+              <input type="date" name="admin-group-start" class="admin-input-field" required>
             </label>
-            <label for="admin-student-email" class="admin-add-student-label">E-mail student
-              <input type="text" name="admin-student-email" class="admin-add-student-input" required>
+            <label for="admin-group-end" class="admin-input-label">Eind datum
+              <input type="date" name="admin-group-end" class="admin-input-field" required>
             </label>
-            <div class="admin-add-student-button-container">
-              <input class="admin-add-student-button" type="submit" value="Opslaan" />
+            <div class="admin-button-container">
+              <input class="admin-save-button" type="submit" value="Opslaan" />
             </div>
           </form>
         </div>

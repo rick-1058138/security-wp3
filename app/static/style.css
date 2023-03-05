@@ -219,7 +219,7 @@ textarea, input{
 
 /* Admin page */
 
-.admin-add-student-form{
+.admin-form{
     height: 500px;
     display: flex;
     flex-direction: column;
@@ -227,7 +227,7 @@ textarea, input{
     gap: 30px;
 }
 
-.admin-add-student-input{
+.admin-input-field{
     width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -239,12 +239,12 @@ textarea, input{
     font-weight: 500;
 }
 
-.admin-add-student-label{
+.admin-input-label{
     font-weight: 600;
     letter-spacing: 1px;
 }
 
-.admin-add-student-button{
+.admin-save-button{
     color: #ffffff;
     background-color: #d30f4c;
     cursor: pointer;
@@ -259,7 +259,7 @@ textarea, input{
     justify-content: center;
 }
 
-.admin-add-student-button-container{
+.admin-button-container{
    display: flex;
     justify-content: center;
 }
@@ -291,6 +291,10 @@ textarea, input{
     display: flex;
     flex-direction: row;
     justify-content: start;
+}
+
+.admin-teacher-radio-button{
+    margin: 5px;
 }
 
 
