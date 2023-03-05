@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin</title>
+    <link rel="stylesheet" href="../static/style.css" />
+  </head>
+  <body>
+    <div class="container-window">
+      <div class="container-header">
+        <img
+          class="header-logo"
+          src="../static/images/logo.png"
+          alt="Hogeschool Rotterdam"
+        />
+      </div>
+      <div class="container-middle container-middle-admin">
+        <div class="container-middle-left">
+          <div id="admin-add-student-toggle" class="admin-toggle" onclick="showStudentForm()">
+            <p>Student toevoegen</p>
+          </div>
+          <div id="admin-add-teacher-toggle" class="admin-toggle" onclick="showTeacherForm()">
+            <p>Docent toevoegen</p>
+          </div>
+          <div id="admin-add-group-toggle" class="admin-toggle" onclick="showGroupForm()">
+            <p>Klas toevoegen</p>
+          </div>
+        </div>
+
+        <div id="admin-student-form" class="container-middle-right">
+          <div class="admin-title">
+            <h1 class="admin-title">Student toevoegen</h1>
+          </div>
+          <form class="admin-add-student-form">
+            <label for="admin-student-number" class="admin-add-student-label">Student nummer
+              <input type="text" name="admin-student-number" class="admin-add-student-input" required>
+            </label>
+            <label for="admin-student-name" class="admin-add-student-label">Naam student
+              <input type="text" name="admin-student-name" class="admin-add-student-input" required>
+            </label>
+            <label for="admin-student-email" class="admin-add-student-label">E-mail student
+              <input type="text" name="admin-student-email" class="admin-add-student-input" required>
+            </label>
+            <div class="admin-add-student-button-container">
+              <input class="admin-add-student-button" type="submit" value="Opslaan" />
+            </div>
+          </form>
+        </div>
+        
+        <div id="admin-teacher-form" class="container-middle-right">
+          <div class="admin-title">
+            <h1>Docent toevoegen</h1>
+          </div>
+          <form class="admin-add-student-form">
+            <label for="admin-student-number" class="admin-add-student-label">Student nummer
+              <input type="text" name="admin-student-number" class="admin-add-student-input" required>
+            </label>
+            <label for="admin-student-name" class="admin-add-student-label">Naam student
+              <input type="text" name="admin-student-name" class="admin-add-student-input" required>
+            </label>
+            <label for="admin-student-email" class="admin-add-student-label">E-mail student
+              <input type="text" name="admin-student-email" class="admin-add-student-input" required>
+            </label>
+            <div class="admin-add-student-button-container">
+              <input class="admin-add-student-button" type="submit" value="Opslaan" />
+            </div>
+          </form>
+        </div>
+
+        <div id="admin-group-form" class="container-middle-right">
+          <div class="admin-title">
+            <h1>Klas toevoegen</h1>
+          </div>
+          <form class="admin-add-student-form">
+            <label for="admin-student-number" class="admin-add-student-label">Student nummer
+              <input type="text" name="admin-student-number" class="admin-add-student-input" required>
+            </label>
+            <label for="admin-student-name" class="admin-add-student-label">Naam student
+              <input type="text" name="admin-student-name" class="admin-add-student-input" required>
+            </label>
+            <label for="admin-student-email" class="admin-add-student-label">E-mail student
+              <input type="text" name="admin-student-email" class="admin-add-student-input" required>
+            </label>
+            <div class="admin-add-student-button-container">
+              <input class="admin-add-student-button" type="submit" value="Opslaan" />
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      const adminStudentForm = document.getElementById("admin-student-form");
+      const adminTeacherForm = document.getElementById("admin-teacher-form");
+      const adminGroupForm = document.getElementById("admin-group-form");
+      
+      adminTeacherForm.style.display = "none";
+      adminGroupForm.style.display = "none";
+
+      function showStudentForm(){
+        adminStudentForm.style.display = "";
+        adminTeacherForm.style.display = "none";
+        adminGroupForm.style.display = "none";
+      }
+
+      function showTeacherForm(){
+        adminStudentForm.style.display = "none";
+        adminTeacherForm.style.display = "";
+        adminGroupForm.style.display = "none";
+      }
+
+        function showGroupForm(){
+        adminStudentForm.style.display = "none";
+        adminTeacherForm.style.display = "none";
+        adminGroupForm.style.display = "";
+        }
+
+    </script>
+  </body>
+</html>

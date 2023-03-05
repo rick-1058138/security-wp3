@@ -10,9 +10,9 @@ def page_not_found(e):
     # return custom 404 page when 404 error occures
     return render_template('404.html'), 404
 
-@app.route("/admin-student-toevoegen")
+@app.route("/admin")
 def admin():
-    return render_template('admin-student-toevoegen.html')
+    return render_template('admin.html')
 
 @app.route("/")
 def hello_world():
