@@ -259,6 +259,13 @@ textarea, input{
     justify-content: center;
 }
 
+.admin-add-student-button-container{
+   display: flex;
+    justify-content: center;
+}
+
+
+
 
 
 .main-header {
