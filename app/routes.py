@@ -117,20 +117,6 @@ def handle_groupmeeting():
 def base():
     return render_template('base.html')
 
-@app.route("/api/groupmeeting", methods=["POST"])
-def handle_groupmeeting():
-    if request.method == "POST":
-        body = request.json
-        try:
-            item = GroupMeeting(group_id=body['group_id'], meeting_id=body['meeting_id'])
-            db.session.add(item)
-            db.session.commit()
-            result = "ok"
-            error = ""
-        except Exception as e:
-            result = "error"
-            error = str(e)
-        return jsonify({"result": result, "meeting": item, "error": error})
 
 @app.route("/api/studentmeeting/<code>")
 def handle_studentmeeting(code=None):
