@@ -10,15 +10,15 @@ body {
     background-color: #fff7ea;
 }
 
-textarea, input{
+textarea,
+input {
     font-family: Poppins, sans-serif;
 }
 
 /*nav-bar*/
 
 .header-container {
-    background: white;
-    box-shadow: 0 3px 8px 0 rgba(4, 31, 116, 0.3);
+    background: #fff7ea;
     min-height: 70px;
     position: fixed;
     top: 0;
@@ -81,7 +81,8 @@ textarea, input{
     transform: translateY(0);
 }
 
-textarea, input{
+textarea,
+input {
     font-family: Poppins, sans-serif;
 }
 
@@ -219,7 +220,7 @@ textarea, input{
 
 /* Admin page */
 
-.admin-form{
+.admin-form {
     height: 500px;
     display: flex;
     flex-direction: column;
@@ -227,7 +228,7 @@ textarea, input{
     gap: 30px;
 }
 
-.admin-input-field{
+.admin-input-field {
     width: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
@@ -239,12 +240,12 @@ textarea, input{
     font-weight: 500;
 }
 
-.admin-input-label{
+.admin-input-label {
     font-weight: 600;
     letter-spacing: 1px;
 }
 
-.admin-save-button{
+.admin-save-button {
     color: #ffffff;
     background-color: #d30f4c;
     cursor: pointer;
@@ -259,12 +260,12 @@ textarea, input{
     justify-content: center;
 }
 
-.admin-button-container{
-   display: flex;
+.admin-button-container {
+    display: flex;
     justify-content: center;
 }
 
-.container-middle-left{
+.container-middle-left {
     margin-left: 100px;
     height: 100%;
     width: 150px;
@@ -274,26 +275,26 @@ textarea, input{
     gap: 20px;
 }
 
-.admin-title{
+.admin-title {
     display: flex;
     justify-content: center;
 }
 
-.admin-toggle{
+.admin-toggle {
     cursor: pointer;
 }
 
-.container-middle-right{
+.container-middle-right {
     margin-left: 300px;
 }
 
-.container-middle-admin{
+.container-middle-admin {
     display: flex;
     flex-direction: row;
     justify-content: start;
 }
 
-.admin-teacher-radio-button{
+.admin-teacher-radio-button {
     margin: 5px;
 }
 
@@ -904,11 +905,16 @@ textarea, input{
 }
 
 @keyframes progress-bar {
-    from {width: 100%;}
-    to {width: 0%;}
+    from {
+        width: 100%;
+    }
+
+    to {
+        width: 0%;
+    }
 }
 
-.popup{
+.popup {
     z-index: 100;
     width: 100%;
     height: 100%;
@@ -921,15 +927,15 @@ textarea, input{
     align-items: center;
 }
 
-.popup:hover{
+.popup:hover {
     cursor: pointer;
 }
 
-.popup-container>h1{
+.popup-container>h1 {
     margin-bottom: 10px;
 }
 
-.popup-container{
+.popup-container {
     min-width: 300px;
     margin: 0 auto;
     background-color: rgb(243, 243, 243);
@@ -939,22 +945,22 @@ textarea, input{
     gap: 10px;
 }
 
-.popup-container:hover{
+.popup-container:hover {
     cursor: auto;
 }
 
-.popup-container form{
+.popup-container form {
     display: flex;
     gap: 10px;
     flex-direction: column;
 }
 
-.form-row{
+.form-row {
     display: flex;
     flex-direction: column;
 }
 
-.form-input{
+.form-input {
     width: 100%;
     padding: 8px 5px;
     border: 1px solid lightgrey;
@@ -965,7 +971,8 @@ textarea, input{
 }
 
 
-.form-select, .form-date{
+.form-select,
+.form-date {
     padding: 8px 5px;
     outline: transparent;
     box-sizing: border-box;
@@ -994,14 +1001,14 @@ textarea, input{
 
 }
 
-.error{
+.error {
     color: red;
 }
 
 
 
 /* Search group select styling (rooster page) */
-span.select2{
+span.select2 {
     display: block;
     min-width: 150px;
     margin: 10px 0;
@@ -1042,7 +1049,8 @@ span.select2{
     border: none !important;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover, .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:focus {
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover,
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove:focus {
     background-color: #bd1449 !important;
     color: rgba(255, 255, 255, 0.568);
     outline: none;
@@ -1055,4 +1063,3 @@ span.select2{
 
 
 /* ========================================= */
-
