@@ -39,11 +39,12 @@ input {
     z-index: 100;
     top: 1rem;
     right: 1rem;
-    padding: 4px;
-    border: black solid 1px;
-    background: white;
+    padding: 10px;
+    border: #fff7ea;
+    background: #fff7ea;
     cursor: pointer;
 }
+
 
 .closeIcon {
     display: none;
@@ -58,7 +59,8 @@ input {
     right: 0;
     bottom: 0;
     z-index: 99;
-    background: black;
+    background: #d30f4c;
+    ;
     color: white;
     list-style: none;
     padding-top: 4rem;
