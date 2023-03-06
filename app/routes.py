@@ -12,7 +12,20 @@ def page_not_found(e):
 
 @app.route("/admin")
 def admin():
-    return render_template('admin.html')
+    return render_template("admin.html")
+
+@app.route("/create-teacher", methods=['POST'])
+def create_teacher_form():
+    name = request.form["admin-teacher-name"]
+    email = request.form["admin-teacher-email"]
+    admin = False
+    if request.form.getlist("admin-teacher-admin-true"):
+        admin = True
+    teacher = Teacher(name=name, email=email, admin=admin)
+    db.session.add(teacher)
+    db.session.commit()
+    return render_template("/admin.html")
+
 
 @app.route("/")
 def hello_world():
