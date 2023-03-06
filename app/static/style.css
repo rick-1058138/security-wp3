@@ -40,7 +40,7 @@ input {
     top: 1rem;
     right: 1rem;
     padding: 10px;
-    border: #fff7ea;
+    border: none;
     background: #fff7ea;
     cursor: pointer;
 }
