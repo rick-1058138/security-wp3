@@ -28,11 +28,12 @@
             <p>Klas toevoegen</p>
           </div>
         </div>
-
+        
         <div id="admin-student-form" class="container-middle-right">
           <div class="admin-title">
             <h1 class="admin-title">Student toevoegen</h1>
           </div>
+          <br> <br>
           <form class="admin-form">
             <label for="admin-student-number" class="admin-input-label">Student nummer
               <input type="text" name="admin-student-number" class="admin-input-field" required>
@@ -43,6 +44,10 @@
             <label for="admin-student-email" class="admin-input-label">E-mail student
               <input type="email" name="admin-student-email" class="admin-input-field" required>
             </label>
+            <label for="admin-student-group" class="admin-input-label">Klas student
+              <br> <br>
+              <select name="admin-student-group" class="admin-student-group-select"></select>
+            </label>
             <div class="admin-button-container">
               <input class="admin-save-button" type="submit" value="Opslaan" />
             </div>
@@ -51,7 +56,7 @@
         
         <div id="admin-teacher-form" class="container-middle-right">
           <div class="admin-title">
-            <h1>Docent toevoegen</h1>
+            <h1 class="admin-title">Docent toevoegen</h1>
           </div>
           <form class="admin-form">
             <label for="admin-teacher-name" class="admin-input-label">Naam docent
@@ -60,8 +65,8 @@
             <label for="admin-teacher-email" class="admin-input-label">E-mail docent
               <input type="email" name="admin-teacher-email" class="admin-input-field" required>
             </label>
-            <label for="admin-teacher-admin" class="admin-input-label">Admin? <br>
-              <br>
+            <label for="admin-teacher-admin" class="admin-input-label">Admin? 
+              <br><br>
               <input type="radio" name="admin-teacher-admin-button" class="admin-teacher-radio-button" required> Ja
               <br>
               <input type="radio" name="admin-teacher-admin-button" class="admin-teacher-radio-button" required> Nee
@@ -74,7 +79,7 @@
 
         <div id="admin-group-form" class="container-middle-right">
           <div class="admin-title">
-            <h1>Klas toevoegen</h1>
+            <h1 class="admin-title">Klas toevoegen</h1>
           </div>
           <form class="admin-form">
             <label for="admin-group-id" class="admin-input-label">Naam klas
