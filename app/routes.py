@@ -1,4 +1,4 @@
-from flask import abort, flash, jsonify, redirect, render_template, request
+from flask import abort, flash, jsonify, redirect, render_template, request, url_for
 from app import app, db
 from app.models import Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting
 from datetime import datetime
@@ -15,7 +15,7 @@ def admin():
     return render_template('admin.html')
 
 @app.route("/")
-def hello_world():
+def home():
     return render_template('index.html')
 
 
@@ -23,6 +23,31 @@ def hello_world():
 def rooster():
     return render_template('rooster.html')
 
+@app.route("/wachtwoord/nieuw/<code>", methods=("GET", "POST"))
+def set_password(code = None):
+    if request.method == "GET":
+
+        # Check if password code exists
+        exists = db.session.query(
+            Student.query.filter_by(password_code=code).exists()
+        ).scalar()
+        if exists:
+            return render_template('set_password.html', code = code)
+        else:
+            abort(404)
+
+    elif request.method == "POST":
+        # form validation 
+        print(request.form)
+        if(request.form.get('password') == request.form.get('password_confirm')):
+            flash("Je wachtwoord is aangepast!", 'success')
+            return redirect(url_for('home'))
+        else:
+            flash("Wachtwoord velden komen niet overeen!", 'error')
+            return render_template('set_password.html', code = code)
+            
+
+        
 
 @app.route("/aanwezigheid/<code>")
 def presence(code=None):
@@ -59,7 +84,7 @@ def setpresence(code=None, user_id=None):
     print(student_present)
     if student_present:
         # student is already present return to home, with message
-        flash("Je was al aangemeld voor deze les")
+        flash("Je was al aangemeld voor deze les", 'error')
         return redirect('/')
     else:
         # add student to meeting
@@ -68,7 +93,7 @@ def setpresence(code=None, user_id=None):
         db.session.add(student)
         db.session.commit()
         # student is added so return to home, with a message
-        flash("Je bent aangemeld in de les!")
+        flash("Je bent aangemeld in de les!", 'success')
         return redirect('/')
 
 
@@ -254,7 +279,8 @@ def create_student():
     student = Student(name=name)
     db.session.add(student)
     db.session.commit()
-    return jsonify({'id': student.id, 'name': student.name})
+    url = url_for('set_password',code = student.password_code, _external=True)
+    return jsonify({'id': student.id, 'name': student.name, 'link': url})
 
 
 # show a specific student

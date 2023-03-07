@@ -2,6 +2,12 @@ from datetime import datetime
 from app import db
 from dataclasses import dataclass
 
+import random
+import string
+
+
+
+
 
 @dataclass
 class Group(db.Model):
@@ -42,11 +48,18 @@ class GroupMeeting(db.Model):
 class Student(db.Model):
     id:int = db.Column(db.Integer, primary_key=True)
     name:str = db.Column(db.String(20), nullable=False)
+    password:str = db.Column(db.String(100), nullable=False)
+    password_code:str = db.Column(db.String(20), nullable=True)
 
     meetings = db.relationship('StudentMeeting', back_populates='student')
 
     def __init__(self, name):
         self.name = name
+        # create random password and password code 
+        characters = string.ascii_letters + string.digits
+        self.password = ''.join(random.choice(characters) for i in range(60))
+        self.password_code = ''.join(random.choice(characters) for i in range(15))
+
             
     def __repr__(self):
         return f"Student('{self.name}')"
