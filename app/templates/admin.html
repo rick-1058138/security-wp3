@@ -16,22 +16,117 @@
           alt="Hogeschool Rotterdam"
         />
       </div>
-      <div class="container-middle">
-        <form class="admin-add-student-form">
-            <label for="admin-student-number" class="admin-add-student-label">Student nummer
-                <input type="text" name="admin-student-number" class="admin-add-student-input" required>
-            </label>
-            <label for="admin-student-name" class="admin-add-student-label">Naam student
-                <input type="text" name="admin-student-name" class="admin-add-student-input" required>
-            </label>
-            <label for="admin-student-email" class="admin-add-student-label">E-mail student
-                <input type="text" name="admin-student-email" class="admin-add-student-input" required>
-            </label>
-        </form>
-        <input class="admin-add-student-button" type="submit" value="Opslaan" />
+      <div class="container-middle container-middle-admin">
+        <div class="container-middle-left">
+          <div id="admin-add-student-toggle" class="admin-toggle" onclick="showStudentForm()">
+            <p>Student toevoegen</p>
+          </div>
+          <div id="admin-add-teacher-toggle" class="admin-toggle" onclick="showTeacherForm()">
+            <p>Docent toevoegen</p>
+          </div>
+          <div id="admin-add-group-toggle" class="admin-toggle" onclick="showGroupForm()">
+            <p>Klas toevoegen</p>
           </div>
         </div>
+        
+        <div id="admin-student-form" class="container-middle-right">
+          <div class="admin-title">
+            <h1 class="admin-title">Student toevoegen</h1>
+          </div>
+          <br> <br>
+          <form class="admin-form">
+            <label for="admin-student-number" class="admin-input-label">Student nummer
+              <input type="text" name="admin-student-number" class="admin-input-field" required>
+            </label>
+            <label for="admin-student-name" class="admin-input-label">Naam student
+              <input type="text" name="admin-student-name" class="admin-input-field" required>
+            </label>
+            <label for="admin-student-email" class="admin-input-label">E-mail student
+              <input type="email" name="admin-student-email" class="admin-input-field" required>
+            </label>
+            <label for="admin-student-group" class="admin-input-label">Klas student
+              <br> <br>
+              <select name="admin-student-group" class="admin-student-group-select"></select>
+            </label>
+            <div class="admin-button-container">
+              <input class="admin-save-button" type="submit" value="Opslaan" />
+            </div>
+          </form>
+        </div>
+        
+        <div id="admin-teacher-form" class="container-middle-right">
+          <div class="admin-title">
+            <h1 class="admin-title">Docent toevoegen</h1>
+          </div>
+          <form class="admin-form">
+            <label for="admin-teacher-name" class="admin-input-label">Naam docent
+              <input type="text" name="admin-teacher-name" class="admin-input-field" required>
+            </label>
+            <label for="admin-teacher-email" class="admin-input-label">E-mail docent
+              <input type="email" name="admin-teacher-email" class="admin-input-field" required>
+            </label>
+            <label for="admin-teacher-admin" class="admin-input-label">Admin? 
+              <br><br>
+              <input type="radio" name="admin-teacher-admin-button" class="admin-teacher-radio-button" required> Ja
+              <br>
+              <input type="radio" name="admin-teacher-admin-button" class="admin-teacher-radio-button" required> Nee
+            </label>
+            <div class="admin-button-container">
+              <input class="admin-save-button" type="submit" value="Opslaan" />
+            </div>
+          </form>
+        </div>
+
+        <div id="admin-group-form" class="container-middle-right">
+          <div class="admin-title">
+            <h1 class="admin-title">Klas toevoegen</h1>
+          </div>
+          <form class="admin-form">
+            <label for="admin-group-id" class="admin-input-label">Naam klas
+              <input type="text" name="admin-group-id" class="admin-input-field" required>
+            </label>
+            <label for="admin-group-start" class="admin-input-label">Start datum
+              <input type="date" name="admin-group-start" class="admin-input-field" required>
+            </label>
+            <label for="admin-group-end" class="admin-input-label">Eind datum
+              <input type="date" name="admin-group-end" class="admin-input-field" required>
+            </label>
+            <div class="admin-button-container">
+              <input class="admin-save-button" type="submit" value="Opslaan" />
+            </div>
+          </form>
+        </div>
+
       </div>
     </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      const adminStudentForm = document.getElementById("admin-student-form");
+      const adminTeacherForm = document.getElementById("admin-teacher-form");
+      const adminGroupForm = document.getElementById("admin-group-form");
+      
+      adminTeacherForm.style.display = "none";
+      adminGroupForm.style.display = "none";
+
+      function showStudentForm(){
+        adminStudentForm.style.display = "";
+        adminTeacherForm.style.display = "none";
+        adminGroupForm.style.display = "none";
+      }
+
+      function showTeacherForm(){
+        adminStudentForm.style.display = "none";
+        adminTeacherForm.style.display = "";
+        adminGroupForm.style.display = "none";
+      }
+
+        function showGroupForm(){
+        adminStudentForm.style.display = "none";
+        adminTeacherForm.style.display = "none";
+        adminGroupForm.style.display = "";
+        }
+
+    </script>
   </body>
 </html>
