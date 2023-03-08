@@ -1,12 +1,7 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mijn Overzicht</title>
-    <link rel="stylesheet" href="../static/style.css""/>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+
+{% block content %}
     <div class="container-window"> 
     <div class="container-header"> 
         <button class="header-logo-button">
@@ -88,5 +83,4 @@ new Chart(myChart, {
 });
     </script>
 </div>
-</body>
-</html>
+{% endblock %}
