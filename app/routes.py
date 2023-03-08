@@ -80,7 +80,7 @@ def setpresence(code=None, user_id=None):
     student_present = db.session.query(
         StudentMeeting.query.filter_by(
             meeting_id=meeting.id, student_id=user_id).exists()
-    ).scalar()
+    .scalar()).bool()
     print(student_present)
     if student_present:
         # student is already present return to home, with message
@@ -380,3 +380,16 @@ def delete_group(id=None):
     db.session.delete(group)
     db.session.commit()
     return jsonify({"message": "Group {group} is verwijderd"})
+
+@app.route("/api/next_meeting", methods=['GET'])
+def get_next_meeting():
+    try:
+        # get the next meeting after the current date
+        # next_meeting = Meeting.query.order_by(Meeting.date).first()
+        next_meeting = Meeting.query.filter(Meeting.date > datetime.now()).order_by(Meeting.date).first()
+        error = ""
+    except Exception as e:
+        next_meeting = None
+        error = str(e)
+
+    return jsonify({"next_meeting": next_meeting, "error": error})
