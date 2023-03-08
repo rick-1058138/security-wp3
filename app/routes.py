@@ -56,7 +56,7 @@ def presence(code=None):
         Meeting.query.filter_by(meeting_code=code).exists()
     ).scalar()
     if exists:
-        return render_template('presence.html')
+        return render_template('presence.html', code = code)
     else:
         abort(404)
 
