@@ -8,6 +8,7 @@
 body {
     font-family: Poppins, sans-serif;
     background-color: #fff7ea;
+    padding-top: 120px;
 }
 
 textarea,
@@ -19,11 +20,13 @@ input {
 
 .header-container {
     background: #fff7ea;
+    background-color: #cf0245;
     min-height: 70px;
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 999;
+    box-shadow: 0 0 20px 0px #c9c9c9e0;
 }
 
 .header-left {
@@ -39,10 +42,15 @@ input {
     z-index: 100;
     top: 1rem;
     right: 1rem;
-    padding: 10px;
+    /* padding: 10px; */
     border: none;
-    background: #fff7ea;
+    /* background: #fff7ea; */
     cursor: pointer;
+    width: 50px;
+    height: 50px;
+    font-size: 34px;
+    background-color: transparent;
+    color: white;
 }
 
 
@@ -111,8 +119,9 @@ input {
 }
 
 .container-window {
-    width: 100vw;
-    height: 100vh;
+    /* width: 100vw;
+    height: 100vh; */
+    padding-top: 100px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -316,6 +325,26 @@ input {
     margin: 0 auto;
     padding: 60px 40px;
     box-shadow: 0px 0px 12px 3px #44444414;
+}
+
+.rooster-extra{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-box{
+    background-color: #d30f4c;
+    color: white;
+    border-radius: 7px;
+    border: 2px solid #d30f4c;
+}
+
+.filter-text{
+    font-weight: bold;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
 }
 
 .rooster-row {
@@ -848,7 +877,6 @@ input {
     width: 80%;
     margin: 0 auto;
     min-width: 500px;
-    margin-top: 120px;
     position: relative;
 }
 
@@ -1021,7 +1049,6 @@ input {
 span.select2 {
     display: block;
     min-width: 150px;
-    margin: 10px 0;
     max-width: 250px;
 }
 
