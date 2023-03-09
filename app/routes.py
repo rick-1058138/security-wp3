@@ -1,9 +1,12 @@
-from flask import abort, flash, jsonify, redirect, render_template, request, url_for
+import time
+from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
 from app import app, db
 from app.models import Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting
 from datetime import datetime
 
 from random import randint
+
+app.secret_key = "abc123"
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -17,6 +20,35 @@ def admin():
 @app.route("/")
 def home():
     return render_template('index.html')
+
+@app.route("/timer/start")
+def start_timer():
+    # UPDATE: set timer length through form where user can choose the length
+    # UPDATE: set time of starting in db ( this time can later be used to check if a student can join a meeting or if they where to late)
+    session['timer_length'] = 30
+    session['start_time'] = time.time()
+    return str(session['start_time'])
+
+@app.route("/timer/update")
+def update_timer():
+    print('start', session['start_time'])
+    print('current', time.time())
+
+    #calculate time left on timer
+    session['time_left'] = round(session['timer_length'] - (time.time() - session['start_time']))
+    mins, secs = divmod(session['time_left'], 60)
+    #format time to mm:ss 
+    session['timer_text'] = '{:02d}:{:02d}'.format(mins, secs)
+
+    # UPDATE: if timer == 0 update meeting status in db 
+
+    # check if time is less then 0, then set the timer to 0
+    if(session['time_left'] < 0):
+        session['time_left'] = 0
+        mins, secs = divmod(session['time_left'], 60)
+        session['timer_text'] = '{:02d}:{:02d}'.format(mins, secs)
+
+    return jsonify({"result": {"timetext": session['timer_text'], "time": session['time_left']}})
 
 
 @app.route("/rooster")

@@ -848,6 +848,8 @@ input {
     width: 80%;
     margin: 0 auto;
     min-width: 500px;
+    margin-top: 120px;
+    position: relative;
 }
 
 .info-header {
@@ -1071,3 +1073,17 @@ span.select2 {
 
 
 /* ========================================= */
+
+.timer-container{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(0, -50%);
+    text-align: center;
+}
+
+.timer-text{
+    font-size: 30px;
+    letter-spacing: 2px;
+    padding: 10px 0;
+}
