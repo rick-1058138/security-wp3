@@ -92,6 +92,7 @@
 
         // checkStudents(test_data)
         meetingCode = $('.meeting-code').text();    
+        var stopRefresh = false
 
 
         function getStudentsForMeeting(meetingCode){
@@ -114,13 +115,13 @@
                     alert("request failed");
                 }
             })
-
-            setTimeout(function(){
-                getStudentsForMeeting(meetingCode)
-            }, 1000);
+            if(!stopRefresh){
+                setTimeout(function(){
+                    getStudentsForMeeting(meetingCode)
+                }, 1000);
+            }
         }
         getStudentsForMeeting(meetingCode)
-
 
 
         function updateTimer(meetingCode){
@@ -131,6 +132,7 @@
                 success: function(responseData){
                     console.log(responseData.result);
                     if(responseData.result.time == 0){
+                        stopRefresh = true
                         $('.timer-text').text("Aanmelden beeindigd")
                     }else{
                         $('.timer-text').text(responseData.result.timetext)
@@ -140,10 +142,11 @@
                     console.log(error);
                 }
             })
-
-            setTimeout(function(){
-                updateTimer()
-            }, 1000);
+            if(!stopRefresh){
+                setTimeout(function(){
+                    updateTimer()
+                }, 1000);
+            }
         }
         updateTimer()
     </script>
