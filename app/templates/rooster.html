@@ -88,8 +88,6 @@
                 {% for day in day_list%}
 
                     <div class="rooster-day">
-                        <!-- if statement in class list is to check for the current day, now for testing it checks for 1 --> 
-                        <!-- loop.index has to change later to the day of the month -->
                         <p class="rooster-day-title">{{day}} <span id="day-{{ loop.index }}" class="rooster-day-number">{{ loop.index }}</span></p>
                         <section class="rooster-table">
                             {% for time in time_list%}

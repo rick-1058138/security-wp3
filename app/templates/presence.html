@@ -24,15 +24,6 @@
     </div>
 
     <script type="application/javascript">
-        const newspaperSpinning = [
-        { transform: 'rotate(0) scale(1)' },
-        { transform: 'rotate(360deg) scale(0)' }
-        ];
-
-        const newspaperTiming = {
-        duration: 2000,
-        iterations: 1,
-        }
 
         var studentIdArray = []
         function addStudent(name, id){
@@ -55,28 +46,7 @@
             });
             
         }
-
-        var test_data = {
-            "result":[
-                {
-                    "name": "test",
-                    "id": 1
-                },
-                {
-                    "name": "naam",
-                    "id": 2
-                },
-                {
-                    "name": "naam",
-                    "id": 2
-                },
-                {
-                    "name": "Peter",
-                    "id": 3
-                },
-
-            ]
-        }
+        
         console.log(test_data.result)
         function checkStudents(data){
             console.log("checking...")
@@ -84,16 +54,10 @@
             if(!studentIdArray.includes(student.id)){
                 addStudent(student.name, student.id);
             }
-            //setTimeout(function(){
-            //   checkStudents(test_data)
-            //}, 1000);
         }
 
-
-        // checkStudents(test_data)
         meetingCode = $('.meeting-code').text();    
         var stopRefresh = false
-
 
         function getStudentsForMeeting(meetingCode){
             $.ajax({ 
@@ -104,7 +68,6 @@
                     console.log(responseData);
                     for(item of responseData.result){
                         studentId = item.student_id
-                        // console.log(studentId)
                         // Find id of students in array of student objects
                         let student = responseData.students.find(o => o.id === studentId)
                         console.log(student)
@@ -122,7 +85,6 @@
             }
         }
         getStudentsForMeeting(meetingCode)
-
 
         function updateTimer(meetingCode){
             $.ajax({ 
@@ -149,6 +111,7 @@
             }
         }
         updateTimer()
+
     </script>
 {% endblock %}
 
