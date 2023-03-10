@@ -58,7 +58,7 @@
           <div class="admin-title">
             <h1 class="admin-title">Docent toevoegen</h1>
           </div>
-          <form class="admin-form">
+          <form class="admin-form" method="POST" action="/create-teacher">
             <label for="admin-teacher-name" class="admin-input-label">Naam docent
               <input type="text" name="admin-teacher-name" class="admin-input-field" required>
             </label>
@@ -67,10 +67,7 @@
             </label>
             <label for="admin-teacher-admin" class="admin-input-label">Admin? 
               <br><br>
-              <input type="radio" name="admin-teacher-admin-button" class="admin-teacher-radio-button" required> Ja
-              <br>
-              <input type="radio" name="admin-teacher-admin-button" class="admin-teacher-radio-button" required> Nee
-            </label>
+              <input type="checkbox" name="admin-teacher-admin-true" class="admin-teacher-checkbox-button"> Ja
             <div class="admin-button-container">
               <input class="admin-save-button" type="submit" value="Opslaan" />
             </div>
