@@ -121,7 +121,7 @@ input {
 .container-window {
     /* width: 100vw;
     height: 100vh; */
-    padding-top: 100px;
+    padding-top: 50px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -263,7 +263,7 @@ input {
     padding-bottom: 10px;
     border-radius: 500px;
     margin-bottom: 30px;
-    margin-top: 40px;
+    margin-top: 10px;
     border: none;
     width: 100px;
     display: flex;
@@ -288,6 +288,7 @@ input {
 .admin-title {
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
 .admin-toggle {
