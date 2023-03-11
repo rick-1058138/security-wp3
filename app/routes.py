@@ -165,7 +165,7 @@ def login():
            return redirect(url_for("home"))
         else:
             flash("Gebruikersnaam of wachtwoord onjuist. Probeer opnieuw.", 'error')
-            return redirect("login")
+            return redirect(url_for("login"))
         
     return render_template("login.html")
 
