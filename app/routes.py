@@ -19,12 +19,13 @@ def admin():
 
 @app.route("/create-teacher", methods=['POST'])
 def create_teacher_form():
-    name = request.form["admin-teacher-name"]
+    firstname = request.form["admin-teacher-firstname"]
+    lastname = request.form["admin-teacher-lastname"]
     email = request.form["admin-teacher-email"]
     admin = False
     if request.form.getlist("admin-teacher-admin-true"):
         admin = True
-    teacher = Teacher(name=name, email=email, admin=admin)
+    teacher = Teacher(firstname=firstname, lastname=lastname, email=email, admin=admin)
     db.session.add(teacher)
     db.session.commit()
     return render_template("/admin.html")
