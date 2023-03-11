@@ -156,6 +156,7 @@ def setpresence(code=None, user_id=None):
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
+        print('hello')
         username = request.form["username"]
         user = db.session.query(User).filter(User.email==username).first()
         print(user)
@@ -167,6 +168,11 @@ def login():
             return redirect("login")
         
     return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
 
 
 @app.route("/code-input")

@@ -13,8 +13,7 @@ import string
 def load_user(user_id):
     user = User.query.get(user_id)
 
-    if user:
-        return user
+    return user
 
 
 @dataclass

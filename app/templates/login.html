@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link rel="stylesheet" href="../static/style.css" />
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block content %}
     <div class="container-window">
       <div class="container-header">
         <img
@@ -17,7 +9,7 @@
         />
       </div>
       <div class="container-middle">
-        <form action="/login" method="POST">
+        <form action="/" method="POST">
           <div class="login-field">
             <label for="username" class="label-login">Gebruikersnaam</label>
             <input class="login-input" type="text" name="username" required />
@@ -37,5 +29,8 @@
         </form>
       </div>
     </div>
-  </body>
-</html>
+    <script type="text/javascript">
+      const hamburger = document.getElementById("hamburger");
+      hamburger.style.display = "none"
+    </script>
+{% endblock %}
