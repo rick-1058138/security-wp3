@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin</title>
-    <link rel="stylesheet" href="../static/style.css" />
-  </head>
-  <body>
+{% extends 'base.html' %}
+{% block content %}
     <div class="container-window">
-      <div class="container-header">
-        <img
-          class="header-logo"
-          src="../static/images/logo.png"
-          alt="Hogeschool Rotterdam"
-        />
-      </div>
       <div class="container-middle container-middle-admin">
         <div class="container-middle-left">
           <div id="admin-add-student-toggle" class="admin-toggle" onclick="showStudentForm()">
@@ -131,5 +116,4 @@
         }
 
     </script>
-  </body>
-</html>
+{% endblock %}
