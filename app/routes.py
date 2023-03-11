@@ -26,7 +26,7 @@ def create_teacher_form():
     admin = False
     if request.form.getlist("admin-teacher-admin-true"):
         admin = True
-    teacher = Teacher(firstname=firstname, lastname=lastname, email=email, admin=admin)
+    teacher = Teacher(first_name=firstname, last_name=lastname, email=email, admin=admin)
     db.session.add(teacher)
     db.session.commit()
     return render_template("/admin.html")
