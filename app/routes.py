@@ -135,7 +135,7 @@ def setpresence(code=None, user_id=None):
     else:
         # add student to meeting
         student = StudentMeeting(
-            student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now())
+            student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now(), present=True)
         db.session.add(student)
         db.session.commit()
         # student is added so return to home, with a message

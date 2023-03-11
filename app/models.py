@@ -94,7 +94,8 @@ class Meeting(db.Model):
     start_time: str = db.Column(db.String(20), nullable=False)
     end_time: str = db.Column(db.String(20), nullable=False)
     date: datetime.date = db.Column(db.Date(), nullable=False)
-    status: str = db.Column(db.String(20), nullable=False, default='moet nog starten')
+    # status: 0 = not started yet - 1 = started - 2 = ended 
+    status: int = db.Column(db.Integer, nullable=False, default=0)
     description: str = db.Column(db.Text(), nullable=False)
     meeting_code: int = db.Column(db.Integer(), nullable=False, unique=True)
 

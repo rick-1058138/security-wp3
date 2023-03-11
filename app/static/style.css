@@ -902,7 +902,7 @@ input {
 
 .message-container {
     position: absolute;
-    top: 0;
+    top: 85px;
     right: 0;
     z-index: 1000;
 }
