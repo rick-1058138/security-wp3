@@ -22,5 +22,4 @@ QRcode(app)
 login_manager = LoginManager()
 app.secret_key = 'ThisKeyIsSuperSecret'
 
-
 from app import routes
