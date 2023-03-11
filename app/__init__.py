@@ -19,7 +19,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aanwezigheidstool.db'
 app.app_context().push()
 db = SQLAlchemy(app)
 QRcode(app)
-login_manager = LoginManager()
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+login_manager.login_message = 'Je moet eerst inloggen!'
+login_manager.login_message_category = 'info'
 app.secret_key = 'ThisKeyIsSuperSecret'
 
 from app import routes

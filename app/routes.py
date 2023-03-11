@@ -1,7 +1,8 @@
 import time
 from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
+from flask_login import login_user, current_user, login_required, logout_user
 from app import app, db
-from app.models import Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting
+from app.models import Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User
 from datetime import datetime
 
 from random import randint
@@ -15,6 +16,7 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 @app.route("/admin")
+@login_required
 def admin():
     return render_template("admin.html")
 
@@ -32,11 +34,13 @@ def create_teacher_form():
     return render_template("/admin.html")
 
 
-@app.route("/")
+@app.route("/home")
+@login_required
 def home():
     return render_template('index.html')
 
 @app.route("/timer/start")
+@login_required
 def start_timer():
     # UPDATE: set timer length through form where user can choose the length
     # UPDATE: set time of starting in db ( this time can later be used to check if a student can join a meeting or if they where to late)
@@ -45,6 +49,7 @@ def start_timer():
     return str(session['start_time'])
 
 @app.route("/timer/update")
+@login_required
 def update_timer():
     print('start', session['start_time'])
     print('current', time.time())
@@ -67,6 +72,7 @@ def update_timer():
 
 
 @app.route("/rooster")
+@login_required
 def rooster():
     return render_template('rooster.html')
 
@@ -97,6 +103,7 @@ def set_password(code = None):
         
 
 @app.route("/aanwezigheid/<code>")
+@login_required
 def presence(code=None):
     # check if code exists else throw 404 not found error
     exists = db.session.query(
@@ -109,6 +116,7 @@ def presence(code=None):
 
 
 @app.route('/aanmelden/<code>/<user_id>')
+@login_required
 def setpresence(code=None, user_id=None):
     # check if code exists else throw 404 not found error
     exists = db.session.query(
@@ -144,27 +152,43 @@ def setpresence(code=None, user_id=None):
         return redirect('/')
 
 
-@app.route("/login")
+
+@app.route("/", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        user = db.session.query(User).filter(User.email==username).first()
+        print(user)
+        if user:
+           login_user(user)
+           return redirect(url_for("home"))
+        else:
+            flash("Gebruikersnaam of wachtwoord onjuist. Probeer opnieuw.", 'error')
+            return redirect("login")
+        
     return render_template("login.html")
 
 
 @app.route("/code-input")
+@login_required
 def code_input():
     return render_template("code-input.html")
 
 
 @app.route("/les_overzicht")
+@login_required
 def les_overzicht():
     return render_template("les_overzicht.html")
 
 
 @app.route("/overview_page")
+@login_required
 def overview_page():
     return render_template('overview_page.html')
 
 
 @app.route("/welcome_page")
+@login_required
 def welcome_page():
     return render_template('welcome_page.html')
 
@@ -186,6 +210,7 @@ def handle_groupmeeting():
 
 
 @app.route("/base")
+@login_required
 def base():
     return render_template('base.html')
 

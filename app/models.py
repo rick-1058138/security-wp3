@@ -1,14 +1,20 @@
 from datetime import datetime
-from app import db
+from app import db, login_manager
 from dataclasses import dataclass
 from sqlalchemy import Column, Integer, ForeignKey, Boolean, DateTime, Text, Time, Date
 from sqlalchemy.orm import relationship
+from flask_login import UserMixin
 
 
 import random
 import string
 
+@login_manager.user_loader
+def load_user(user_id):
+    user = User.query.get(user_id)
 
+    if user:
+        return user
 
 
 @dataclass
@@ -140,7 +146,7 @@ class Teacher(db.Model):
     
 
 @dataclass
-class User(db.Model):
+class User(UserMixin, db.Model):
     id: int = db.Column(db.Integer, primary_key=True)
     email: str = db.Column(db.String(255), unique=True, nullable=False)
     password: str = db.Column(db.String(255), nullable=False)
