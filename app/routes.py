@@ -5,6 +5,7 @@ from app.models import Student, Group, Meeting, StudentMeeting, Teacher, GroupMe
 from datetime import datetime
 
 from random import randint
+from faker import Faker
 
 app.secret_key = "abc123"
 
@@ -233,7 +234,7 @@ def handle_meeting(id=None):
         body = request.json
         try:
             date_object = datetime.strptime(body['date'], '%Y-%m-%d').date()
-            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=date_object, status="niet begonnen", description=body["description"], meeting_code=randint(10_000_000, 99_999_999))
+            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=date_object, description=body["description"], meeting_code=randint(10_000_000, 99_999_999))
             db.session.add(meeting)
             db.session.commit()
             result = "ok"
@@ -284,6 +285,26 @@ def handle_meeting(id=None):
 # def test_meeting():
 #     Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", meeting_code=123456)
 #     return "Meeting toegevoegd"
+
+@app.route("/faker")
+def faker():
+    fake = Faker()
+    for _ in range(5):
+        student = Student(first_name=fake.first_name(), last_name=fake.last_name(), email=fake.free_email())
+        db.session.add(student)
+        db.session.commit()
+
+        teacher = Teacher(first_name=fake.first_name(), last_name=fake.last_name(), email=fake.free_email(), admin=randint(0, 1))
+        db.session.add(teacher)
+        db.session.commit()
+
+        group = Group(start_date=datetime.now(), end_date=datetime.now(), name=fake.word())
+        db.session.add(group)
+        db.session.commit()
+
+    return "Data toegevoegd aan de database"
+
+
 
 @app.route("/testdata")
 def test():

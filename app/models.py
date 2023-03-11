@@ -11,19 +11,24 @@ import string
 
 
 
-
 @dataclass
 class Group(db.Model):
     id: int = db.Column(db.Integer, primary_key=True)
-    start_date = db.Column(db.DateTime, nullable=False)
-    end_date = db.Column(db.DateTime, nullable=False)
+    start_date: datetime.date = db.Column(db.Date, nullable=False)
+    end_date: datetime.date = db.Column(db.Date, nullable=False)
     name: str = db.Column(db.String(50))
 
-    group_meetings = db.relationship('GroupMeeting', back_populates='group')
-    student_groups = db.relationship('StudentGroup', back_populates='group')
+    meetings = db.relationship('GroupMeeting', back_populates='group')
+    groups = db.relationship('StudentGroup', back_populates='group')
 
     def __repr__(self):
         return f"Group('{self.start_date}', '{self.end_date}')"
+    
+    def __init__(self, start_date, end_date, name):
+        self.start_date = start_date
+        self.end_date = end_date
+        self.name = name
+        
 
 # many to many relationship for students and meetings
 @dataclass
@@ -32,7 +37,7 @@ class StudentMeeting(db.Model):
     student_id:int = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
     meeting_id:int = db.Column(db.Integer, db.ForeignKey('meeting.id'), nullable=False)
     checkin_date:str = db.Column(db.DateTime)
-    present  = db.Column(db.Boolean, nullable=False)
+    present:bool  = db.Column(db.Boolean, nullable=False)
 
     student = db.relationship('Student', back_populates='meetings')
     meeting = db.relationship('Meeting', back_populates='students')
@@ -51,14 +56,14 @@ class GroupMeeting(db.Model):
 
 @dataclass
 class Student(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    student_number = db.Column(db.String(20), nullable=False)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
+    id:int = db.Column(db.Integer, primary_key=True)
+    user_id:int = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    student_number:int = db.Column(db.String(20), nullable=False)
+    first_name:str = db.Column(db.String(50), nullable=False)
+    last_name:str = db.Column(db.String(50), nullable=False)
     
-    student_groups = db.relationship('StudentGroup', back_populates='student')
-    student_meeting = db.relationship('StudentMeeting', back_populates='student')
+    groups = db.relationship('StudentGroup', back_populates='student')
+    meetings = db.relationship('StudentMeeting', back_populates='student')
     user = db.relationship('User', back_populates='student')
 
     @property
@@ -69,12 +74,14 @@ class Student(db.Model):
         return f"Student('{self.full_name}')"
 
 
-    def __init__(self, name):
-        self.name = name
-        # create random password and password code 
-        characters = string.ascii_letters + string.digits
-        self.password = ''.join(random.choice(characters) for i in range(60))
-        self.password_code = ''.join(random.choice(characters) for i in range(15))
+    def __init__(self, first_name, last_name, email):
+        user = User(email=email, admin=False)
+        db.session.add(user)
+        db.session.commit()
+        self.first_name = first_name
+        self.last_name = last_name
+        self.student_number = random.randint(1_000_000, 9_999_999)
+        self.user_id = user.id
 
             
     def __repr__(self):
@@ -84,24 +91,24 @@ class Student(db.Model):
 class Meeting(db.Model):
     id: int = db.Column(db.Integer, primary_key=True)
     name: str = db.Column(db.String(100), nullable=False)
-    start_time: datetime.time = db.Column(db.Time(), nullable=False)
-    end_time: datetime.time = db.Column(db.Time(), nullable=False)
+    start_time: str = db.Column(db.String(20), nullable=False)
+    end_time: str = db.Column(db.String(20), nullable=False)
     date: datetime.date = db.Column(db.Date(), nullable=False)
-    status = db.Column(db.String(20), nullable=False, default='moet nog starten')
+    status: str = db.Column(db.String(20), nullable=False, default='moet nog starten')
     description: str = db.Column(db.Text(), nullable=False)
     meeting_code: int = db.Column(db.Integer(), nullable=False, unique=True)
 
     students = db.relationship('StudentMeeting', back_populates='meeting')
     groups = db.relationship('GroupMeeting', back_populates='meeting')
-    teacher = db.relationship('TeacherMeeting', back_populates='meeting')
-    answer = db.relationship('Question', back_populates='meeting')
+    teachers = db.relationship('TeacherMeeting', back_populates='meeting')
+    question = db.relationship('Question', back_populates='meeting')
 
-    def __init__(self, name, start_time, end_time, date, status, description, meeting_code):
+
+    def __init__(self, name, start_time, end_time, date, description, meeting_code):
         self.name = name
         self.start_time = start_time
         self.end_time = end_time
         self.date = date
-        self.status = status
         self.description = description
         self.meeting_code = meeting_code
 
@@ -113,59 +120,80 @@ class Meeting(db.Model):
 
 @dataclass
 class Teacher(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
+    id: int = db.Column(db.Integer, primary_key=True)
+    user_id: int = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    first_name: str = db.Column(db.String(50), nullable=False)
+    last_name: str = db.Column(db.String(50), nullable=False)
 
-    teacher_meetings = db.relationship('TeacherMeeting', back_populates='teacher')
+    meetings = db.relationship('TeacherMeeting', back_populates='teacher')
     user = db.relationship('User', back_populates='teacher')
+
+    def __init__(self, first_name, last_name, email, admin):
+        user = User(email=email, admin=admin)
+        db.session.add(user)
+        db.session.commit()
+        self.first_name = first_name
+        self.last_name = last_name
+        self.user_id = user.id
+
     
 
 @dataclass
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    password_code = db.Column(db.String(255))
-    admin = db.Column(db.Boolean, nullable=False)
-    created_date = db.Column(db.DateTime, nullable=False)
+    id: int = db.Column(db.Integer, primary_key=True)
+    email: str = db.Column(db.String(255), unique=True, nullable=False)
+    password: str = db.Column(db.String(255), nullable=False)
+    password_code: str = db.Column(db.String(255))
+    admin: bool = db.Column(db.Boolean, nullable=False)
+    created_date = db.Column(db.DateTime, nullable=False, default=datetime.now())
 
     student = db.relationship('Student', back_populates='user',)
     teacher = db.relationship('Teacher', back_populates='user',)
 
+    def __init__(self, email, admin=False):
+        self.email = email
+        # create random password and password code 
+        characters = string.ascii_letters + string.digits
+        password = ''.join(random.choice(characters) for i in range(60))
+        password_code = ''.join(random.choice(characters) for i in range(15))
+
+        self.password = password
+        self.password_code = password_code
+        self.admin = admin
+
+
+
 @dataclass
 class StudentGroup(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
-    group_id = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
+    id: int = db.Column(db.Integer, primary_key=True)
+    student_id: int = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    group_id: int = db.Column(db.Integer, db.ForeignKey('group.id'), nullable=False)
 
-    group = db.relationship('Group', back_populates='student_groups')
-    student = db.relationship('Student', back_populates='student_groups')
+    group = db.relationship('Group', back_populates='groups')
+    student = db.relationship('Student', back_populates='groups')
 
 @dataclass
 class Question(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'), nullable=False)
-    text = db.Column(db.String(500), nullable=False)
+    id: int = db.Column(db.Integer, primary_key=True)
+    meeting_id: int = db.Column(db.Integer, db.ForeignKey('meeting.id'), nullable=False)
+    text: str = db.Column(db.String(500), nullable=False)
 
-    meeting = db.relationship('Meeting', back_populates='questions')
+    meeting = db.relationship('Meeting', back_populates='question')
+    answers = db.relationship('Answer', back_populates='question')
 
 @dataclass
 class Answer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(255))
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
+    id: int = db.Column(db.Integer, primary_key=True)
+    text: str = db.Column(db.String(255))
+    question_id: int = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
 
     question = db.relationship('Question', back_populates='answers')
 
 @dataclass
 class TeacherMeeting(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    group_id = db.Column(db.Integer(), db.ForeignKey('group.id'), nullable=False)
-    teacher_id = db.Column(db.Integer(), db.ForeignKey('teacher.id'), nullable=False)
-    meeting_id = db.Column(db.Integer(), db.ForeignKey('meeting.id'), nullable=False)
+    id: int = db.Column(db.Integer, primary_key=True)
+    teacher_id: int = db.Column(db.Integer(), db.ForeignKey('teacher.id'), nullable=False)
+    meeting_id: int = db.Column(db.Integer(), db.ForeignKey('meeting.id'), nullable=False)
 
-    meeting = db.relationship('Meeting', back_populates='teacher_meeting')
-    teacher = db.relationship('Teacher', back_populates='teacher_meeting')
-    group = db.relationship('Group', back_populates='teacher_meeting')
+    meeting = db.relationship('Meeting', back_populates='teachers')
+    teacher = db.relationship('Teacher', back_populates='meetings')
