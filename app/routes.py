@@ -2,7 +2,7 @@ import time
 from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from app import app, db
-from app.models import Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User
+from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User
 from datetime import datetime
 
 from random import randint
@@ -10,15 +10,18 @@ from faker import Faker
 
 app.secret_key = "abc123"
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     # return custom 404 page when 404 error occures
     return render_template('404.html'), 404
 
+
 @app.route("/admin")
 @login_required
 def admin():
     return render_template("admin.html")
+
 
 @app.route("/create-teacher", methods=['POST'])
 def create_teacher_form():
@@ -28,7 +31,8 @@ def create_teacher_form():
     admin = False
     if request.form.getlist("admin-teacher-admin-true"):
         admin = True
-    teacher = Teacher(first_name=firstname, last_name=lastname, email=email, admin=admin)
+    teacher = Teacher(first_name=firstname,
+                      last_name=lastname, email=email, admin=admin)
     db.session.add(teacher)
     db.session.commit()
     return render_template("/admin.html")
@@ -39,6 +43,7 @@ def create_teacher_form():
 def home():
     return render_template('index.html')
 
+
 @app.route("/timer/start")
 @login_required
 def start_timer():
@@ -48,22 +53,24 @@ def start_timer():
     session['start_time'] = time.time()
     return str(session['start_time'])
 
+
 @app.route("/timer/update")
 @login_required
 def update_timer():
     print('start', session['start_time'])
     print('current', time.time())
 
-    #calculate time left on timer
-    session['time_left'] = round(session['timer_length'] - (time.time() - session['start_time']))
+    # calculate time left on timer
+    session['time_left'] = round(
+        session['timer_length'] - (time.time() - session['start_time']))
     mins, secs = divmod(session['time_left'], 60)
-    #format time to mm:ss 
+    # format time to mm:ss
     session['timer_text'] = '{:02d}:{:02d}'.format(mins, secs)
 
-    # UPDATE: if timer == 0 update meeting status in db 
+    # UPDATE: if timer == 0 update meeting status in db
 
     # check if time is less then 0, then set the timer to 0
-    if(session['time_left'] < 0):
+    if (session['time_left'] < 0):
         session['time_left'] = 0
         mins, secs = divmod(session['time_left'], 60)
         session['timer_text'] = '{:02d}:{:02d}'.format(mins, secs)
@@ -76,8 +83,9 @@ def update_timer():
 def rooster():
     return render_template('rooster.html')
 
+
 @app.route("/wachtwoord/nieuw/<code>", methods=("GET", "POST"))
-def set_password(code = None):
+def set_password(code=None):
     if request.method == "GET":
 
         # Check if password code exists
@@ -85,22 +93,20 @@ def set_password(code = None):
             Student.query.filter_by(password_code=code).exists()
         ).scalar()
         if exists:
-            return render_template('set_password.html', code = code)
+            return render_template('set_password.html', code=code)
         else:
             abort(404)
 
     elif request.method == "POST":
-        # form validation 
+        # form validation
         print(request.form)
-        if(request.form.get('password') == request.form.get('password_confirm')):
+        if (request.form.get('password') == request.form.get('password_confirm')):
             flash("Je wachtwoord is aangepast!", 'success')
             return redirect(url_for('home'))
         else:
             flash("Wachtwoord velden komen niet overeen!", 'error')
-            return render_template('set_password.html', code = code)
-            
+            return render_template('set_password.html', code=code)
 
-        
 
 @app.route("/aanwezigheid/<code>")
 @login_required
@@ -110,7 +116,7 @@ def presence(code=None):
         Meeting.query.filter_by(meeting_code=code).exists()
     ).scalar()
     if exists:
-        return render_template('presence.html', code = code)
+        return render_template('presence.html', code=code)
     else:
         abort(404)
 
@@ -152,22 +158,22 @@ def setpresence(code=None, user_id=None):
         return redirect('/')
 
 
-
 @app.route("/", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         print('hello')
         username = request.form["username"]
-        user = db.session.query(User).filter(User.email==username).first()
+        user = db.session.query(User).filter(User.email == username).first()
         print(user)
         if user:
-           login_user(user)
-           return redirect(url_for("home"))
+            login_user(user)
+            return redirect(url_for("home"))
         else:
             flash("Gebruikersnaam of wachtwoord onjuist. Probeer opnieuw.", 'error')
             return redirect(url_for("login"))
-        
+
     return render_template("login.html")
+
 
 @app.route("/logout")
 def logout():
@@ -204,7 +210,8 @@ def handle_groupmeeting():
     if request.method == "POST":
         body = request.json
         try:
-            item = GroupMeeting(group_id=body['group_id'], meeting_id=body['meeting_id'])
+            item = GroupMeeting(
+                group_id=body['group_id'], meeting_id=body['meeting_id'])
             db.session.add(item)
             db.session.commit()
             result = "ok"
@@ -251,6 +258,7 @@ def meetings_between(start, end):
         error = str(e)
     return jsonify({"result": result, "error": error})
 
+
 @app.route("/api/meeting/", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
 @app.route("/api/meeting/<id>", methods=("GET", "POST", "PUT", "PATCH", "DELETE"))
 def handle_meeting(id=None):
@@ -266,7 +274,8 @@ def handle_meeting(id=None):
         body = request.json
         try:
             date_object = datetime.strptime(body['date'], '%Y-%m-%d').date()
-            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"], date=date_object, description=body["description"], meeting_code=randint(10_000_000, 99_999_999))
+            meeting = Meeting(name=body["name"], start_time=body["start_time"], end_time=body["end_time"],
+                              date=date_object, description=body["description"], meeting_code=randint(10_000_000, 99_999_999))
             db.session.add(meeting)
             db.session.commit()
             result = "ok"
@@ -318,24 +327,27 @@ def handle_meeting(id=None):
 #     Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", meeting_code=123456)
 #     return "Meeting toegevoegd"
 
+
 @app.route("/faker")
 def faker():
     fake = Faker()
     for _ in range(5):
-        student = Student(first_name=fake.first_name(), last_name=fake.last_name(), email=fake.free_email())
+        student = Student(first_name=fake.first_name(),
+                          last_name=fake.last_name(), email=fake.free_email())
         db.session.add(student)
         db.session.commit()
 
-        teacher = Teacher(first_name=fake.first_name(), last_name=fake.last_name(), email=fake.free_email(), admin=randint(0, 1))
+        teacher = Teacher(first_name=fake.first_name(), last_name=fake.last_name(
+        ), email=fake.free_email(), admin=randint(0, 1))
         db.session.add(teacher)
         db.session.commit()
 
-        group = Group(start_date=datetime.now(), end_date=datetime.now(), name=fake.word())
+        group = Group(start_date=datetime.now(),
+                      end_date=datetime.now(), name=fake.word())
         db.session.add(group)
         db.session.commit()
 
     return "Data toegevoegd aan de database"
-
 
 
 @app.route("/testdata")
@@ -351,11 +363,13 @@ def test():
     marinda = Student("Marinda")
     db.session.add(marinda)
 
-    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(), status="niet begonnen", description="dit is een meeting", meeting_code=randint(10_000_000, 99_999_999))
+    Meeting.create(name="test", start_time="10:00", end_time="11:00", date=datetime.now(
+    ), status="niet begonnen", description="dit is een meeting", meeting_code=randint(10_000_000, 99_999_999))
     group = Group(start_date="2023-3-2",
                   end_date="2024-3-2", name="Klas 1")
     db.session.add(group)
-    studentmeeting = StudentMeeting(student=rick, meeting_id=1, checkin_date=datetime.now())
+    studentmeeting = StudentMeeting(
+        student=rick, meeting_id=1, checkin_date=datetime.now())
     db.session.add(studentmeeting)
 
     db.session.commit()
@@ -377,7 +391,7 @@ def create_student():
     student = Student(name=name)
     db.session.add(student)
     db.session.commit()
-    url = url_for('set_password',code = student.password_code, _external=True)
+    url = url_for('set_password', code=student.password_code, _external=True)
     return jsonify({'id': student.id, 'name': student.name, 'link': url})
 
 
@@ -405,6 +419,8 @@ def get_teachers():
     return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
 
 # Add teacher
+
+
 @app.route('/api/teacher', methods=['POST'])
 def create_teacher():
     name = request.json['name']
@@ -414,12 +430,16 @@ def create_teacher():
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
 # Show specific teacher
+
+
 @app.route('/api/teacher/<int:id>', methods=['GET'])
 def get_teacher(id):
     teacher = Teacher.query.get_or_404(id)
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
 # Delete teacher
+
+
 @app.route('/api/teacher/<int:id>', methods=['DELETE'])
 def delete_teacher(id):
     teacher = Teacher.query.get_or_404(id)
@@ -428,6 +448,8 @@ def delete_teacher(id):
     return jsonify({"message": "Docent {} ID: {} is verwijderd".format(teacher.name, teacher.id)})
 
 # Update teacher
+
+
 @app.route('/api/teacher/<int:id>', methods=['PUT'])
 def update_teacher(id):
     teacher = Teacher.query.get_or_404(id)
@@ -478,3 +500,35 @@ def delete_group(id=None):
     db.session.delete(group)
     db.session.commit()
     return jsonify({"message": "Group {group} is verwijderd"})
+
+
+@app.route('/api/question', methods=['POST'])
+def create_question():
+    body = request.json
+    question = Question(text=body["text"], meeting_id=body["meeting_id"])
+    db.session.add(question)
+    db.session.commit()
+    result = "ok"
+    return jsonify({'text': question.text, 'id': question.meeting_id, 'result': result})
+
+
+@app.route('/api/question/<id>', methods=['PUT'])
+def update_question(id):
+    question = Question.query.get_or_404(id)
+    question.text = request.json['text']
+    db.session.commit()
+    return jsonify({'text': question.text, 'id': question.meeting_id, })
+
+
+@app.route('/api/question/<id>', methods=['GET'])
+def get_question_by_id(id=None):
+    question = Question.query.get_or_404(id)
+    return jsonify({'result': question})
+
+
+@app.route('/api/question/<id>', methods=['DELETE'])
+def delete_question(id):
+    question = Question.query.get_or_404(id)
+    db.session.delete(question)
+    db.session.commit()
+    return jsonify({"message": "Vraag ID: {} is verwijderd"})
