@@ -81,6 +81,9 @@ def update_timer():
 @app.route("/rooster")
 @login_required
 def rooster():
+    # current logged in student id
+    # print(current_user.student[0].id)
+
     return render_template('rooster.html')
 
 
@@ -121,10 +124,19 @@ def presence(code=None):
         abort(404)
 
 
-@app.route('/aanmelden/<code>/<user_id>')
+@app.route('/aanmelden/<code>')
 @login_required
-def setpresence(code=None, user_id=None):
+def setpresence(code=None):
     # check if code exists else throw 404 not found error
+
+    # UPDATE: later check here if user role is student
+    if(current_user.student != []):
+        #logged in student
+        id = current_user.student[0].id
+    else:
+        flash("Je kunt niet meedoen aan deze bijeenkomst", 'error')
+        return redirect(url_for("home"))
+
     exists = db.session.query(
         Meeting.query.filter_by(meeting_code=code).exists()
     ).scalar()
@@ -134,13 +146,10 @@ def setpresence(code=None, user_id=None):
         abort(404)
 
     # UPDATE: if user logs in then execute below
-    # UPDATE: get user id from session
-
-    # user id is from url for now, till user sessions are added
 
     student_present = db.session.query(
         StudentMeeting.query.filter_by(
-            meeting_id=meeting.id, student_id=user_id).exists()
+            meeting_id=meeting.id, student_id=id).exists()
     ).scalar()
     print(student_present)
     if student_present:
@@ -150,7 +159,7 @@ def setpresence(code=None, user_id=None):
     else:
         # add student to meeting
         student = StudentMeeting(
-            student_id=user_id, meeting_id=meeting.id, checkin_date=datetime.now(), present=True)
+            student_id=id, meeting_id=meeting.id, checkin_date=datetime.now(), present=True)
         db.session.add(student)
         db.session.commit()
         # student is added so return to home, with a message
