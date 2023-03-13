@@ -6,7 +6,7 @@
     <div class="top-row">   
         <!-- When application is opened on the network wide url, then scanning qr-code works  -->
         <div class="qrcode">
-            <img src="{{ qrcode(url_for('setpresence',code = code, user_id = 2, _external=True)) }}">
+            <img src="{{ qrcode(url_for('setpresence',code = code, _external=True)) }}">
         </div>
         <div>
             <h2 class="meeting-code-text">Les code:</h2>

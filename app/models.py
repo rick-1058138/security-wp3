@@ -95,8 +95,6 @@ class Student(db.Model):
         self.student_number = random.randint(1_000_000, 9_999_999)
         self.user_id = user.id
 
-    def __repr__(self):
-        return f"Student('{self.name}')"
 
 
 @dataclass
