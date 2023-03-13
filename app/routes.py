@@ -502,7 +502,7 @@ def delete_group(id=None):
     return jsonify({"message": "Group {group} is verwijderd"})
 
 
-@app.route('/api/question', methods=['POST'])
+@app.route('/api/question/', methods=['POST'])
 def create_question():
     body = request.json
     question = Question(text=body["text"], meeting_id=body["meeting_id"])

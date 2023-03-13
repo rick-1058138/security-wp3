@@ -21,8 +21,11 @@
                     <label>Klas / Klassen:</label>
                     <!-- Groups are added in here with ajax request  -->
                     <select class="group-select" name="groups[]" multiple="multiple" id="group-input">
-
                     </select>
+                </div>
+                <div class="form-row">
+                    <label>Vraag aan studenten</label>
+                    <input class="form-input" type="text" name="text" id="question-input"> 
                 </div>
                 <div class="form-row">
                     <label>Begin / eind tijd</label>
@@ -192,7 +195,7 @@
 
             $.ajax({
                 method: "POST",
-                url: "/api/meeting/",
+                url: "/api/meeting/", 
                 data : JSON.stringify(meeting),
                 contentType: "application/json",
                 dataType: 'json',
@@ -201,6 +204,11 @@
                     $empty = $('#new-meeting').find("input").filter(function() {
                         return this.value === "";
                     });
+
+            var question = {
+                text :$('#question-input').val(),
+            }
+
 
                     if($empty.length) {
                         $('#form-error').text("Vul alle vereiste velden in")
@@ -231,6 +239,9 @@
                     for(group of groups){
                         addGroupToMeeting(group, result.meeting.id)
                     }
+                    addQuestionToMeeting($('#question-input').val(), result.meeting.id)
+
+
                     getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
                 },
                 error : function(request,error){
@@ -238,6 +249,21 @@
                 }
             });
         });
+
+        function addQuestionToMeeting(text, meetingId){
+            var questionMeeting = {
+                text : text,
+                meeting_id : meetingId
+            }
+
+            $.ajax({
+                method: "POST",
+                url: "/api/question/", 
+                data : JSON.stringify(questionMeeting),
+                contentType: "application/json",
+                dataType: 'json',
+            });
+        }
 
         // add group to meeting
         function addGroupToMeeting(groupId, meetingId){
