@@ -8,8 +8,6 @@ from datetime import datetime
 from random import randint
 from faker import Faker
 
-app.secret_key = "abc123"
-
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -169,6 +167,9 @@ def setpresence(code=None):
 
 @app.route("/", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+    
     if request.method == "POST":
         print('hello')
         username = request.form["username"]
