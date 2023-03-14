@@ -158,8 +158,8 @@ def presence(code=None):
 def setpresence(code=None):
     # check if code exists else throw 404 not found error
 
-    # UPDATE: later check here if user role is student
-    if (current_user.student != []):
+    # check if user is a student
+    if (current_user.role == 1):
         # logged in student
         id = current_user.student[0].id
     else:

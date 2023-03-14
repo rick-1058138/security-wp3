@@ -87,13 +87,13 @@ class Student(db.Model):
     def __repr__(self):
         return f"Student('{self.full_name}')"
 
-    def __init__(self, first_name, last_name, email, student_number):
-        user = User(email=email, admin=False)
+    def __init__(self, first_name, last_name, email):
+        user = User(email=email, role=1,admin=False)
         db.session.add(user)
         db.session.commit()
         self.first_name = first_name
         self.last_name = last_name
-        self.student_number = student_number
+        self.student_number = random.randint(1_000_000, 9_999_999)
         self.user_id = user.id
 
 
@@ -142,7 +142,7 @@ class Teacher(db.Model):
     user = db.relationship('User', back_populates='teacher')
 
     def __init__(self, first_name, last_name, email, admin):
-        user = User(email=email, admin=admin)
+        user = User(email=email, role=0,admin=admin)
         db.session.add(user)
         db.session.commit()
         self.first_name = first_name
@@ -157,13 +157,15 @@ class User(UserMixin, db.Model):
     password: str = db.Column(db.String(255), nullable=False)
     password_code: str = db.Column(db.String(255))
     admin: bool = db.Column(db.Boolean, nullable=False)
+    # role: 0 = teacher, 1 = student
+    role: int = db.Column(db.Integer, nullable=False)
     created_date = db.Column(
         db.DateTime, nullable=False, default=datetime.now())
 
     student = db.relationship('Student', back_populates='user',)
     teacher = db.relationship('Teacher', back_populates='user',)
 
-    def __init__(self, email, admin=False):
+    def __init__(self, email, role, admin=False):
         self.email = email
         # create random password and password code
         characters = string.ascii_letters + string.digits
@@ -171,6 +173,7 @@ class User(UserMixin, db.Model):
         password = bcrypt.generate_password_hash("werkplaats3") 
         password_code = ''.join(random.choice(characters) for i in range(15))
 
+        self.role = role
         self.password = password
         self.password_code = password_code
         self.admin = admin
