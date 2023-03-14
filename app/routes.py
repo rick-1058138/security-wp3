@@ -1,7 +1,7 @@
 import time
 from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
-from app import app, db
+from app import app, db, bcrypt
 from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User
 from datetime import datetime
 
@@ -174,7 +174,7 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         user = db.session.query(User).filter(User.email == username).first()
-        if user and password == user.password:
+        if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for("home"))
         else:

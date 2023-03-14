@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from sqlalchemy import Column, Integer, ForeignKey, Boolean, DateTime, Text, Time, Date
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
+from app import bcrypt
 
 
 import random
@@ -166,7 +167,8 @@ class User(UserMixin, db.Model):
         self.email = email
         # create random password and password code
         characters = string.ascii_letters + string.digits
-        password = ''.join(random.choice(characters) for i in range(60))
+        # password = ''.join(random.choice(characters) for i in range(60))
+        password = bcrypt.generate_password_hash("werkplaats3") 
         password_code = ''.join(random.choice(characters) for i in range(15))
 
         self.password = password
