@@ -175,6 +175,15 @@ class User(UserMixin, db.Model):
         self.password_code = password_code
         self.admin = admin
 
+    def update_password(self, password):
+        self.password = bcrypt.generate_password_hash(password) 
+        db.session.commit()
+
+    def remove_password_code(self):
+        self.password_code = None
+        db.session.commit()
+
+
 
 @dataclass
 class StudentGroup(db.Model):

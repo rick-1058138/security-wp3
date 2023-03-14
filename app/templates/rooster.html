@@ -241,6 +241,16 @@
                     }
                     addQuestionToMeeting($('#question-input').val(), result.meeting.id)
 
+                    // reset form popup data
+                    $('#name-input').val(""),
+                    $('#description-input').val(""),
+                    $('#question-input').val("")
+                    $('#group-input').val([])
+                    $('#date-input').val(today)
+                    $('#start-input').val("8:00"),
+                    $('#end-input').val("9:00"),
+                    // remove selected elements from group select
+                    document.getElementById("select2-group-input-container").innerHTML = ''
 
                     getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
                 },
