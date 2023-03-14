@@ -49,6 +49,18 @@ def create_student_form():
     return render_template("/admin.html")
 
 
+@app.route("/create-group", methods=['POST'])
+def create_group_form():
+    name_group = request.form["admin-group-id"]
+    start_date = request.form["admin-group-start"]
+    end_date = request.form["admin-group-end"]
+    formatted_startdate = datetime.strptime(start_date, "%Y-%m-%d")
+    formatted_enddate = datetime.strptime(end_date, "%Y-%m-%d")
+    group = Group(name=name_group, start_date=formatted_startdate, end_date=formatted_enddate)
+    db.session.add(group)
+    db.session.commit()
+    return render_template("/admin.html")
+
 @app.route("/home")
 @login_required
 def home():
