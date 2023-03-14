@@ -27,4 +27,4 @@ login_manager.login_message_category = 'info'
 bcrypt = Bcrypt(app)
 app.secret_key = 'ThisKeyIsSuperSecret'
 
-from app import routes
+from app import routes, api
