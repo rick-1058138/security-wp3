@@ -34,7 +34,11 @@
             </label>
             <label for="admin-student-group" class="admin-input-label">Klas student
               <br> <br>
-              <select name="admin-student-group" class="admin-student-group-select"></select>
+              <select name="admin-student-group" class="admin-student-group-select">
+                {% for group in group_list %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+              </select>
             </label>
             <div class="admin-button-container">
               <input class="admin-save-button" type="submit" value="Opslaan" />

@@ -18,7 +18,15 @@ def page_not_found(e):
 @app.route("/admin")
 @login_required
 def admin():
-    return render_template("admin.html")
+    groups = db.session.query(Group).all()
+    group_list = []
+    for group in groups:
+        print(group.name)
+        group_list.append({
+            "name": group.name,
+            "id": group.id
+        })
+    return render_template("admin.html", group_list=group_list)
 
 
 @app.route("/create-teacher", methods=['POST'])
