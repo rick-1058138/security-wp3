@@ -171,11 +171,10 @@ def login():
         return redirect(url_for("home"))
     
     if request.method == "POST":
-        print('hello')
         username = request.form["username"]
+        password = request.form["password"]
         user = db.session.query(User).filter(User.email == username).first()
-        print(user)
-        if user:
+        if user and password == user.password:
             login_user(user)
             return redirect(url_for("home"))
         else:

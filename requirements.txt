@@ -3,3 +3,4 @@ flask-sqlalchemy
 Flask-QRcode
 flask-login
 Faker
+flask_bcrypt
