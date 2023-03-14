@@ -19,7 +19,7 @@
             <h1 class="admin-title">Student toevoegen</h1>
           </div>
           <br> <br>
-          <form class="admin-form">
+          <form class="admin-form" method="POST" action="/create-student">
             <label for="admin-student-number" class="admin-input-label">Student nummer
               <input type="text" name="admin-student-number" class="admin-input-field" required>
             </label>
@@ -69,7 +69,7 @@
           <div class="admin-title">
             <h1 class="admin-title">Klas toevoegen</h1>
           </div>
-          <form class="admin-form">
+          <form class="admin-form" method="POST" action="/create-group">
             <label for="admin-group-id" class="admin-input-label">Naam klas
               <input type="text" name="admin-group-id" class="admin-input-field" required>
             </label>
