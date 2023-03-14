@@ -87,13 +87,13 @@ class Student(db.Model):
     def __repr__(self):
         return f"Student('{self.full_name}')"
 
-    def __init__(self, first_name, last_name, email):
+    def __init__(self, first_name, last_name, email, student_number):
         user = User(email=email, admin=False)
         db.session.add(user)
         db.session.commit()
         self.first_name = first_name
         self.last_name = last_name
-        self.student_number = random.randint(1_000_000, 9_999_999)
+        self.student_number = student_number
         self.user_id = user.id
 
 

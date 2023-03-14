@@ -36,6 +36,19 @@ def create_teacher_form():
     return render_template("/admin.html")
 
 
+@app.route("/create-student", methods=['POST'])
+def create_student_form():
+    student_number = request.form["admin-student-number"]
+    firstname = request.form["admin-student-firstname"]
+    lastname = request.form["admin-student-lastname"]
+    email = request.form["admin-student-email"]
+    student = Student(student_number=student_number, first_name=firstname,
+                      last_name=lastname, email=email)
+    db.session.add(student)
+    db.session.commit()
+    return render_template("/admin.html")
+
+
 @app.route("/home")
 @login_required
 def home():
@@ -128,8 +141,8 @@ def setpresence(code=None):
     # check if code exists else throw 404 not found error
 
     # UPDATE: later check here if user role is student
-    if(current_user.student != []):
-        #logged in student
+    if (current_user.student != []):
+        # logged in student
         id = current_user.student[0].id
     else:
         flash("Je kunt niet meedoen aan deze bijeenkomst", 'error')
@@ -169,7 +182,7 @@ def setpresence(code=None):
 def login():
     if current_user.is_authenticated:
         return redirect(url_for("home"))
-    
+
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
