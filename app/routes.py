@@ -68,10 +68,12 @@ def create_group_form():
     end_date = request.form["admin-group-end"]
     formatted_startdate = datetime.strptime(start_date, "%Y-%m-%d")
     formatted_enddate = datetime.strptime(end_date, "%Y-%m-%d")
-    group = Group(name=name_group, start_date=formatted_startdate, end_date=formatted_enddate)
+    group = Group(name=name_group, start_date=formatted_startdate,
+                  end_date=formatted_enddate)
     db.session.add(group)
     db.session.commit()
     return redirect(url_for("admin"))
+
 
 @app.route("/home")
 @login_required
@@ -216,7 +218,8 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        user = db.session.query(User).filter(User.email == username.lower()).first()
+        user = db.session.query(User).filter(
+            User.email == username.lower()).first()
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for("home"))
@@ -245,18 +248,16 @@ def les_overzicht():
     return render_template("les_overzicht.html")
 
 
-@app.route("/overview_page")
+@app.route("/overview")
 @login_required
 def overview_page():
-    return render_template('overview_page.html')
+    return render_template('overview.html')
 
 
-@app.route("/welcome_page")
+@app.route("/welcome")
 @login_required
 def welcome_page():
-    return render_template('welcome_page.html')
-
-
+    return render_template('welcome.html')
 
 
 @app.route("/faker")
@@ -279,6 +280,3 @@ def faker():
         db.session.commit()
 
     return "Data toegevoegd aan de database"
-
-
-
