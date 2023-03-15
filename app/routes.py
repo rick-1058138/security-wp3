@@ -239,10 +239,15 @@ def code_input():
     return render_template("code-input.html")
 
 
-@app.route("/les_overzicht")
+@app.route("/les_overzicht/<meeting_code>")
 @login_required
-def les_overzicht():
-    return render_template("les_overzicht.html")
+def les_overzicht(meeting_code):
+    return render_template("les_overzicht.html", meeting_code=meeting_code)
+
+@app.route("/meeting/<meeting_code>")
+def meeting_page(meeting_code):
+    meeting = Meeting.query.filter_by(meeting_code=meeting_code).first()
+    return render_template("meeting.html", meeting=meeting)
 
 
 @app.route("/overview_page")
@@ -282,4 +287,3 @@ def faker():
 
 
 
-#test push

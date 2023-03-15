@@ -20,7 +20,8 @@
           </div>
           <div class="teacher-info-container"></div>
           <script>
-            fetch("/api/next_meeting")
+            const meeting_code = "{{ meeting_code }}";
+            fetch(`/api/studentmeeting/${meeting_code}`)
               .then(response => response.json())
               .then(data => {
                 const teacherInfoContainer = document.querySelector(".teacher-info-container");
@@ -33,7 +34,7 @@
         
                   teacherInfoContainer.innerHTML = `
                     <div class="teacher-info">
-                      <h2>Next Meeting</h2>
+                      <h2>Huidige les</h2>
                       <p><strong>${meetingName}</strong></p>
                       <p>Date: ${meetingDate}</p>
                       <p>Time: ${meetingStartTime} - ${meetingEndTime}</p>
@@ -42,7 +43,7 @@
                 } else {
                   teacherInfoContainer.innerHTML = `
                     <div class="teacher-info">
-                      <h2>Je mag naar huis! :)</h2>
+                      <h2>Geen les</h2>
                     </div>
                   `;
                 }
