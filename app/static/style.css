@@ -1150,3 +1150,27 @@ span.select2 {
     background-color: rgb(209, 209, 209);
     margin-right: 8px
 }
+
+.big-btn{
+    font-size: 20px;
+    padding: 15px 30px;
+    background-color: #d30f4c;
+    color: white;
+    font-weight: bold;
+    box-shadow: inset 0 0 20px 20px rgba(0, 0, 0, 0);
+    transition: .2s;
+    margin-top: 20px;
+    border-radius: 2px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.big-btn>i{
+    font-size: 15px;
+}
+
+.big-btn:hover{
+    box-shadow: inset 0 0 20px 20px rgba(0, 0, 0, 0.15);
+}

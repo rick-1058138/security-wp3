@@ -167,11 +167,18 @@ def presence(code=None):
         abort(404)
 
 
+@app.route('/aanmelden', methods=("GET", "POST"))
+@login_required
+def presence_code():
+    if request.method == "GET":
+        return render_template('code-input.html')
+    elif request.method == "POST":
+        code = request.form["meeting_code"]
+        return redirect(url_for('setpresence',code = code))
+
 @app.route('/aanmelden/<code>')
 @login_required
 def setpresence(code=None):
-    # check if code exists else throw 404 not found error
-
     # check if user is a student
     if (current_user.role == 1):
         # logged in student
@@ -186,7 +193,8 @@ def setpresence(code=None):
     if exists:
         meeting = Meeting.query.filter_by(meeting_code=code).first()
     else:
-        abort(404)
+        flash("Deze les code bestaat niet", 'error')
+        return redirect(url_for('presence_code'))
 
     # UPDATE: if user logs in then execute below
 
@@ -194,6 +202,7 @@ def setpresence(code=None):
         StudentMeeting.query.filter_by(
             meeting_id=meeting.id, student_id=id).exists()
     ).scalar()
+    
     print(student_present)
     if student_present:
         # student is already present return to home, with message

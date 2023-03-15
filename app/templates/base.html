@@ -39,10 +39,13 @@
 							<div class="user-info">
 								{% if current_user.role == 0%}
 									<span class="user-prefix">Docent, </span>
+									<span>{{ current_user.teacher[0].full_name}}</span>
+
 								{%elif current_user.role == 1%}
 									<span class="user-prefix">Student, </span>
+									<span>{{ current_user.student[0].full_name}}</span>
+
 								{% endif%}
-								<span>{{ current_user.student[0].full_name}}</span>
 							</div>
 						</a>
 					{% endif %}
@@ -62,7 +65,7 @@
 					</button>
 				</div>
 			</div>
-		</nav>\
+		</nav>
 		<!-- Check for flash messages  -->
 		<!-- Neutral messages  -->
 		{% with messages = get_flashed_messages() %}  

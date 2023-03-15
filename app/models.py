@@ -141,6 +141,10 @@ class Teacher(db.Model):
     meetings = db.relationship('TeacherMeeting', back_populates='teacher')
     user = db.relationship('User', back_populates='teacher')
 
+    @property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"
+    
     def __init__(self, first_name, last_name, email, admin):
         user = User(email=email, role=0,admin=admin)
         db.session.add(user)

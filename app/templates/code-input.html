@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="container-window">
-      <div class="container-middle">
-        <div class="login-field">
-          <label for="code-input" class="label-code"
-            >Vul hier je lescode in</label
-          >
-          <input type="text" class="code-input" name="code-input" />
-          <div class="container-button">
-            <input class="login-button" type="submit" value="Ga door" />
-          </div>
-        </div>
-      </div>
+		<div class="container-middle">
+			<div class="login-field">
+				<form action="{{url_for('presence_code')}}" method="post">
+					<label for="code-input" class="label-code">Vul hier je lescode in</label>
+					<input type="text" class="code-input" name="meeting_code" />
+					<div class="container-button">
+					<input class="login-button" type="submit" value="Ga door" />
+					</div>
+				</form>
+
+			</div>
+		</div>
     </div>
 {% endblock %}
