@@ -54,6 +54,12 @@ def create_student_form():
                       last_name=lastname, email=email)
     db.session.add(student)
     db.session.commit()
+    group = request.form["admin-student-group"]
+    g = db.session.query(Group).filter(Group.id==group).first()
+    print(student)
+    print(g)
+    student.groups.append(g)
+    db.session.commit()
     return render_template("/admin.html")
 
 
