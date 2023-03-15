@@ -216,7 +216,7 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        user = db.session.query(User).filter(User.email == username).first()
+        user = db.session.query(User).filter(User.email == username.lower()).first()
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for("home"))
