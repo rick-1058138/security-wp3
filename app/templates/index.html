@@ -9,7 +9,7 @@
             <div class="meeting-container">
                 <h2 class="container-title">Komende lessen</h2>
                 {% for meeting in meetings%}
-                    <div class="meeting-container-item">
+                    <a class="meeting-container-item" href="/les_overzicht/{{meeting.meeting_code}}">
                         <p class="meeting-item-date">{{meeting.date}}</p>
                         <div class="meeting-item-header">
                             <p>{{meeting.name}}</p>
@@ -29,7 +29,7 @@
                                 {% endfor %}
                             </div>
                         </div>
-                    </div>
+                    </a>
    
                 {%endfor%}
             </div>
