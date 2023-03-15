@@ -19,7 +19,7 @@
             <h1 class="admin-title">Student toevoegen</h1>
           </div>
           <br> <br>
-          <form class="admin-form" method="POST" action="/create-student">
+          <form class="admin-form" method="POST" action="/admin/create-student">
             <label for="admin-student-number" class="admin-input-label">Student nummer
               <input type="text" name="admin-student-number" class="admin-input-field" required>
             </label>
@@ -34,7 +34,11 @@
             </label>
             <label for="admin-student-group" class="admin-input-label">Klas student
               <br> <br>
-              <select name="admin-student-group" class="admin-student-group-select"></select>
+              <select name="admin-student-group" class="admin-student-group-select">
+                {% for group in group_list %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+              </select>
             </label>
             <div class="admin-button-container">
               <input class="admin-save-button" type="submit" value="Opslaan" />
@@ -46,7 +50,7 @@
           <div class="admin-title">
             <h1 class="admin-title">Docent toevoegen</h1>
           </div>
-          <form class="admin-form" method="POST" action="/create-teacher">
+          <form class="admin-form" method="POST" action="/admin/create-teacher">
             <label for="admin-teacher-firstname" class="admin-input-label">Voornaam docent
               <input type="text" name="admin-teacher-firstname" class="admin-input-field" required>
             </label>
@@ -69,7 +73,7 @@
           <div class="admin-title">
             <h1 class="admin-title">Klas toevoegen</h1>
           </div>
-          <form class="admin-form" method="POST" action="/create-group">
+          <form class="admin-form" method="POST" action="/admin/create-group">
             <label for="admin-group-id" class="admin-input-label">Naam klas
               <input type="text" name="admin-group-id" class="admin-input-field" required>
             </label>

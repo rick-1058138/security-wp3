@@ -2,7 +2,7 @@ import time
 from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from app import app, db, bcrypt
-from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User
+from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User, StudentGroup
 from datetime import datetime
 
 from random import randint
@@ -18,10 +18,18 @@ def page_not_found(e):
 @app.route("/admin")
 @login_required
 def admin():
-    return render_template("admin.html")
+    groups = db.session.query(Group).all()
+    group_list = []
+    for group in groups:
+        print(group.name)
+        group_list.append({
+            "name": group.name,
+            "id": group.id
+        })
+    return render_template("admin.html", group_list=group_list)
 
 
-@app.route("/create-teacher", methods=['POST'])
+@app.route("/admin/create-teacher", methods=['POST'])
 def create_teacher_form():
     firstname = request.form["admin-teacher-firstname"]
     lastname = request.form["admin-teacher-lastname"]
@@ -33,10 +41,10 @@ def create_teacher_form():
                       last_name=lastname, email=email, admin=admin)
     db.session.add(teacher)
     db.session.commit()
-    return render_template("/admin.html")
+    return redirect(url_for("admin"))
 
 
-@app.route("/create-student", methods=['POST'])
+@app.route("/admin/create-student", methods=['POST'])
 def create_student_form():
     student_number = request.form["admin-student-number"]
     firstname = request.form["admin-student-firstname"]
@@ -46,10 +54,14 @@ def create_student_form():
                       last_name=lastname, email=email)
     db.session.add(student)
     db.session.commit()
-    return render_template("/admin.html")
+    group = request.form["admin-student-group"]
+    student_group = StudentGroup(student_id=student.id, group_id=group)
+    db.session.add(student_group)
+    db.session.commit()
+    return redirect(url_for("admin"))
 
 
-@app.route("/create-group", methods=['POST'])
+@app.route("/admin/create-group", methods=['POST'])
 def create_group_form():
     name_group = request.form["admin-group-id"]
     start_date = request.form["admin-group-start"]
@@ -59,7 +71,7 @@ def create_group_form():
     group = Group(name=name_group, start_date=formatted_startdate, end_date=formatted_enddate)
     db.session.add(group)
     db.session.commit()
-    return render_template("/admin.html")
+    return redirect(url_for("admin"))
 
 @app.route("/home")
 @login_required

@@ -26,7 +26,7 @@ class Group(db.Model):
     name: str = db.Column(db.String(50))
 
     meetings = db.relationship('GroupMeeting', back_populates='group')
-    groups = db.relationship('StudentGroup', back_populates='group')
+    students = db.relationship('StudentGroup', back_populates='group')
 
     def __repr__(self):
         return f"Group('{self.start_date}', '{self.end_date}')"
@@ -196,8 +196,12 @@ class StudentGroup(db.Model):
     group_id: int = db.Column(
         db.Integer, db.ForeignKey('group.id'), nullable=False)
 
-    group = db.relationship('Group', back_populates='groups')
+    group = db.relationship('Group', back_populates='students')
     student = db.relationship('Student', back_populates='groups')
+
+    def __init__(self, student_id, group_id):
+        self.student_id = student_id
+        self.group_id = group_id
 
 
 @dataclass
