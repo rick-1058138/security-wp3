@@ -248,16 +248,16 @@ def les_overzicht():
     return render_template("les_overzicht.html")
 
 
-@app.route("/overview")
+@app.route("/overzicht")
 @login_required
 def overview_page():
     return render_template('overview.html')
 
 
-@app.route("/welcome")
+@app.route("/vraag")
 @login_required
-def welcome_page():
-    return render_template('welcome.html')
+def question():
+    return render_template('question.html')
 
 
 @app.route("/faker")
