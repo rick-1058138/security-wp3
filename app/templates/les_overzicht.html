@@ -1,91 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Les overzicht</title>
-    <link rel="stylesheet" href="../static/style.css" />
-  </head>
-  <body>
+
+{% extends "base.html" %}
+{% block title %}Les overzicht{% endblock %}
+
+{% block content %}
     <div class="container-window">
-        <div class="container-header">
-            <button class="header-logo-button">
-              <img
-                class="header-logo"
-                src="../static/images/logo.png"
-                alt="Hogeschool Rotterdam"
-              />
-            </button>
-          </div>
-          <div class="teacher-info-container"></div>
-          <!-- {{meeting}} -->
-          <br>
-          <br>
-          {{question}}
-          <br>
-          <br>
-          {{meeting.name}} {{meeting.start_time}} {{meeting.end_time}} {{meeting.status}} {{meeting.description}} {{question.text }} 
-          {%for item in groups%}
-          {{item.name}}
-          {%endfor%}
-          {%if meeting.status == 0%}
-          <span>Nog niet gestart</span>
-          {%elif meeting.status == 1%}
-          <span>Gestart</span>
-          {%elif meeting.status == 2%}
-          <span>Afgelopen</span>
-          {%endif%}
-          <div class="table-container">
-            <table class="table-style">
-              <thead>
-                <tr>
-                  <th>Naam</th>
-                  <th>Student nr.</th>
-                  <th>Aanwezigheid</th>
-                  <th>Tijd</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Sam Moore</td>
-                  <td>1039540</td>
-                  <td class="aanwezig">Aanwezig</td>
-                  <td>10:30</td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="teacher-info-container">
+          	<!-- {{meeting}} -->
+			<br>
+			<br>
+			{{question}}
+			<br>
+			<br>
+			{{meeting.name}} {{meeting.start_time}} {{meeting.end_time}} {{meeting.status}} {{meeting.description}} {{question.text }} 
+			{%for item in groups%}
+				{{item.name}}
+			{%endfor%}
+			{%if meeting.status == 0%}
+				<span>Nog niet gestart</span>
+			{%elif meeting.status == 1%}
+				<span>Gestart</span>
+			{%elif meeting.status == 2%}
+				<span>Afgelopen</span>
+			{%endif%}
+          	<div class="table-container">
+				<table class="table-style">
+				<thead>
+					<tr>
+					<th>Naam</th>
+					<th>Student nr.</th>
+					<th>Aanwezigheid</th>
+					<th>Tijd</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+					<td>Sam Moore</td>
+					<td>1039540</td>
+					<td class="aanwezig">Aanwezig</td>
+					<td>10:30</td>
+					</tr>
+				</tbody>
+				</table>
 
-            <div class="bottom-buttons-container">
-                <a class="weizigen-btn" href="/meeting/delete/{{ meeting.id }}">Verwijderen</a>
-                <a class="start-btn" href="/aanwezigheid/{{ meeting.meeting_code }}">Start</a>
-
-                
-              </div>
-              
-          </div>
-
-          <script>
-            var id = {{meeting.id}};
-            function deleteMeeting(id) {
-              const confirmed = confirm("Weet je zeker dat je deze bijeenkomst wilt verwijderen?");
-              if (confirmed) {
-                fetch(`/api/meeting/${id}`, { method: "DELETE" })
-                  .then((response) => response.json())
-                  .then((data) => {
-                    if (data.result === "ok") {
-                      window.location.href = "/";
-                    } else {
-                      alert(`Error: ${data.error}`);
-                    }
-                  })
-                  .catch((error) => console.error(error));
-              }
-            }
-            </script>
-
-        
-      </div>
+				<div class="bottom-buttons-container">
+					<a class="wijzigen-btn" href="/meeting/delete/{{ meeting.id }}">Verwijderen</a>
+					<a class="start-btn" href="/aanwezigheid/{{ meeting.meeting_code }}">Start</a>
+				</div>
+			</div>
+        </div>
     </div>
-  </body>
-</html>
+	<script>
+		var id = {{meeting.id}};
+		function deleteMeeting(id) {
+		  const confirmed = confirm("Weet je zeker dat je deze bijeenkomst wilt verwijderen?");
+		  if (confirmed) {
+			fetch(`/api/meeting/${id}`, { method: "DELETE" })
+			  .then((response) => response.json())
+			  .then((data) => {
+				if (data.result === "ok") {
+				  window.location.href = "/";
+				} else {
+				  alert(`Error: ${data.error}`);
+				}
+			  })
+			  .catch((error) => console.error(error));
+		  }
+		}
+	</script>
+{% endblock %}
