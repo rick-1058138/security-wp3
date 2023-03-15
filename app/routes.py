@@ -166,6 +166,31 @@ def presence(code=None):
     else:
         abort(404)
 
+@app.route("/meeting/start/<code>")
+@login_required
+def start_presence(code=None):
+    # check if code exists else throw 404 not found error
+    exists = db.session.query(
+        Meeting.query.filter_by(meeting_code=code).exists()
+    ).scalar()
+    if exists:
+        session['timer_length'] = 30
+        session['start_time'] = time.time()
+
+        # UPDATE: update meeting status in db
+
+        # meeting = Meeting.query.filter_by(meeting_code=code).first()
+
+        # UDPATE: loop through all groups added to meeting
+            # loop through all students in each group
+
+        # UPDATE: insert all students with presence false   
+        # student = StudentMeeting(student_id=id, meeting_id=meeting.id, checkin_date=datetime.now(), present=False)
+
+        return redirect(url_for('presence',code = code))
+    else:
+        abort(404)
+
 
 @app.route('/aanmelden', methods=("GET", "POST"))
 @login_required
@@ -202,7 +227,7 @@ def setpresence(code=None):
         StudentMeeting.query.filter_by(
             meeting_id=meeting.id, student_id=id).exists()
     ).scalar()
-    
+
     print(student_present)
     if student_present:
         # student is already present return to home, with message

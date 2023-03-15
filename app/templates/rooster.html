@@ -5,6 +5,8 @@
     {% set time_list = ['8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'] %}
     {% set day_list = ['Maandag','Dinsdag','Woensdag','Donderdag','Vrijdag', 'Zaterdag', 'Zondag'] %}
 
+    {% if current_user.role == 0 %}
+    <!-- only show if user is a teacher -->
     <div id="popup" class="popup" style="display: none">
         <div class="popup-container">
             <h1>Nieuwe bijeenkomst</h1>
@@ -58,9 +60,13 @@
             </form>
         </div>
     </div>
+    {% endif %}
 
     <div class="rooster-wrapper"> 
         <section class="rooster-container">
+        
+            {% if current_user.role == 0 %}
+            <!-- only show if user is a teacher -->
             <div class="rooster-extra">
                 <a id="new-meeting-btn" class="rooster-btn">+ Bijeenkomst toevoegen</a>
                 <div class="filter-box">
@@ -70,7 +76,7 @@
                     </select>
                 </div>
             </div>
-   
+            {% endif %}
             <div class="date-selection-row">
                 <div id="previous-btn" class="change-week-btn"><i class="fa fa-chevron-left" style="font-size:15px"></i></div><input class="rooster-calendar" type="date" id="week-calendar" onfocus="this.showPicker()" value=""/><div id="next-btn" class="change-week-btn reverse"><i class="fa fa-chevron-right" style="font-size:15px"></i></div>
             </div>

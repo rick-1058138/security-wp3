@@ -37,6 +37,7 @@
 						<a href="{{url_for('overview_page')}}" class="user-profile">
 							<i class="fa fa-user user-icon"></i>
 							<div class="user-info">
+
 								{% if current_user.role == 0%}
 									<span class="user-prefix">Docent, </span>
 									<span>{{ current_user.teacher[0].full_name}}</span>
@@ -46,7 +47,12 @@
 									<span>{{ current_user.student[0].full_name}}</span>
 
 								{% endif%}
+
+								{% if current_user.admin %}
+									<strong>Admin</strong>
+								{% endif%}
 							</div>
+					
 						</a>
 					{% endif %}
 				</div>

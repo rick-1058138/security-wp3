@@ -44,7 +44,7 @@
 
 				<div class="bottom-buttons-container">
 					<a class="wijzigen-btn" href="/meeting/delete/{{ meeting.id }}">Verwijderen</a>
-					<a class="start-btn" href="/aanwezigheid/{{ meeting.meeting_code }}">Start</a>
+					<a class="start-btn" href="{{url_for('start_presence', code = meeting.meeting_code)}}">Start</a>
 				</div>
 			</div>
         </div>
