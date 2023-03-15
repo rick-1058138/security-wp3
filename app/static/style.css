@@ -40,6 +40,8 @@ a{
     max-width: 500px;
     margin-top: 5px;
     margin-bottom: 5px;
+    display: flex;
+    gap: 20px;
 }
 
 .hamburger {
@@ -1110,4 +1112,41 @@ span.select2 {
     font-size: 30px;
     letter-spacing: 2px;
     padding: 10px 0;
+}
+
+.user-prefix{
+    font-style: italic;
+}
+
+.user-info{
+    display: flex;
+    flex-direction: column;
+}
+
+.user-profile{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-left: 1px solid rgba(255, 255, 255, 0.329);
+    padding-left: 20px;
+    margin: 10px 0;
+}
+
+.user-profile:hover{
+    opacity: 0.9;
+}
+
+
+.fa.user-icon{
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    border: 2px solid white;
+    /* border-radius: 50%; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(209, 209, 209);
+    margin-right: 8px
 }

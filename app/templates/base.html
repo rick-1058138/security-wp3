@@ -33,6 +33,19 @@
 						alt="Hogeschool Rotterdam"
 						/>
 					</a>
+					{% if current_user.is_authenticated%}
+						<a href="{{url_for('overview_page')}}" class="user-profile">
+							<i class="fa fa-user user-icon"></i>
+							<div class="user-info">
+								{% if current_user.role == 0%}
+									<span class="user-prefix">Docent, </span>
+								{%elif current_user.role == 1%}
+									<span class="user-prefix">Student, </span>
+								{% endif%}
+								<span>{{ current_user.student[0].full_name}}</span>
+							</div>
+						</a>
+					{% endif %}
 				</div>
 				<div class="header-right">
 					<ul class="menu">
@@ -42,12 +55,14 @@
 						<li><a class="menuItem" href="#">Instellingen</a></li>
 						<li><a class="menuItem" href="{{ url_for('logout') }}">Uitloggen</a></li>
 					</ul>
+					
 					<button class="hamburger" id="hamburger">
 					<i class="fa fa-bars" ></i>
+					
 					</button>
 				</div>
 			</div>
-		</nav>
+		</nav>\
 		<!-- Check for flash messages  -->
 		<!-- Neutral messages  -->
 		{% with messages = get_flashed_messages() %}  
