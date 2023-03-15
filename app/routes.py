@@ -78,7 +78,7 @@ def create_group_form():
 @app.route("/home")
 @login_required
 def home():
-    meetings = Meeting.query.limit(5).all()
+    meetings = Meeting.query.filter(Meeting.date >= datetime.today().date()).limit(5).all()
     return render_template('index.html', meetings=meetings)
 
 
