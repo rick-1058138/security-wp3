@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Lessen overzicht{% endblock %}
+
+{% block content %}
+<h1>Lessen</h1>
+{% for meeting in meetings%}
+    <p>{{meeting.name}}</p>
+{%endfor%}
+{% endblock %}

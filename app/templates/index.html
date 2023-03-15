@@ -6,6 +6,41 @@
         <div class="container-middle">
             <h1>Aanwezigheidstool</h1>
             <a class="big-btn" href="{{url_for('presence_code')}}">Meedoen met een les <i class="fa fa-chevron-right"></i></a>
+            <div class="meeting-container">
+                <h2 class="container-title">Komende lessen</h2>
+                {% for meeting in meetings%}
+                    <div class="meeting-container-item">
+                        <p class="meeting-item-date">{{meeting.date}}</p>
+                        <div class="meeting-item-header">
+                            <p>{{meeting.name}}</p>
+                            <p>{{meeting.start_time}}-{{meeting.end_time}}</p>
+                        </div>
+                        <div class="meeting-item-content">
+                            <div>
+                                <span>Klassen:</span>
+                                {% for group in meeting.groups%}
+                                    <p class="meeting-item-group">{{group.group.name}}</p>
+                                {% endfor %}
+                            </div>
+                            <div>
+                                <span>Docenten:</span>
+                                {% for teacher in meeting.teachers%}
+                                    <p class="meeting-item-teacher">{{teacher.teacher.full_name}}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+   
+                {%endfor%}
+            </div>
+ 
         </div>
     </div>
+    <script>
+        $('.meeting-item-date').each(function(index, element) {
+            let date = $(this).text()
+            let day = dayjs(date).format('dddd D MMMM YYYY')
+            $(this).text(day)
+        });
+    </script>
 {% endblock %}

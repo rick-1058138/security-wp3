@@ -78,7 +78,8 @@ def create_group_form():
 @app.route("/home")
 @login_required
 def home():
-    return render_template('index.html')
+    meetings = Meeting.query.limit(5).all()
+    return render_template('index.html', meetings=meetings)
 
 
 @app.route("/timer/start")
@@ -330,3 +331,8 @@ def delete_meeting(id=None):
     db.session.commit()
     flash("meeting verwijderd", "success")
     return redirect(url_for("rooster"))
+
+@app.route("/lessen/overzicht")
+def meetings_overview():
+    meetings = Meeting.query.all()
+    return render_template("meetings.html", meetings=meetings)
