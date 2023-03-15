@@ -311,7 +311,7 @@
                     console.log(response_data);
                     for(item of response_data.result){
                         // console.log(item.id, item)
-                        createLessonBlock(day=dayjs(item.date).day(), name=item.name, start_time=formatTimeToNumber(item.start_time), end_time=formatTimeToNumber(item.end_time));
+                        createLessonBlock(day=dayjs(item.date).day(), name=item.name, start_time=formatTimeToNumber(item.start_time), end_time=formatTimeToNumber(item.end_time), meeting_code=item.meeting_code);
                     }
                 },
                 error : function(request,error){
@@ -455,8 +455,8 @@
         refreshCalendar(today)
 
         // function to create a lesson block
-        function createLessonBlock(day, name, start_time, end_time){
-            console.log(day, name, start_time, end_time)
+        function createLessonBlock(day, name, start_time, end_time, meeting_code){
+            console.log(day, name, start_time, end_time, meeting_code);
             // if day == 0 set it to 7 so that it is sunday
             if(day == 0){
                 day = 7
@@ -469,13 +469,15 @@
             let block_spacing = 5
             // html code for a lesson
             let html_block = $(`                                 
-            <div class="rooster-content-item">
-                <div>
-                    <p class="rooster-content-item-title">${name}</p>
-                    <p class="rooster-content-item-text">${start_time}:00 - ${end_time}:00</p>
+            <a href="/les_overzicht/${meeting_code}" data-meeting-code="${meeting_code}">
+                <div class="rooster-content-item">
+                    <div>
+                        <p class="rooster-content-item-title">${name}</p>
+                        <p class="rooster-content-item-text">${start_time}:00 - ${end_time}:00</p>
+                    </div>
+                    <p class="rooster-content-item-text">Docent</p>
                 </div>
-                <p class="rooster-content-item-text">Docent</p>
-            </div>`);
+            </a>`);
             // add lesson to html   
             let parent = document.getElementById("rooster-content-"+day);
             let element = $(parent).append(html_block);

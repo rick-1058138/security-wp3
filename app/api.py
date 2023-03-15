@@ -55,7 +55,7 @@ def handle_meeting(id=None):
 
     elif request.method == "DELETE":
         try:
-            Meeting.query.filter_by(id=id).delete()
+            Meeting.query.filter_by(id=meeting.id).delete()
             db.session.commit()
             result = "ok"
             error = ""

@@ -242,10 +242,18 @@ def code_input():
     return render_template("code-input.html")
 
 
-@app.route("/les_overzicht")
+@app.route("/les_overzicht/<meeting_code>")
 @login_required
-def les_overzicht():
-    return render_template("les_overzicht.html")
+def les_overzicht(meeting_code):
+    meeting =  Meeting.query.filter_by(meeting_code = meeting_code).first()
+    question = Question.query.filter_by(meeting_id = meeting.id).first()
+    groups = meeting.groups
+    group_dict = []
+    for row in groups:
+        group_dict.append(row.group)
+    print(groups) 
+    return render_template("les_overzicht.html", meeting_code=meeting_code,meeting=meeting, question=question,groups=group_dict)
+
 
 
 @app.route("/overzicht")
@@ -280,3 +288,11 @@ def faker():
         db.session.commit()
 
     return "Data toegevoegd aan de database"
+
+
+@app.route("/meeting/delete/<id>")
+def delete_meeting(id=None):
+    Meeting.query.filter_by(id=id).delete()
+    db.session.commit()
+    flash("meeting verwijderd", "success")
+    return redirect(url_for("rooster"))

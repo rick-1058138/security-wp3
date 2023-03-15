@@ -19,37 +19,23 @@
             </button>
           </div>
           <div class="teacher-info-container"></div>
-          <script>
-            fetch("/api/next_meeting")
-              .then(response => response.json())
-              .then(data => {
-                const teacherInfoContainer = document.querySelector(".teacher-info-container");
-        
-                if (data.next_meeting) {
-                  const meetingName = data.next_meeting.name;
-                  const meetingDate = new Date(data.next_meeting.date).toLocaleDateString();
-                  const meetingStartTime = data.next_meeting.start_time;
-                  const meetingEndTime = data.next_meeting.end_time;
-        
-                  teacherInfoContainer.innerHTML = `
-                    <div class="teacher-info">
-                      <h2>Next Meeting</h2>
-                      <p><strong>${meetingName}</strong></p>
-                      <p>Date: ${meetingDate}</p>
-                      <p>Time: ${meetingStartTime} - ${meetingEndTime}</p>
-                    </div>
-                  `;
-                } else {
-                  teacherInfoContainer.innerHTML = `
-                    <div class="teacher-info">
-                      <h2>Je mag naar huis! :)</h2>
-                    </div>
-                  `;
-                }
-              })
-              .catch(error => console.error(error));
-          </script>
-          
+          <!-- {{meeting}} -->
+          <br>
+          <br>
+          {{question}}
+          <br>
+          <br>
+          {{meeting.name}} {{meeting.start_time}} {{meeting.end_time}} {{meeting.status}} {{meeting.description}} {{question.text }} 
+          {%for item in groups%}
+          {{item.name}}
+          {%endfor%}
+          {%if meeting.status == 0%}
+          <span>Nog niet gestart</span>
+          {%elif meeting.status == 1%}
+          <span>Gestart</span>
+          {%elif meeting.status == 2%}
+          <span>Afgelopen</span>
+          {%endif%}
           <div class="table-container">
             <table class="table-style">
               <thead>
@@ -72,13 +58,32 @@
 
             <div class="bottom-buttons-container">
                 <button class="beamer-btn">Beamer</button>
-                <button class="weizigen-btn">Wijzigen</button>
-                <button class="start-btn">Start</button>
+                <a class="weizigen-btn" href="/meeting/delete/{{ meeting.id }}">Verwijderen</a>
+                <a class="start-btn" href="/aanwezigheid/{{ meeting.meeting_code }}">Start</a>
+
                 
               </div>
               
           </div>
-          
+
+          <script>
+            var id = {{meeting.id}};
+            function deleteMeeting(id) {
+              const confirmed = confirm("Weet je zeker dat je deze bijeenkomst wilt verwijderen?");
+              if (confirmed) {
+                fetch(`/api/meeting/${id}`, { method: "DELETE" })
+                  .then((response) => response.json())
+                  .then((data) => {
+                    if (data.result === "ok") {
+                      window.location.href = "/";
+                    } else {
+                      alert(`Error: ${data.error}`);
+                    }
+                  })
+                  .catch((error) => console.error(error));
+              }
+            }
+            </script>
 
         
       </div>
