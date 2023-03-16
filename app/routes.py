@@ -332,7 +332,6 @@ def delete_meeting(id=None):
     flash("meeting verwijderd", "success")
     return redirect(url_for("rooster"))
 
-@app.route("/lessen/overzicht")
+@app.route("/overzicht/zoeken")
 def meetings_overview():
-    meetings = Meeting.query.all()
-    return render_template("meetings.html", meetings=meetings)
+    return render_template("meetings.html")

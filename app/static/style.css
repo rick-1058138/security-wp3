@@ -1248,3 +1248,58 @@ span.select2 {
     text-align: center;
     margin: 10px 0;
 }
+
+.overview-search-top{
+    width: 80%;
+    min-width: 400px;
+    margin: 20px auto;
+}
+
+.overview-search-container{
+    width: 80%;
+    margin: 0 auto;
+    min-width: 400px;
+}
+
+.search-field-input{
+    padding: 5px 10px;
+    font-size: 20px;
+    min-width: 200px;
+    width: 300px;
+}
+
+.group-content{
+    display: flex;
+    gap: 5px;
+}
+
+.overview-btn-row{
+    width: max-content;
+    display: flex;
+    gap: 20px;
+    margin: 0 auto;
+}
+
+
+.overview-btn{
+    padding: 10px 40px;
+    border-radius: 40px;
+    background-color: transparent;
+    border: 2px solid #d30f4d;
+    color: #d30f4d;
+    font-weight: bold;
+    transition: 0.2s;
+    /* box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.15); */
+}
+
+.overview-btn.active{
+    background-color: #d30f4d;
+    color: white;
+}
+
+.overview-btn:hover{
+    background-color: #d30f4d;
+    color: white;
+    cursor: pointer;
+}
+
