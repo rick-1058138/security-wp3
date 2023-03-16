@@ -1303,3 +1303,34 @@ span.select2 {
     cursor: pointer;
 }
 
+/* Table styling overview page  */
+.search-table{
+    min-width: 600px;
+    border-collapse: collapse;
+}
+
+.search-table, .search-table td, .search-table th{
+    border: 1px solid rgb(165, 165, 165);
+}
+
+.search-table thead tr{ 
+    background-color: rgba(226, 226, 226, 0.781);
+}
+
+.search-table th{ 
+    padding: 10px;
+}
+
+.search-table td{
+    padding: 10px;
+}
+
+.search-table tr{
+    background-color: rgba(255, 255, 255, 0.637);
+}
+
+
+.btn-row-between{
+    display: flex;
+    justify-content: space-between;
+}

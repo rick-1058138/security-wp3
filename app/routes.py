@@ -332,6 +332,18 @@ def delete_meeting(id=None):
     flash("meeting verwijderd", "success")
     return redirect(url_for("rooster"))
 
-@app.route("/overzicht/zoeken")
-def meetings_overview():
+@app.route("/lessen/zoeken")
+def search_meetings():
     return render_template("meetings.html")
+
+@app.route("/studenten/zoeken")
+def search_students():
+    return render_template("students.html")
+
+@app.route("/klassen/zoeken")
+def search_groups():
+    return render_template("groups.html")
+
+@app.route("/docenten/zoeken")
+def search_teachers():
+    return render_template("teachers.html")
