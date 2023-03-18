@@ -4,50 +4,55 @@
 
 {% block content %}
     <div class="container-window">
-        <div class="teacher-info-container">
-			<div class="teacher-info"> 
-		  
-			<br> Les: {{ meeting.name }}
-			<br> Starttijd: {{ meeting.start_time }} 
-			<br> Eindtijd: {{ meeting.end_time }} 
-			<br> Groepsnaam: {% for item in groups %}
-			{% if item.id == meeting.group_id %}
-			  {{ item.name }}
-			{% else %}
-			  Geen groepsinformatie beschikbaar.
-			{% endif %}
-		  {% endfor %}
-			<br> Status: {% if meeting.status == 0 %}<span>Nog niet gestart</span>{% elif meeting.status == 1 %}<span>Gestart</span>{% elif meeting.status == 2 %}<span>Afgelopen</span>{% endif %}
-			<br> Beschrijving: {{ meeting.description }}
-			<br> Vraag: {{ question.text }}
-		  </div>
-		</div>
+        <div class="content-container"> 
+            <div class="table-container">
+                <table class="table-style">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">Naam<span class="sort-arrow sort-arrow-down"></span></th>
+                            <th onclick="sortTable(1)">Student nr.<span class="sort-arrow sort-arrow-down"></span></th>
+                            <th onclick="sortTable(2)">Aanwezigheid<span class="sort-arrow sort-arrow-down"></span></th>
+                            <th onclick="sortTable(3)">Tijd<span class="sort-arrow sort-arrow-down"></span></th>
+                        </tr>
+                    </thead>
+                    
+                <tbody>
+                    {% for student in meeting.students %}
+                        <tr>
+                            <td>{{ student.student.full_name }}</td>
+                            <td>{{ student.student.student_number }}</td>
+                            <td class="aanwezig">{{ 'Aanwezig' if student.present else 'Afwezig' }}</td>
+                            <td>{{ student.checkin_date.strftime('%H:%M') if student.checkin_date else '' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
 
-          	<div class="table-container">
-				<table class="table-style">
-				<thead>
-					<tr>
-					<th>Naam</th>
-					<th>Student nr.</th>
-					<th>Aanwezigheid</th>
-					<th>Tijd</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-					<td>Sam Moore</td>
-					<td>1039540</td>
-					<td class="aanwezig">Aanwezig</td>
-					<td>10:30</td>
-					</tr>
-				</tbody>
-				</table>
+                <div class="bottom-buttons-container">
+                    <div class="button-wrapper">
+                        <a class="wijzigen-btn" href="/meeting/delete/{{ meeting.id }}">Verwijderen</a>
+                        <a class="start-btn" href="{{url_for('start_presence', code = meeting.meeting_code)}}">Start</a>
+                    </div>
+            </div>
 
-				<div class="bottom-buttons-container">
-					<a class="wijzigen-btn" href="/meeting/delete/{{ meeting.id }}">Verwijderen</a>
-					<a class="start-btn" href="{{url_for('start_presence', code = meeting.meeting_code)}}">Start</a>
-				</div>
-			</div>
+            <div class="teacher-info-container">
+                <div class="teacher-info"> 
+              
+                <br> Les: {{ meeting.name }}
+                <br> Starttijd: {{ meeting.start_time }} 
+                <br> Eindtijd: {{ meeting.end_time }} 
+                <br> Groepsnaam: {% if groups %}
+                {% for group_name in groups %}
+                    {{ group_name }}
+                {% endfor %}
+            {% else %}
+                Geen groepsinformatie beschikbaar.
+            {% endif %}
+                <br> Status: {% if meeting.status == 0 %}<span>Nog niet gestart</span>{% elif meeting.status == 1 %}<span>Gestart</span>{% elif meeting.status == 2 %}<span>Afgelopen</span>{% endif %}
+                <br> Beschrijving: {{ meeting.description }}
+                <br> Vraag: {{ question.text }}
+              </div>
+            </div>
         </div>
     </div>
 	<script>
@@ -68,4 +73,55 @@
 		  }
 		}
 	</script>
+
+	<script>
+		function sortTable(column) {
+			var table = document.querySelector(".table-style");
+			var rows = Array.from(table.rows).slice(1);
+			var sortOrder = 1;
+			var currentSortArrow;
+		
+			if (event.target.classList.contains("sort-arrow")) {
+				currentSortArrow = event.target;
+			} else {
+				currentSortArrow = event.target.querySelector(".sort-arrow");
+			}
+		
+			if (currentSortArrow.style.borderTopWidth === "5px") {
+				sortOrder = -1;
+				currentSortArrow.style.borderTopWidth = "0";
+				currentSortArrow.style.borderBottomWidth = "5px";
+			} else {
+				currentSortArrow.style.borderTopWidth = "5px";
+				currentSortArrow.style.borderBottomWidth = "0";
+			}
+	
+			rows.sort(function (rowA, rowB) {
+				var cellA = rowA.cells[column].innerText;
+				var cellB = rowB.cells[column].innerText;
+	
+				if (column === 3) { // If the "Tijd" column, convert to Date object
+					cellA = new Date("1970-01-01T" + cellA);
+					cellB = new Date("1970-01-01T" + cellB);
+				} else if (!isNaN(parseFloat(cellA)) && !isNaN(parseFloat(cellB))) {
+					cellA = parseFloat(cellA);
+					cellB = parseFloat(cellB);
+				}
+	
+				if (cellA < cellB) return -1 * sortOrder;
+				if (cellA > cellB) return 1 * sortOrder;
+				return 0;
+			});
+	
+			rows.forEach(function (row) {
+				table.tBodies[0].appendChild(row);
+			});
+		}
+	</script>
+	
+	
+	
+	
+	
 {% endblock %}
+
