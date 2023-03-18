@@ -5,23 +5,24 @@
 {% block content %}
     <div class="container-window">
         <div class="teacher-info-container">
-          	<!-- {{meeting}} -->
-			<br>
-			<br>
-			{{question}}
-			<br>
-			<br>
-			{{meeting.name}} {{meeting.start_time}} {{meeting.end_time}} {{meeting.status}} {{meeting.description}} {{question.text }} 
-			{%for item in groups%}
-				{{item.name}}
-			{%endfor%}
-			{%if meeting.status == 0%}
-				<span>Nog niet gestart</span>
-			{%elif meeting.status == 1%}
-				<span>Gestart</span>
-			{%elif meeting.status == 2%}
-				<span>Afgelopen</span>
-			{%endif%}
+			<div class="teacher-info"> 
+		  
+			<br> Les: {{ meeting.name }}
+			<br> Starttijd: {{ meeting.start_time }} 
+			<br> Eindtijd: {{ meeting.end_time }} 
+			<br> Groepsnaam: {% for item in groups %}
+			{% if item.id == meeting.group_id %}
+			  {{ item.name }}
+			{% else %}
+			  Geen groepsinformatie beschikbaar.
+			{% endif %}
+		  {% endfor %}
+			<br> Status: {% if meeting.status == 0 %}<span>Nog niet gestart</span>{% elif meeting.status == 1 %}<span>Gestart</span>{% elif meeting.status == 2 %}<span>Afgelopen</span>{% endif %}
+			<br> Beschrijving: {{ meeting.description }}
+			<br> Vraag: {{ question.text }}
+		  </div>
+		</div>
+
           	<div class="table-container">
 				<table class="table-style">
 				<thead>

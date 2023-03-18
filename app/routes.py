@@ -178,9 +178,12 @@ def start_presence(code=None):
         session['timer_length'] = 30
         session['start_time'] = time.time()
 
-        # UPDATE: update meeting status in db
-
-        # meeting = Meeting.query.filter_by(meeting_code=code).first()
+        # update status in db
+        meeting = Meeting.query.filter_by(meeting_code=code).first()
+        meeting.status = 1
+        meeting.checkin_date = datetime.now()
+        meeting.present = False
+        db.session.commit()
 
         # UDPATE: loop through all groups added to meeting
             # loop through all students in each group
