@@ -289,12 +289,9 @@ def code_input():
 def les_overzicht(meeting_code):
     meeting = Meeting.query.filter_by(meeting_code=meeting_code).first()
     question = Question.query.filter_by(meeting_id=meeting.id).first()
-    groups = meeting.groups
-    group_dict = []
-    for row in groups:
-        group_dict.append(row.group)
-    print(groups)
-    return render_template("les_overzicht.html", meeting_code=meeting_code, meeting=meeting, question=question, groups=group_dict)
+    group_meetings = meeting.groups
+    group_names = [group_meeting.group.name for group_meeting in group_meetings]
+    return render_template("les_overzicht.html", meeting_code=meeting_code, meeting=meeting, question=question, groups=group_names)
 
 
 @app.route("/overzicht/<id>")
