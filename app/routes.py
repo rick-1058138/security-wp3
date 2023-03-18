@@ -2,7 +2,7 @@ import time
 from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from app import app, db, bcrypt
-from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User, StudentGroup
+from app.models import Answer, Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User, StudentGroup
 from datetime import datetime
 
 from random import randint
@@ -205,7 +205,8 @@ def presence_code():
         return render_template('code-input.html')
     elif request.method == "POST":
         code = request.form["meeting_code"]
-        return redirect(url_for('setpresence', code=code))
+        return redirect(url_for('question', code=code))
+        # return redirect(url_for('setpresence', code=code))
 
 
 @app.route('/aanmelden/<code>')
@@ -300,14 +301,22 @@ def les_overzicht(meeting_code):
 @login_required
 def overview_page(id=None):
     student = Student.query.filter_by(user_id=id).first()
-    print(student)
     return render_template('overview.html', student=student)
 
 
-@app.route("/vraag")
+@app.route("/vraag/<code>", methods=["GET", "POST"])
 @login_required
-def question():
-    return render_template('question.html')
+def question(code=None):
+    meeting = Meeting.query.filter_by(meeting_code=code).first()
+    question = Question.query.filter_by(meeting_id=meeting.id).first()
+    if request.method == "GET":
+        return render_template('question.html', question=question, code=code)
+    elif request.method == "POST":
+        print(request.form["answer"])
+        answer = Answer(text=request.form["answer"], question_id=question.id)
+        db.session.add(answer)
+        db.session.commit()
+        return redirect(url_for('setpresence', code=code))
 
 
 @app.route("/faker")

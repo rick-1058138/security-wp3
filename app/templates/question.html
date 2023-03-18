@@ -5,10 +5,11 @@
     <div class="container-window-welcome">
         <div class="container-middle-welcome">
             <p class="welcome">Fijn dat je er bent! </p>
-            <div class="question"> Uitgerust vandaag?</div>
-            <form action="/send_answer" method="POST"></form>
-            <textarea class="textarea_answer"  rows="4"> </textarea>
-            <input class="save_button" type="submit"  value="Klaar" />
+            <div class="question">  {{question.text}}</div>
+            <form action="/vraag/{{code}}" method="POST">
+                <textarea name="answer" class="textarea_answer"  rows="4"> </textarea>
+                <input class="save_button" type="submit"  value="Klaar" />
+        </form>
         </div>
     </div>
 {% endblock %}

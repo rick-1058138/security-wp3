@@ -20,6 +20,9 @@
 			<br> Status: {% if meeting.status == 0 %}<span>Nog niet gestart</span>{% elif meeting.status == 1 %}<span>Gestart</span>{% elif meeting.status == 2 %}<span>Afgelopen</span>{% endif %}
 			<br> Beschrijving: {{ meeting.description }}
 			<br> Vraag: {{ question.text }}
+			<br> Antwoord: {% for answer in question.answers%}
+			<p>{{answer.text}}</p>
+			{% endfor%}
 		  </div>
 		</div>
 
