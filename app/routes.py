@@ -78,7 +78,8 @@ def create_group_form():
 @app.route("/home")
 @login_required
 def home():
-    meetings = Meeting.query.filter(Meeting.date >= datetime.today().date()).limit(5).all()
+    meetings = Meeting.query.filter(
+        Meeting.date >= datetime.today().date()).limit(5).all()
     return render_template('index.html', meetings=meetings)
 
 
@@ -167,6 +168,7 @@ def presence(code=None):
     else:
         abort(404)
 
+
 @app.route("/meeting/start/<code>")
 @login_required
 def start_presence(code=None):
@@ -186,12 +188,12 @@ def start_presence(code=None):
         db.session.commit()
 
         # UDPATE: loop through all groups added to meeting
-            # loop through all students in each group
+        # loop through all students in each group
 
-        # UPDATE: insert all students with presence false   
+        # UPDATE: insert all students with presence false
         # student = StudentMeeting(student_id=id, meeting_id=meeting.id, checkin_date=datetime.now(), present=False)
 
-        return redirect(url_for('presence',code = code))
+        return redirect(url_for('presence', code=code))
     else:
         abort(404)
 
@@ -203,7 +205,8 @@ def presence_code():
         return render_template('code-input.html')
     elif request.method == "POST":
         code = request.form["meeting_code"]
-        return redirect(url_for('setpresence',code = code))
+        return redirect(url_for('setpresence', code=code))
+
 
 @app.route('/aanmelden/<code>')
 @login_required
@@ -283,21 +286,22 @@ def code_input():
 @app.route("/les_overzicht/<meeting_code>")
 @login_required
 def les_overzicht(meeting_code):
-    meeting =  Meeting.query.filter_by(meeting_code = meeting_code).first()
-    question = Question.query.filter_by(meeting_id = meeting.id).first()
+    meeting = Meeting.query.filter_by(meeting_code=meeting_code).first()
+    question = Question.query.filter_by(meeting_id=meeting.id).first()
     groups = meeting.groups
     group_dict = []
     for row in groups:
         group_dict.append(row.group)
-    print(groups) 
-    return render_template("les_overzicht.html", meeting_code=meeting_code,meeting=meeting, question=question,groups=group_dict)
+    print(groups)
+    return render_template("les_overzicht.html", meeting_code=meeting_code, meeting=meeting, question=question, groups=group_dict)
 
 
-
-@app.route("/overzicht")
+@app.route("/overzicht/<id>")
 @login_required
-def overview_page():
-    return render_template('overview.html')
+def overview_page(id=None):
+    student = Student.query.filter_by(user_id=id).first()
+    print(student)
+    return render_template('overview.html', student=student)
 
 
 @app.route("/vraag")
@@ -335,17 +339,21 @@ def delete_meeting(id=None):
     flash("meeting verwijderd", "success")
     return redirect(url_for("rooster"))
 
+
 @app.route("/lessen/zoeken")
 def search_meetings():
     return render_template("meetings.html")
+
 
 @app.route("/studenten/zoeken")
 def search_students():
     return render_template("students.html")
 
+
 @app.route("/klassen/zoeken")
 def search_groups():
     return render_template("groups.html")
+
 
 @app.route("/docenten/zoeken")
 def search_teachers():
