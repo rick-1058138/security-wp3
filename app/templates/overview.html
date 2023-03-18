@@ -35,7 +35,9 @@
             <span class="class"> Klas:</span>
         </td>
         <td> 
-            <span class="class_input"> {{student.groups}} </span>
+            {% for group in student.groups%}
+            <span> {{group.group.name}} </span>
+            {% endfor%}
         </td>
     </tr>
 </tr>
