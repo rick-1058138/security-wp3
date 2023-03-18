@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}Docenten Overzicht{% endblock %}
+
+{% block content %}
+
+    {% if current_user.role == 0%}
+    <div class="overview-btn-row">
+        <a href="{{url_for('search_meetings')}}" class="overview-btn">Lessen</a>
+        <a href="{{url_for('search_students')}}" class="overview-btn">Studenten</a>
+        <a href="{{url_for('search_groups')}}" class="overview-btn">Klassen</a>
+        <a href="{{url_for('search_teachers')}}" class="overview-btn active">Docenten</a>
+    </div>
+    {%elif current_user.role == 1%}
+    <div class="overview-btn-row">
+        <a href="{{url_for('search_meetings')}}" class="overview-btn">Lessen</a>
+        <a href="{{url_for('search_teachers')}}" class="overview-btn active">Docenten</a>
+    </div>
+
+    {% endif%}
+
+    <div class="overview-search-top">
+        <h2>Zoeken van docenten:</h2>
+        <input type="text" id="search-field" class="form-input search-field-input">
+    </div>
+    <div class="overview-search-container">
+        <table class="search-table">
+            <thead>
+                <tr>
+                    <th>Voornaam</th>
+                    <th>Achternaam</th>
+                    <th>E-mail</th>
+                </tr>
+            </thead>
+            <tbody id="search-container">
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <script>
+        // check for filter update
+        $('#search-field').keyup( function (e) {
+            let filter = $(this).val()
+            if( filter != ""){
+                $.ajax({
+                    method: "GET",
+                    url: "/api/teacher/filter/"+filter,
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success:function(result)
+                    {   
+                        console.log(result)
+                        $("#search-container").html("")
+                        if(result.result.length>0){
+                            console.log(result.result)
+                            for( item of result.result){
+                                console.log(result.users)
+                                let user = result.users.find(o => o.user_id == item.user_id);
+                                addTeacher(item, user)
+                            }
+                        }else{
+                            $("#search-container").text("Geen resultaten")
+                        }
+                    },
+                    error : function(request,error){
+                        alert("request failed", error);
+                    }
+                });                
+            }else{
+                // no filter in input, show limited teachers by limit variable
+                getTeachersWithLimit(20)
+            }
+
+        });
+
+        function addTeacher(teacher, user){
+            // console.log("teacher: "+teacher.id)
+     
+            let html_block = $(`                                 
+                <tr>
+                    <td>${teacher.first_name}</td>
+                    <td>${teacher.last_name}</td>
+                    <td>${user.email}</td>
+                </tr>
+            `);
+
+            // add lesson to html   
+            let parent = document.getElementById("search-container");
+            let element = $(parent).append(html_block);
+        }
+
+        function getTeachersWithLimit(limit){
+            $.ajax({
+                method: "GET",
+                url: "/api/teacher/limit/"+limit,
+                contentType: "application/json",
+                dataType: 'json',
+                success:function(result)
+                {   
+                    console.log(result)
+                    $("#search-container").html("")
+                    if(result.result.length>0){
+                        for( item of result.result){
+                            console.log(result.users)
+                            let user = result.users.find(o => o.user_id == item.user_id);
+                            addTeacher(item, user)
+                        }
+                    }else{
+                        $("#search-container").text("Geen resultaten")
+                    }
+
+    
+                },
+                error : function(request,error){
+                    alert("request failed", error);
+                }
+            });       
+        }
+        // onload fill page with meetings
+        getTeachersWithLimit(30)
+        
+    </script>
+{% endblock %}

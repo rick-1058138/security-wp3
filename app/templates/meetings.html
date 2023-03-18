@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Lessen Overzicht{% endblock %}
+
+{% block content %}
+
+    {% if current_user.role == 0%}
+        <div class="overview-btn-row">
+            <a href="{{url_for('search_meetings')}}" class="overview-btn active">Lessen</a>
+            <a href="{{url_for('search_students')}}" class="overview-btn">Studenten</a>
+            <a href="{{url_for('search_groups')}}" class="overview-btn">Klassen</a>
+            <a href="{{url_for('search_teachers')}}" class="overview-btn">Docenten</a>
+        </div>
+    {%elif current_user.role == 1%}
+        <div class="overview-btn-row">
+            <a href="{{url_for('search_meetings')}}" class="overview-btn active">Lessen</a>
+            <a href="{{url_for('search_teachers')}}" class="overview-btn">Docenten</a>
+        </div>
+
+    {% endif%}
+
+
+    <div class="overview-search-top">
+        <h2>Zoeken van lessen:</h2>
+        <input type="text" id="search-field" class="form-input search-field-input">
+    </div>
+    <div id="search-container" class="overview-search-container">
+    </div>
+
+    <script>
+        // check for filter update
+        $('#search-field').keyup( function (e) {
+            let filter = $(this).val()
+            if( filter != ""){
+                $.ajax({
+                    method: "GET",
+                    url: "/api/meeting/filter/"+filter,
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success:function(result)
+                    {   
+                        $("#search-container").html("")
+                        if(result.result.length>0){
+                            console.log(result.result)
+                            for( item of result.result){
+                                let groups = result.groups.find(o => o.meeting_id == item.id);
+                                addMeeting(item, groups)
+                            }
+                        }else{
+                            $("#search-container").text("Geen resultaten")
+                        }
+                    },
+                    error : function(request,error){
+                        alert("request failed", error);
+                    }
+                });                
+            }else{
+                // no filter in input, show first upcoming meetings limited by limit variable
+                getMeetingsWithLimit(15)
+            }
+
+        });
+
+        function addMeeting(meeting, meetinggroups){
+            console.log("meeting: "+meeting.id, meetinggroups)
+     
+            let html_block = $(`                                 
+            <a class="meeting-container-item" href="/les_overzicht/${meeting.meeting_code}">
+                <p class="meeting-item-date">${meeting.date}</p>
+                <div class="meeting-item-header">
+                    <p>${meeting.name}</p>
+                    <p>${meeting.start_time} - ${meeting.end_time}</p>
+                </div>
+                <div class="meeting-item-content">
+                    <div>
+                        <span>Klassen:</span>
+                        <div class="group-content">
+                        </div>
+                    </div>
+                    <div>
+                        <span>Docenten:</span>
+                        <div class="teacher-content">
+                            <p class="meeting-item-teacher"></p>
+                        </div>
+
+                    </div>
+                </div>
+            </a>
+            `);
+            // add lesson to html   
+            let parent = document.getElementById("search-container");
+            let element = $(parent).append(html_block);
+
+            // format date in meetings block
+            let date = $(html_block).find('.meeting-item-date').text()
+            let day = dayjs(date).format('dddd D MMMM YYYY')
+            $(html_block).find('.meeting-item-date').text(day)
+
+            // add groups in html to correct meeting
+            for( group of meetinggroups.groups){
+                let group_block = $(`<p class="meeting-item-group">${group.group_name}</p>`);
+                $(html_block).find('.group-content').append(group_block)
+            }
+
+        }
+
+        function getMeetingsWithLimit(limit){
+            $.ajax({
+                method: "GET",
+                url: "/api/meeting/limit/"+limit,
+                contentType: "application/json",
+                dataType: 'json',
+                success:function(result)
+                {   
+                    console.log(result.groups)
+                    $("#search-container").html("")
+                    if(result.result.length>0){
+                        for( item of result.result){
+                            let groups = result.groups.find(o => o.meeting_id == item.id);
+                            addMeeting(item, groups)
+                        }
+                    }else{
+                        $("#search-container").text("Geen resultaten")
+                    }
+
+    
+                },
+                error : function(request,error){
+                    alert("request failed", error);
+                }
+            });       
+        }
+        // onload fill page with meetings
+        getMeetingsWithLimit(15)
+        
+    </script>
+{% endblock %}

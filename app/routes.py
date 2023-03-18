@@ -2,7 +2,7 @@ import time
 from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from app import app, db, bcrypt
-from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User, StudentGroup
+from app.models import Answer, Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User, StudentGroup
 from datetime import datetime
 
 from random import randint
@@ -78,7 +78,9 @@ def create_group_form():
 @app.route("/home")
 @login_required
 def home():
-    return render_template('index.html')
+    meetings = Meeting.query.filter(
+        Meeting.date >= datetime.today().date()).limit(5).all()
+    return render_template('index.html', meetings=meetings)
 
 
 @app.route("/timer/start")
@@ -166,6 +168,7 @@ def presence(code=None):
     else:
         abort(404)
 
+
 @app.route("/meeting/start/<code>")
 @login_required
 def start_presence(code=None):
@@ -185,12 +188,12 @@ def start_presence(code=None):
         db.session.commit()
 
         # UDPATE: loop through all groups added to meeting
-            # loop through all students in each group
+        # loop through all students in each group
 
-        # UPDATE: insert all students with presence false   
+        # UPDATE: insert all students with presence false
         # student = StudentMeeting(student_id=id, meeting_id=meeting.id, checkin_date=datetime.now(), present=False)
 
-        return redirect(url_for('presence',code = code))
+        return redirect(url_for('presence', code=code))
     else:
         abort(404)
 
@@ -202,7 +205,9 @@ def presence_code():
         return render_template('code-input.html')
     elif request.method == "POST":
         code = request.form["meeting_code"]
-        return redirect(url_for('setpresence',code = code))
+        return redirect(url_for('question', code=code))
+        # return redirect(url_for('setpresence', code=code))
+
 
 @app.route('/aanmelden/<code>')
 @login_required
@@ -289,19 +294,26 @@ def les_overzicht(meeting_code):
     return render_template("les_overzicht.html", meeting_code=meeting_code, meeting=meeting, question=question, groups=group_names)
 
 
-
-
-
-@app.route("/overzicht")
+@app.route("/overzicht/<id>")
 @login_required
-def overview_page():
-    return render_template('overview.html')
+def overview_page(id=None):
+    student = Student.query.filter_by(user_id=id).first()
+    return render_template('overview.html', student=student)
 
 
-@app.route("/vraag")
+@app.route("/vraag/<code>", methods=["GET", "POST"])
 @login_required
-def question():
-    return render_template('question.html')
+def question(code=None):
+    meeting = Meeting.query.filter_by(meeting_code=code).first()
+    question = Question.query.filter_by(meeting_id=meeting.id).first()
+    if request.method == "GET":
+        return render_template('question.html', question=question, code=code)
+    elif request.method == "POST":
+        print(request.form["answer"])
+        answer = Answer(text=request.form["answer"], question_id=question.id)
+        db.session.add(answer)
+        db.session.commit()
+        return redirect(url_for('setpresence', code=code))
 
 
 @app.route("/faker")
@@ -332,3 +344,23 @@ def delete_meeting(id=None):
     db.session.commit()
     flash("meeting verwijderd", "success")
     return redirect(url_for("rooster"))
+
+
+@app.route("/lessen/zoeken")
+def search_meetings():
+    return render_template("meetings.html")
+
+
+@app.route("/studenten/zoeken")
+def search_students():
+    return render_template("students.html")
+
+
+@app.route("/klassen/zoeken")
+def search_groups():
+    return render_template("groups.html")
+
+
+@app.route("/docenten/zoeken")
+def search_teachers():
+    return render_template("teachers.html")

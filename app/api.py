@@ -72,11 +72,71 @@ def handle_meeting(id=None):
 def meetings_between(start, end):
     try:
         result = Meeting.query.filter(Meeting.date.between(start, end)).all()
+
         error = ""
     except Exception as e:
         result = "error"
         error = str(e)
     return jsonify({"result": result, "error": error})
+
+@app.route("/api/meeting/filter/<filter>", methods=["GET"])
+def meetings_filter(filter):
+    group_dict = []
+    try:
+        result = Meeting.query.filter(Meeting.name.like(f'{filter}%')).all()
+        # add groups for each meeting to group dictionary
+        for row in result:
+            groups = []
+            for group in row.groups:
+                item = {
+                    "group_name": group.group.name,
+                    "start_date": group.group.start_date,
+                    "end_date": group.group.end_date,                    
+                    }
+                groups.append(item)
+
+            meeting_groups = { 
+                "meeting_id": row.id,
+                "groups": groups
+            }
+            group_dict.append(meeting_groups)
+
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "groups": group_dict, "error": error})
+
+@app.route("/api/meeting/limit/<limit>", methods=["GET"])
+def meetings_limit(limit):
+    group_dict = []
+    try:
+        result = Meeting.query.filter(Meeting.date >= datetime.today().date()).limit(limit).all()
+        
+        # add groups for each meeting to group dictionary
+        for row in result:
+            groups = []
+            for group in row.groups:
+                item = {
+                    "group_name": group.group.name,
+                    "start_date": group.group.start_date,
+                    "end_date": group.group.end_date,                    
+                    }
+                groups.append(item)
+
+            meeting_groups = { 
+                "meeting_id": row.id,
+                "groups": groups
+            }
+            group_dict.append(meeting_groups)
+
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "groups": group_dict, "error": error})
+
+
 
 @app.route("/api/studentmeeting/<code>")
 def handle_studentmeeting(code=None):
@@ -148,6 +208,31 @@ def delete_student(id):
     return jsonify({"message": "Student {} ID: {} is verwijderd".format(student.name, student.id)})
 
 
+@app.route("/api/student/filter/<filter>", methods=["GET"])
+def students_filter(filter):
+    try:
+        result = Student.query.filter(Student.first_name.like(f'{filter}%') | Student.last_name.like(f'{filter}%') | Student.student_number.like(f'{filter}%')).all()
+
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "error": error})
+
+@app.route("/api/student/limit/<limit>", methods=["GET"])
+def students_limit(limit):
+    try:
+        result = Student.query.limit(limit).all()
+        
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "error": error})
+
+
+
+
 # Show all teachers
 @app.route('/api/teacher', methods=['GET'])
 def get_teachers():
@@ -194,6 +279,46 @@ def update_teacher(id):
     return jsonify({'id': teacher.id, 'name': teacher.name})
 
 
+@app.route("/api/teacher/filter/<filter>", methods=["GET"])
+def teachers_filter(filter):
+    user_dict = []
+    try:
+        result = Teacher.query.filter(Teacher.first_name.like(f'{filter}%') | Teacher.last_name.like(f'{filter}%')).all()
+        for row in result:
+            # print(row.user.email)
+            user = { 
+                "user_id": row.user_id,
+                "email": row.user.email
+            }
+            user_dict.append(user)
+
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "users": user_dict, "error": error})
+
+@app.route("/api/teacher/limit/<limit>", methods=["GET"])
+def teachers_limit(limit):
+    user_dict = []
+    try:
+        result = Teacher.query.limit(limit).all()
+        for row in result:
+            # print(row.user.email)
+            user = { 
+                "user_id": row.user_id,
+                "email": row.user.email
+            }
+            user_dict.append(user)
+
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "users": user_dict ,"error": error})
+
+
+
 @app.route('/api/group', methods=['GET'])
 def get_group():
     group = Group.query.all()
@@ -238,6 +363,31 @@ def delete_group(id=None):
     return jsonify({"message": "Group {group} is verwijderd"})
 
 
+
+@app.route("/api/group/filter/<filter>", methods=["GET"])
+def groups_filter(filter):
+    try:
+        result = Group.query.filter(Group.name.like(f'{filter}%')).all()
+
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "error": error})
+
+@app.route("/api/group/limit/<limit>", methods=["GET"])
+def groups_limit(limit):
+    try:
+        result = Group.query.limit(limit).all()
+        
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    return jsonify({"result": result, "error": error})
+
+
+
 @app.route('/api/question/', methods=['POST'])
 def create_question():
     body = request.json
@@ -268,3 +418,4 @@ def delete_question(id):
     db.session.delete(question)
     db.session.commit()
     return jsonify({"message": "Vraag ID: {} is verwijderd"})
+

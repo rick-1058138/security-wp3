@@ -19,7 +19,7 @@
             <span class="name"> Naam:</span>
         </td>
         <td> 
-            <span class="name_input"> C Daniel</span>
+            <span class="name_input"> {{student.full_name}}</span>
         </td>
     </tr>
 </tr>
@@ -27,7 +27,7 @@
             <span class="studentnumber"> Studentnummer:</span>
         </td>
         <td> 
-            <span class="studentnumber_input"> 1234567</span>
+            <span class="studentnumber_input"> {{student.student_number}}</span>
         </td>
     </tr>
 </tr>
@@ -35,7 +35,9 @@
             <span class="class"> Klas:</span>
         </td>
         <td> 
-            <span class="class_input"> C1</span>
+            {% for group in student.groups%}
+            <span> {{group.group.name}} </span>
+            {% endfor%}
         </td>
     </tr>
 </tr>
@@ -43,7 +45,7 @@
             <span class="e-mail"> E-mailadres:</span>
         </td>
         <td> 
-            <span class="mail_input"> hello@world.com</span>
+            <span class="mail_input"> {{student.user.email}}</span>
         </td>
     </tr>
     </tbody>

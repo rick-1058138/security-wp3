@@ -87,15 +87,17 @@ class Student(db.Model):
     def __repr__(self):
         return f"Student('{self.full_name}')"
 
-    def __init__(self, first_name, last_name, email):
-        user = User(email=email, role=1,admin=False)
+    def __init__(self, first_name, last_name, email, student_number=None):
+        user = User(email=email, role=1, admin=False)
         db.session.add(user)
         db.session.commit()
         self.first_name = first_name
         self.last_name = last_name
-        self.student_number = random.randint(1_000_000, 9_999_999)
+        if student_number == None:
+            self.student_number = random.randint(1_000_000, 9_999_999)
+        else:
+            self.student_number = student_number
         self.user_id = user.id
-
 
 
 @dataclass
@@ -144,9 +146,9 @@ class Teacher(db.Model):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
-    
+
     def __init__(self, first_name, last_name, email, admin):
-        user = User(email=email, role=0,admin=admin)
+        user = User(email=email, role=0, admin=admin)
         db.session.add(user)
         db.session.commit()
         self.first_name = first_name
@@ -174,7 +176,7 @@ class User(UserMixin, db.Model):
         # create random password and password code
         characters = string.ascii_letters + string.digits
         # password = ''.join(random.choice(characters) for i in range(60))
-        password = bcrypt.generate_password_hash("werkplaats3") 
+        password = bcrypt.generate_password_hash("werkplaats3")
         password_code = ''.join(random.choice(characters) for i in range(15))
 
         self.role = role
@@ -183,13 +185,12 @@ class User(UserMixin, db.Model):
         self.admin = admin
 
     def update_password(self, password):
-        self.password = bcrypt.generate_password_hash(password) 
+        self.password = bcrypt.generate_password_hash(password)
         db.session.commit()
 
     def remove_password_code(self):
         self.password_code = None
         db.session.commit()
-
 
 
 @dataclass
@@ -231,6 +232,10 @@ class Answer(db.Model):
         db.Integer, db.ForeignKey('question.id'), nullable=False)
 
     question = db.relationship('Question', back_populates='answers')
+
+    def __init__(self, text, question_id):
+        self.text = text
+        self.question_id = question_id
 
 
 @dataclass

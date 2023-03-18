@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Klassen Overzicht{% endblock %}
+
+{% block content %}
+
+    <div class="overview-btn-row">
+        <a href="{{url_for('search_meetings')}}" class="overview-btn">Lessen</a>
+        <a href="{{url_for('search_students')}}" class="overview-btn">Studenten</a>
+        <a href="{{url_for('search_groups')}}" class="overview-btn active">Klassen</a>
+        <a href="{{url_for('search_teachers')}}" class="overview-btn">Docenten</a>
+    </div>
+    
+    <div class="overview-search-top">
+        <h2>Zoeken van groepen:</h2>
+        <input type="text" id="search-field" class="form-input search-field-input">
+    </div>
+    <div class="overview-search-container">
+        <table class="search-table">
+            <thead>
+                <tr>
+                    <th>Naam</th>
+                    <th>Start datum</th>
+                    <th>Eind datum</th>
+                </tr>
+            </thead>
+            <tbody id="search-container">
+            </tbody>
+        </table>
+
+    </div>
+
+
+    <script>
+        // check for filter update
+        $('#search-field').keyup( function (e) {
+            let filter = $(this).val()
+            if( filter != ""){
+                $.ajax({
+                    method: "GET",
+                    url: "/api/group/filter/"+filter,
+                    contentType: "application/json",
+                    dataType: 'json',
+                    success:function(result)
+                    {   
+                        console.log(result)
+                        $("#search-container").html("")
+                        if(result.result.length>0){
+                            console.log(result.result)
+                            for( item of result.result){
+                                addGroup(item)
+                            }
+                        }else{
+                            $("#search-container").text("Geen resultaten")
+                        }
+                    },
+                    error : function(request,error){
+                        alert("request failed", error);
+                    }
+                });                
+            }else{
+                // no filter in input, show limited groups by limit variable
+                getGroupsWithLimit(20)
+            }
+
+        });
+
+        function addGroup(group){
+            // console.log("group: "+group.id)
+     
+            let html_block = $(`                                 
+                <tr>
+                    <td>${group.name}</td>
+                    <td id="start-date">${group.start_date}</td>
+                    <td id="end-date">${group.end_date}</td>
+                </tr>
+            `);
+
+            // format date in group table
+            let startdate = $(html_block).find('#start-date').text()
+            let enddate = $(html_block).find('#end-date').text()
+            let start = dayjs(startdate).format('DD MMMM YYYY')
+            let end = dayjs(enddate).format('DD MMMM YYYY')
+            $(html_block).find('#start-date').text(start)
+            $(html_block).find('#end-date').text(end)
+
+            // add lesson to html   
+            let parent = document.getElementById("search-container");
+            let element = $(parent).append(html_block);
+        }
+
+        function getGroupsWithLimit(limit){
+            $.ajax({
+                method: "GET",
+                url: "/api/group/limit/"+limit,
+                contentType: "application/json",
+                dataType: 'json',
+                success:function(result)
+                {   
+                    console.log(result)
+                    $("#search-container").html("")
+                    if(result.result.length>0){
+                        for( item of result.result){
+                            addGroup(item)
+                        }
+                    }else{
+                        $("#search-container").text("Geen resultaten")
+                    }
+
+    
+                },
+                error : function(request,error){
+                    alert("request failed", error);
+                }
+            });       
+        }
+        // onload fill page with meetings
+        getGroupsWithLimit(30)
+        
+    </script>
+{% endblock %}

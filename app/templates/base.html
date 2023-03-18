@@ -21,6 +21,9 @@
 		<!-- select2 - https://select2.org/getting-started/installation  -->
 		<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+		<!-- dayjs script  -->
+		<script src="{{url_for('static', filename='/js/day.js')}}"></script>
     </head>
     <body>
 		<nav class="header-container">
@@ -34,7 +37,7 @@
 						/>
 					</a>
 					{% if current_user.is_authenticated%}
-						<a href="{{url_for('overview_page')}}" class="user-profile">
+						<a href="{{url_for('overview_page', id=current_user.id)}}" class="user-profile">
 							<i class="fa fa-user user-icon"></i>
 							<div class="user-info">
 
@@ -59,7 +62,10 @@
 				<div class="header-right">
 					<ul class="menu">
 						<li><a class="menuItem" href="/">Home</a></li>
-						<li><a class="menuItem" href="{{ url_for('overview_page') }}">Aanwezigheid</a></li>
+						<li><a class="menuItem" href="{{ url_for('overview_page', id=current_user.id) }}">Aanwezigheid</a></li>
+						{% if current_user.admin %}
+						<li><a class="menuItem" href="{{ url_for('admin') }}">Admin</a></li>
+						{% endif%}
 						<li><a class="menuItem" href="{{ url_for('rooster') }}">Rooster</a></li>
 						<li><a class="menuItem" href="#">Instellingen</a></li>
 						<li><a class="menuItem" href="{{ url_for('logout') }}">Uitloggen</a></li>
@@ -139,6 +145,8 @@
     </body>
 </html>
 <script>
+
+
 	const menu = document.querySelector(".menu");
 	// const menuItems = document.querySelectorAll(".menuItem");
 	const hamburger= document.querySelector(".hamburger");
