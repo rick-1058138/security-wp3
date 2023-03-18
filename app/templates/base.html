@@ -63,6 +63,9 @@
 					<ul class="menu">
 						<li><a class="menuItem" href="/">Home</a></li>
 						<li><a class="menuItem" href="{{ url_for('overview_page') }}">Aanwezigheid</a></li>
+						{% if current_user.admin %}
+						<li><a class="menuItem" href="{{ url_for('admin') }}">Admin</a></li>
+						{% endif%}
 						<li><a class="menuItem" href="{{ url_for('rooster') }}">Rooster</a></li>
 						<li><a class="menuItem" href="#">Instellingen</a></li>
 						<li><a class="menuItem" href="{{ url_for('logout') }}">Uitloggen</a></li>
