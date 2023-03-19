@@ -43,7 +43,8 @@
                             console.log(result.result)
                             for( item of result.result){
                                 let groups = result.groups.find(o => o.meeting_id == item.id);
-                                addMeeting(item, groups)
+                                let teachers = result.teachers.find(o => o.meeting_id == item.id);
+                                addMeeting(item, groups, teachers)
                             }
                         }else{
                             $("#search-container").text("Geen resultaten")
@@ -60,8 +61,8 @@
 
         });
 
-        function addMeeting(meeting, meetinggroups){
-            console.log("meeting: "+meeting.id, meetinggroups)
+        function addMeeting(meeting, meetinggroups, meetingteachers){
+            console.log("meeting: "+meeting.id, meetinggroups, meetingteachers)
      
             let html_block = $(`                                 
             <a class="meeting-container-item" href="/les_overzicht/${meeting.meeting_code}">
@@ -79,7 +80,6 @@
                     <div>
                         <span>Docenten:</span>
                         <div class="teacher-content">
-                            <p class="meeting-item-teacher"></p>
                         </div>
 
                     </div>
@@ -95,10 +95,24 @@
             let day = dayjs(date).format('dddd D MMMM YYYY')
             $(html_block).find('.meeting-item-date').text(day)
 
+            // if there are no groups
+            if(meetinggroups.groups.length == 0){
+                $(html_block).find('.group-content').text("-")
+            }
             // add groups in html to correct meeting
             for( group of meetinggroups.groups){
                 let group_block = $(`<p class="meeting-item-group">${group.group_name}</p>`);
                 $(html_block).find('.group-content').append(group_block)
+            }
+
+            // if there are no teachers
+            if(meetingteachers.teachers.length == 0){
+                $(html_block).find('.teacher-content').text("-")
+            }
+            // add teachers in html to correct meeting
+            for( teacher of meetingteachers.teachers){
+                let teacher_block = $(`<p class="meeting-item-teacher">${teacher.first_name} ${teacher.last_name}</p>`);
+                $(html_block).find('.teacher-content').append(teacher_block)
             }
 
         }
@@ -116,7 +130,8 @@
                     if(result.result.length>0){
                         for( item of result.result){
                             let groups = result.groups.find(o => o.meeting_id == item.id);
-                            addMeeting(item, groups)
+                            let teachers = result.teachers.find(o => o.meeting_id == item.id);
+                            addMeeting(item, groups, teachers)
                         }
                     }else{
                         $("#search-container").text("Geen resultaten")

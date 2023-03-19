@@ -141,8 +141,6 @@
 
         var today = dayjs().format('YYYY-MM-DD');
 
-        console.log("Day: "+currentWeekMonday)
-
 
         // <======= Meeting popup ========>
         // set new meeting popup date to today on load
@@ -250,6 +248,7 @@
                     document.getElementById("select2-group-input-container").innerHTML = ''
                     document.getElementById("select2-teacher-input-container").innerHTML = ''
 
+                    // UPDATE: groups need to be implemented, now default group ( does nothing for now)
                     getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
                 },
                 error : function(request,error){
@@ -331,7 +330,10 @@
                     console.log(response_data);
                     for(item of response_data.result){
                         // console.log(item.id, item)
-                        createLessonBlock(day=dayjs(item.date).day(), name=item.name, start_time=formatTimeToNumber(item.start_time), end_time=formatTimeToNumber(item.end_time), meeting_code=item.meeting_code);
+                        // Get element of created lesson block and add the teachers to it
+                        element = createLessonBlock(day=dayjs(item.date).day(), name=item.name, start_time=formatTimeToNumber(item.start_time), end_time=formatTimeToNumber(item.end_time), meeting_code=item.meeting_code)
+                        getTeachersForMeeting(item.id, element);
+
                     }
                 },
                 error : function(request,error){
@@ -350,7 +352,7 @@
                 success: function(response_data){
                     console.log(response_data);
                     for(item of response_data.result){
-                        console.log(item.id, item)
+                        // console.log(item.id, item)
                         groupsArray.push(item)
                     }
                 },
@@ -382,7 +384,7 @@
                 success: function(response_data){
                     console.log(response_data);
                     for(item of response_data.result){
-                        console.log(item.id, item)
+                        // console.log(item.id, item)
                         teachersArray.push(item)
                     }
                 },
@@ -398,6 +400,30 @@
                     let formgroup = $("#teacher-input").append(html_block);
                 }
                 $('#teacher-input').select2();
+            })
+        }
+
+        function getTeachersForMeeting(meeting_id, element){
+            teachers = []
+            $.ajax({ 
+                type: "GET",
+                url: "/api/teachermeeting/"+meeting_id,
+                contentType: "application/json",
+                dataType: "json",  
+                success: function(response_data){
+                    teachers = response_data.result
+                    return teachers
+                },
+                error : function(request,error){
+                    console.log(request)
+                }
+            }).then(function(value){
+                // Add teachers to correct meeting
+                element.find('.docent-text').text(teachers)
+                if(teachers == ''){
+                    element.find('.docent-text').text("Nog geen docenten")
+
+                }
             })
         }
 
@@ -452,7 +478,6 @@
                 currentWeekMonday = dayjs(date).day(1).format('YYYY-MM-DD')
                 currentWeekSunday = dayjs(date).day(7).format('YYYY-MM-DD')
             }
-            console.log(currentWeekMonday, currentWeekSunday)
 
             // set correct day number in html calendar
             // if day == 0 it is sunday, so go back to monday so to day 1
@@ -509,7 +534,8 @@
 
         // function to create a lesson block
         function createLessonBlock(day, name, start_time, end_time, meeting_code){
-            console.log(day, name, start_time, end_time, meeting_code);
+            // console.log(day, name, start_time, end_time, meeting_code);
+
             // if day == 0 set it to 7 so that it is sunday
             if(day == 0){
                 day = 7
@@ -527,7 +553,7 @@
                         <p class="rooster-content-item-title">${name}</p>
                         <p class="rooster-content-item-text">${start_time}:00 - ${end_time}:00</p>
                     </div>
-                    <p class="rooster-content-item-text">Docent</p>
+                    <p class="rooster-content-item-text docent-text" >Docent</p>
                 </a>
             `);
             // add lesson to html   
@@ -549,6 +575,7 @@
             let height = lesson_blocks * lesson_height + extra_height;
             html_block.css({ height: height+'px' });
 
+            return html_block
         }
 
     </script>
