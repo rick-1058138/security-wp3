@@ -37,7 +37,13 @@
 						/>
 					</a>
 					{% if current_user.is_authenticated%}
-						<a href="{{url_for('overview_page', id=current_user.id)}}" class="user-profile">
+						<a 
+						{% if current_user.role == 0 %}
+						href="{{url_for('home')}}" 
+						{% else %}
+						href="{{url_for('overview_page', id=current_user.id)}}" 
+						{% endif%}
+						class="user-profile">
 							<i class="fa fa-user user-icon"></i>
 							<div class="user-info">
 
