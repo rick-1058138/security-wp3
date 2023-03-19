@@ -258,12 +258,17 @@ def login():
         return redirect(url_for("home"))
 
     if request.method == "POST":
+
+        next_url = request.args.get("next")
         username = request.form["username"]
         password = request.form["password"]
         user = db.session.query(User).filter(
             User.email == username.lower()).first()
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
+            if next_url:
+               url = next_url[1:]
+               return redirect(url_for(url))
             return redirect(url_for("home"))
         else:
             flash("Gebruikersnaam of wachtwoord onjuist. Probeer opnieuw.", 'error')
