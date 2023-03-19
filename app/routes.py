@@ -79,7 +79,7 @@ def create_group_form():
 @login_required
 def home():
     meetings = Meeting.query.filter(
-        Meeting.date >= datetime.today().date()).limit(5).all()
+        Meeting.date >= datetime.today().date()).order_by(Meeting.date).limit(5).all()
     return render_template('index.html', meetings=meetings)
 
 

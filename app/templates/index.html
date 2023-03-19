@@ -30,6 +30,8 @@
                                 <span>Docenten:</span>
                                 {% for teacher in meeting.teachers%}
                                     <p class="meeting-item-teacher">{{teacher.teacher.full_name}}</p>
+                                {% else %}
+                                    Nog geen docenten
                                 {% endfor %}
                             </div>
                         </div>

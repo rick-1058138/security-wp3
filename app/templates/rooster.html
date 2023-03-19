@@ -26,6 +26,12 @@
                     </select>
                 </div>
                 <div class="form-row">
+                    <label>Docent / Docenten:</label>
+                    <!-- Groups are added in here with ajax request  -->
+                    <select class="group-select" name="teachers[]" multiple="multiple" id="teacher-input">
+                    </select>
+                </div>
+                <div class="form-row">
                     <label>Vraag aan studenten</label>
                     <input class="form-input" type="text" name="text" id="question-input"> 
                 </div>
@@ -124,10 +130,16 @@
     </div>
     <script type="application/javascript">
 
-        var currentWeekMonday = dayjs().day(1).format('YYYY-MM-DD')
-        var currentWeekSunday = dayjs().day(7).format('YYYY-MM-DD')
-        var today = dayjs().format('YYYY-MM-DD');
+        if(dayjs().day() == 0){
+            // If today is sunday use -6 for monday and 0 for sunday to prevent wrong week data
+            var currentWeekMonday = dayjs().day(-6).format('YYYY-MM-DD')
+            var currentWeekSunday = dayjs().day(0).format('YYYY-MM-DD')
+        }else{
+            var currentWeekMonday = dayjs().day(1).format('YYYY-MM-DD')
+            var currentWeekSunday = dayjs().day(7).format('YYYY-MM-DD')
+        }
 
+        var today = dayjs().format('YYYY-MM-DD');
 
 
         // <======= Meeting popup ========>
@@ -166,6 +178,7 @@
 
             // check if the input is valid using a 'valid' property
             var groups = $('#group-input').val()
+            var teachers = $('#teacher-input').val()
 
             var meeting = {
                 name : $('#name-input').val(),
@@ -186,10 +199,6 @@
                     $empty = $('#new-meeting').find("input").filter(function() {
                         return this.value === "";
                     });
-
-            var question = {
-                text :$('#question-input').val(),
-            }
 
 
                     if($empty.length) {
@@ -221,6 +230,9 @@
                     for(group of groups){
                         addGroupToMeeting(group, result.meeting.id)
                     }
+                    for(teacher of teachers){
+                        addTeacherToMeeting(teacher, result.meeting.id)
+                    }
                     addQuestionToMeeting($('#question-input').val(), result.meeting.id)
 
                     // reset form popup data
@@ -228,12 +240,15 @@
                     $('#description-input').val(""),
                     $('#question-input').val("")
                     $('#group-input').val([])
+                    $('#teacher-input').val([])
                     $('#date-input').val(today)
                     $('#start-input').val("8:00"),
                     $('#end-input').val("9:00"),
-                    // remove selected elements from group select
+                    // remove selected elements from group, teacher select
                     document.getElementById("select2-group-input-container").innerHTML = ''
+                    document.getElementById("select2-teacher-input-container").innerHTML = ''
 
+                    // UPDATE: groups need to be implemented, now default group ( does nothing for now)
                     getMeetings(currentWeekMonday, currentWeekSunday, 'group 1')
                 },
                 error : function(request,error){
@@ -279,6 +294,28 @@
                 }
             });
         }
+
+        function addTeacherToMeeting(teacherId, meetingId){
+            var teacherMeeting = {
+                teacher_id : teacherId,
+                meeting_id : meetingId
+            }
+
+            $.ajax({
+                method: "POST",
+                url: "/api/teachermeeting",
+                data : JSON.stringify(teacherMeeting),
+                contentType: "application/json",
+                dataType: 'json',
+                success:function(result)
+                {
+                    console.log("teacher added: ", result)
+                },
+                error : function(request,error){
+                    alert("request failed", error);
+                }
+            });
+        }
         // <======= ============ ========>
 
         // AJAX request to get meetings
@@ -293,7 +330,10 @@
                     console.log(response_data);
                     for(item of response_data.result){
                         // console.log(item.id, item)
-                        createLessonBlock(day=dayjs(item.date).day(), name=item.name, start_time=formatTimeToNumber(item.start_time), end_time=formatTimeToNumber(item.end_time), meeting_code=item.meeting_code);
+                        // Get element of created lesson block and add the teachers to it
+                        element = createLessonBlock(day=dayjs(item.date).day(), name=item.name, start_time=formatTimeToNumber(item.start_time), end_time=formatTimeToNumber(item.end_time), meeting_code=item.meeting_code)
+                        getTeachersForMeeting(item.id, element);
+
                     }
                 },
                 error : function(request,error){
@@ -312,7 +352,7 @@
                 success: function(response_data){
                     console.log(response_data);
                     for(item of response_data.result){
-                        console.log(item.id, item)
+                        // console.log(item.id, item)
                         groupsArray.push(item)
                     }
                 },
@@ -334,7 +374,58 @@
         }
         getGroups()
 
+        teachersArray = []
+        function getTeachers(){
+            $.ajax({ 
+                type: "GET",
+                url: "/api/teacher",
+                contentType: "application/json",
+                dataType: "json",  
+                success: function(response_data){
+                    console.log(response_data);
+                    for(item of response_data.result){
+                        // console.log(item.id, item)
+                        teachersArray.push(item)
+                    }
+                },
+                error : function(request,error){
+                    console.log(request)
+                }
+            }).then(function(){
+                console.log("teachers: ", teachersArray)
+                for(teacher of teachersArray){
+                    // add groups to places where a list of all groups is needed 
+                    let html_block = `<option value="${teacher.id}">${teacher.first_name} ${teacher.last_name}</option>`
 
+                    let formgroup = $("#teacher-input").append(html_block);
+                }
+                $('#teacher-input').select2();
+            })
+        }
+
+        function getTeachersForMeeting(meeting_id, element){
+            teachers = []
+            $.ajax({ 
+                type: "GET",
+                url: "/api/teachermeeting/"+meeting_id,
+                contentType: "application/json",
+                dataType: "json",  
+                success: function(response_data){
+                    teachers = response_data.result
+                    return teachers
+                },
+                error : function(request,error){
+                    console.log(request)
+                }
+            }).then(function(value){
+                // Add teachers to correct meeting
+                element.find('.docent-text').text(teachers)
+                if(teachers == ''){
+                    element.find('.docent-text').text("Nog geen docenten")
+
+                }
+            })
+        }
 
         // remove meetings from calendar
         function removeMeetings(){
@@ -343,7 +434,7 @@
                 dayContainer.innerHTML = ''
             }
         }
-
+        getTeachers()
 
         // format time from HH:MM to H
         function formatTimeToNumber(time){
@@ -379,9 +470,14 @@
         // sets day numbers on calendar & updates the start and end day variables of the selected week
         function setWeekDayNumbers(date){
             // Update variables of start and end day of week
-            currentWeekMonday = dayjs(date).day(1).format('YYYY-MM-DD')
-            currentWeekSunday = dayjs(date).day(7).format('YYYY-MM-DD')
-            console.log(currentWeekMonday, currentWeekSunday)
+            if(dayjs(date).day() == 0){
+                // If today is sunday use -6 for monday and 0 for sunday to prevent wrong week data
+                currentWeekMonday = dayjs(date).day(-6).format('YYYY-MM-DD')
+                currentWeekSunday = dayjs(date).day(0).format('YYYY-MM-DD')
+            }else{
+                currentWeekMonday = dayjs(date).day(1).format('YYYY-MM-DD')
+                currentWeekSunday = dayjs(date).day(7).format('YYYY-MM-DD')
+            }
 
             // set correct day number in html calendar
             // if day == 0 it is sunday, so go back to monday so to day 1
@@ -438,7 +534,8 @@
 
         // function to create a lesson block
         function createLessonBlock(day, name, start_time, end_time, meeting_code){
-            console.log(day, name, start_time, end_time, meeting_code);
+            // console.log(day, name, start_time, end_time, meeting_code);
+
             // if day == 0 set it to 7 so that it is sunday
             if(day == 0){
                 day = 7
@@ -456,7 +553,7 @@
                         <p class="rooster-content-item-title">${name}</p>
                         <p class="rooster-content-item-text">${start_time}:00 - ${end_time}:00</p>
                     </div>
-                    <p class="rooster-content-item-text">Docent</p>
+                    <p class="rooster-content-item-text docent-text" >Docent</p>
                 </a>
             `);
             // add lesson to html   
@@ -478,6 +575,7 @@
             let height = lesson_blocks * lesson_height + extra_height;
             html_block.css({ height: height+'px' });
 
+            return html_block
         }
 
     </script>

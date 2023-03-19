@@ -1,6 +1,6 @@
 from flask import jsonify, request, url_for
 from app import app, db
-from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User
+from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, TeacherMeeting, User
 from datetime import datetime
 
 from random import randint
@@ -82,6 +82,8 @@ def meetings_between(start, end):
 @app.route("/api/meeting/filter/<filter>", methods=["GET"])
 def meetings_filter(filter):
     group_dict = []
+    teacher_dict = []
+
     try:
         result = Meeting.query.filter(Meeting.name.like(f'{filter}%')).all()
         # add groups for each meeting to group dictionary
@@ -101,15 +103,30 @@ def meetings_filter(filter):
             }
             group_dict.append(meeting_groups)
 
+            teachers = []
+            for teacher in row.teachers:
+                item = {
+                    "first_name": teacher.teacher.first_name,
+                    "last_name": teacher.teacher.last_name,                
+                    }
+                teachers.append(item)
+
+            meeting_teachers = { 
+                "meeting_id": row.id,
+                "teachers": teachers
+            }
+            teacher_dict.append(meeting_teachers)
+
         error = ""
     except Exception as e:
         result = "error"
         error = str(e)
-    return jsonify({"result": result, "groups": group_dict, "error": error})
+    return jsonify({"result": result, "groups": group_dict, "teachers": teacher_dict, "error": error})
 
 @app.route("/api/meeting/limit/<limit>", methods=["GET"])
 def meetings_limit(limit):
     group_dict = []
+    teacher_dict = []
     try:
         result = Meeting.query.filter(Meeting.date >= datetime.today().date()).limit(limit).all()
         
@@ -130,11 +147,27 @@ def meetings_limit(limit):
             }
             group_dict.append(meeting_groups)
 
+            teachers = []
+            for teacher in row.teachers:
+                item = {
+                    "first_name": teacher.teacher.first_name,
+                    "last_name": teacher.teacher.last_name,                
+                    }
+                teachers.append(item)
+
+            meeting_teachers = { 
+                "meeting_id": row.id,
+                "teachers": teachers
+            }
+            teacher_dict.append(meeting_teachers)
+            print(teacher_dict)
+
+
         error = ""
     except Exception as e:
         result = "error"
         error = str(e)
-    return jsonify({"result": result, "groups": group_dict, "error": error})
+    return jsonify({"result": result, "groups": group_dict, "teachers": teacher_dict, "error": error})
 
 
 
@@ -232,16 +265,51 @@ def students_limit(limit):
 
 
 
-
+@app.route("/api/teachermeeting/<meeting_id>", methods=["GET"])
+@app.route("/api/teachermeeting", methods=["POST"])
+def handle_teachermeeting(meeting_id = None):
+    if request.method == "POST":
+        body = request.json
+        try:
+            item = TeacherMeeting(
+                teacher_id=body['teacher_id'], meeting_id=body['meeting_id'])
+            db.session.add(item)
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            item = ""
+            error = str(e)
+        return jsonify({"result": result, "meeting": item, "error": error})
+    elif request.method == "GET":
+        try:
+            result = []
+            teachermeeting = TeacherMeeting.query.filter_by(meeting_id=meeting_id).all()
+            for teacher in teachermeeting:
+                result.append(teacher.teacher.full_name)
+            print(result)
+            error = ""
+        except Exception as e:
+            result = "error"
+            error = str(e)
+        return jsonify({"result": result, "error": error})
+    
 # Show all teachers
 @app.route('/api/teacher', methods=['GET'])
 def get_teachers():
-    teachers = Teacher.query.all()
-    return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
+    try:
+        result = Teacher.query.all()
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    # teachers = Teacher.query.all()
+    # return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
+    return jsonify({"result": result, "error": error})
+
 
 # Add teacher
-
-
 @app.route('/api/teacher', methods=['POST'])
 def create_teacher():
     name = request.json['name']
