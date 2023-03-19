@@ -1,6 +1,6 @@
 from flask import jsonify, request, url_for
 from app import app, db
-from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User
+from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, TeacherMeeting, User
 from datetime import datetime
 
 from random import randint
@@ -232,16 +232,38 @@ def students_limit(limit):
 
 
 
-
+@app.route("/api/teachermeeting", methods=["POST"])
+def handle_teachermeeting():
+    if request.method == "POST":
+        body = request.json
+        try:
+            item = TeacherMeeting(
+                teacher_id=body['teacher_id'], meeting_id=body['meeting_id'])
+            db.session.add(item)
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            item = ""
+            error = str(e)
+        return jsonify({"result": result, "meeting": item, "error": error})
+    
 # Show all teachers
 @app.route('/api/teacher', methods=['GET'])
 def get_teachers():
-    teachers = Teacher.query.all()
-    return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
+    try:
+        result = Teacher.query.all()
+        error = ""
+    except Exception as e:
+        result = "error"
+        error = str(e)
+    # teachers = Teacher.query.all()
+    # return jsonify([{'id': teacher.id, 'name': teacher.name} for teacher in teachers])
+    return jsonify({"result": result, "error": error})
+
 
 # Add teacher
-
-
 @app.route('/api/teacher', methods=['POST'])
 def create_teacher():
     name = request.json['name']
