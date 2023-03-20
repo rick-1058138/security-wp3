@@ -5,11 +5,19 @@
     <div class="container-window">
         <div class="container-middle">
             <h1>Aanwezigheidstool</h1>
-            <a class="big-btn" href="{{url_for('presence_code')}}">Meedoen met een les <i class="fa fa-chevron-right"></i></a>
+            {% if current_user.role == 1%}
+                <a class="big-btn" href="{{url_for('presence_code')}}">Meedoen met een les <i class="fa fa-chevron-right"></i></a>
+            {% endif%}
             <div class="meeting-container">
                 <div class="btn-row-between">
                     <a href="{{url_for('search_meetings')}}" class="rooster-btn">Les zoeken</a>
+                    
+                    {% if current_user.role == 1%}
                     <a href="{{url_for('search_teachers')}}" class="rooster-btn">Docent zoeken</a>
+                    {% elif current_user.role == 0%}
+                    <a href="{{url_for('search_students')}}" class="rooster-btn">Student zoeken</a>
+                    {% endif%}
+
                 </div>
                 <h2 class="container-title">Komende lessen</h2>
                 {% for meeting in meetings%}
