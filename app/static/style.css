@@ -978,6 +978,7 @@ input {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    margin-top: 30px;
 }
 
 .popup-container:hover {
@@ -1358,4 +1359,11 @@ span.select2 {
 .btn-row-between{
     display: flex;
     justify-content: space-between;
+}
+
+
+.student-link{
+    color: #d30f4c;
+    text-decoration: underline;
+    font-weight: bold;
 }

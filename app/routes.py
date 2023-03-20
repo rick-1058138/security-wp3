@@ -343,7 +343,7 @@ def les_overzicht(meeting_code):
 @app.route("/overzicht/<id>")
 @login_required
 def overview_page(id=None):
-    student = Student.query.filter_by(user_id=id).first()
+    student = Student.query.filter_by(id=id).first()
     return render_template('overview.html', student=student)
 
 

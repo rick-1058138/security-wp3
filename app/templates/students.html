@@ -70,7 +70,7 @@
      
             let html_block = $(`                                 
                 <tr>
-                    <td>${student.student_number}</td>
+                    <td><a class="student-link" href="/overzicht/${student.id}">${student.student_number}</a></td>
                     <td>${student.first_name}</td>
                     <td>${student.last_name}</td>
                 </tr>
