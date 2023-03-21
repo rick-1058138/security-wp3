@@ -9,23 +9,34 @@
                 <table class="table-style">
                     <thead>
                         <tr>
-                            <th onclick="sortTable(0)">Naam<span class="sort-arrow sort-arrow-down"></span></th>
-                            <th onclick="sortTable(1)">Student nr.<span class="sort-arrow sort-arrow-down"></span></th>
-                            <th onclick="sortTable(2)">Aanwezigheid<span class="sort-arrow sort-arrow-down"></span></th>
-                            <th onclick="sortTable(3)">Tijd<span class="sort-arrow sort-arrow-down"></span></th>
+                            <th onclick="sortTable(0)" >Naam<span class="sort-arrow sort-arrow-down"></span></th>
+                            <th onclick="sortTable(1)" >Student nr.<span class="sort-arrow sort-arrow-down"></span></th>
+                            <th onclick="sortTable(2)" >Aanwezigheid<span class="sort-arrow sort-arrow-down"></span></th>
+                            <th onclick="sortTable(3)" >Tijd<span class="sort-arrow sort-arrow-down"></span></th>
                         </tr>
                     </thead>
                     
-                <tbody>
-                    {% for student in meeting.students %}
-                        <tr>
-                            <td>{{ student.student.full_name }}</td>
-                            <td>{{ student.student.student_number }}</td>
-                            <td class="aanwezig">{{ 'Aanwezig' if student.present else 'Afwezig' }}</td>
-                            <td>{{ student.checkin_date.strftime('%H:%M') if student.checkin_date else '' }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
+					<tbody>
+						{% set num_rows = 0 %}
+						{% for student in meeting.students %}
+							{% set num_rows = num_rows + 1 %}
+							<tr>
+								<td>{{ student.student.full_name }}</td>
+								<td>{{ student.student.student_number }}</td>
+								<td class="aanwezig">{{ 'Aanwezig' if student.present else 'Afwezig' }}</td>
+								<td>{{ student.checkin_date.strftime('%H:%M') if student.checkin_date else '' }}</td>
+							</tr>
+						{% endfor %}
+						{% for i in range(10 - num_rows) %}
+							<tr>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+								<td>&nbsp;</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+					
                 </table>
 
                 <div class="bottom-buttons-container">

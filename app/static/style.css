@@ -1359,3 +1359,15 @@ span.select2 {
     display: flex;
     justify-content: space-between;
 }
+
+.table-header-style{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.group-select {
+    width: auto;
+    min-width: 200px;
+}
