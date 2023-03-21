@@ -3,74 +3,129 @@
 {% block title %}Les overzicht{% endblock %}
 
 {% block content %}
-    <div class="container-window">
-        <div class="content-container"> 
-            <div class="table-container">
-                <table class="table-style">
-                    <thead>
-                        <tr>
-                            <th onclick="sortTable(0)" >Naam<span class="sort-arrow sort-arrow-down"></span></th>
-                            <th onclick="sortTable(1)" >Student nr.<span class="sort-arrow sort-arrow-down"></span></th>
-                            <th onclick="sortTable(2)" >Aanwezigheid<span class="sort-arrow sort-arrow-down"></span></th>
-                            <th onclick="sortTable(3)" >Tijd<span class="sort-arrow sort-arrow-down"></span></th>
-                        </tr>
-                    </thead>
-                    
-					<tbody>
-						{% set num_rows = 0 %}
-						{% for student in meeting.students %}
-							{% set num_rows = num_rows + 1 %}
-							<tr>
-								<td>{{ student.student.full_name }}</td>
-								<td>{{ student.student.student_number }}</td>
-								<td class="aanwezig">{{ 'Aanwezig' if student.present else 'Afwezig' }}</td>
-								<td>{{ student.checkin_date.strftime('%H:%M') if student.checkin_date else '' }}</td>
-							</tr>
-						{% endfor %}
-						{% for i in range(10 - num_rows) %}
-							<tr>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-								<td>&nbsp;</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-					
-                </table>
+    <div class="meeting-detail-container">
+		<div class="teacher-info-container">
+			<div class="teacher-info"> 
+				<h1>{{ meeting.name }}</h1>
+				<h4>Lestijden: </h4>
+				<p>{{ meeting.start_time }} tot {{ meeting.end_time }} </p>
+				<h4>Datum:</h4>
+				<p id="date">{{ meeting.date }}</p>
+				<h4>Docent(en):</h4>
+				<p>
+					{% for teacher in meeting.teachers %}
+						{{ teacher.teacher.full_name }}
+						{% if not loop.last %}
+						,
+						{% endif %}
+					{% else %}
+						<i>Geen docenten toegevoegd</i>
+					{% endfor %}
+				</p>
 
-                <div class="bottom-buttons-container">
-                    <div class="button-wrapper">
-                        <a class="wijzigen-btn" href="/meeting/delete/{{ meeting.id }}">Verwijderen</a>
-                        <a class="start-btn" href="{{url_for('start_presence', code = meeting.meeting_code)}}" target="_blank">Start</a>
-                    </div>
-            </div>
+				<h4>Groep(en):</h4>
+				<p>
+					{% for group_name in groups %}
+						{{ group_name }}
+						{% if not loop.last %}
+						,
+						{% endif %}
+					{% else %}
+						<i>Geen groepsinformatie beschikbaar.</i>
+					{% endfor %}
+				</p>
+				<h4>Status:</h4>
+				<p>
+					{% if meeting.status == 0 %}
+						Nog niet gestart
+					{% elif meeting.status == 1 %}
+						Gestart
+					{% elif meeting.status == 2 %}
+						Afgelopen
+					{% endif %}
+				</p> 
+				<h4>Beschrijving:</h4>
+				<p>
+					{% if meeting.description%}
+						{{ meeting.description }}
+					{% else %}
+						-
+					{% endif %}
+				</p>
+				{% if current_user.role == 0%}
+					<h4>Vraag:</h4>
+					<p>{{ question.text }}</p>
+					<h4>Antwoord(en):</h4>
+					<p>
+						{% for answer in question.answers%}
+							{{answer.text}} <br>
 
-            <div class="teacher-info-container">
-                <div class="teacher-info"> 
-              
-                <br> Les: {{ meeting.name }}
-                <br> Starttijd: {{ meeting.start_time }} 
-                <br> Eindtijd: {{ meeting.end_time }} 
-                <br> Groepsnaam: {% if groups %}
-                {% for group_name in groups %}
-                    {{ group_name }}
-                {% endfor %}
-            {% else %}
-                Geen groepsinformatie beschikbaar.
-            {% endif %}
-                <br> Status: {% if meeting.status == 0 %}<span>Nog niet gestart</span>{% elif meeting.status == 1 %}<span>Gestart</span>{% elif meeting.status == 2 %}<span>Afgelopen</span>{% endif %}
-                <br> Beschrijving: {{ meeting.description }}
-                <br> Vraag: {{ question.text }}
-				<br> Antwoord: {% for answer in question.answers%}
-				<p>{{answer.text}}</p>
-				{% endfor%}
-              </div>
-            </div>
+						{% else %}
+							<i>Nog geen antwoorden</i>
+						{% endfor%}
+					</p>
+				{% endif %}
+			</div>
         </div>
+		{% if current_user.role == 0%}
+		<div class="table-container">
+			<table class="table-style">
+				<thead>
+					<tr>
+						<th onclick="sortTable(0)" ><div class="table-header">Naam<span class="sort-arrow sort-arrow-down"></span></div></th>
+						<th onclick="sortTable(1)" ><div class="table-header">Student nr.<span class="sort-arrow sort-arrow-down"></span></div></th>
+						<th onclick="sortTable(2)" ><div class="table-header">Aanwezigheid<span class="sort-arrow sort-arrow-down"></span></div></th>
+						<th onclick="sortTable(3)" ><div class="table-header">Aanmeldtijd<span class="sort-arrow sort-arrow-down"></span></div></th>
+					</tr>
+				</thead>
+				
+				<tbody>
+		
+					{% for student in meeting.students %}
+						<tr>
+							<td>{{ student.student.full_name }}</td>
+							<td>{{ student.student.student_number }}</td>
+							{% if student.present %}
+								<td class="aanwezig">Aanwezig</td>
+								<td>{{ student.checkin_date.strftime('%H:%M') if student.checkin_date else '' }}</td>
+
+							{% else %}
+								<td class="afwezig">Afwezig</td>
+								<td>-</td>
+
+							{% endif %}
+						</tr>
+					{% else %}
+						<tr>
+							<td><i>Nog geen informatie</i></td>
+							<td>-</td>
+							<td>-</td>
+							<td>-</td>
+						</tr>
+					{% endfor %}
+
+				</tbody>
+				
+			</table>
+		</div>
+		{% endif %}
+
     </div>
+	{% if current_user.role == 0%}
+
+	<div class="button-wrapper">
+		<a class="start-btn" href="/meeting/delete/{{ meeting.id }}">Verwijderen</a>
+		<a class="start-btn" href="{{url_for('start_presence', code = meeting.meeting_code)}}" target="_blank">Start</a>
+	</div>
+	{% endif %}
+
+
 	<script>
-		var id = {{meeting.id}};
+        let date = $('#date').text()
+        let day = dayjs(date).format('dddd, D MMMM YYYY')
+        $('#date').text(day)
+  
+
 		function deleteMeeting(id) {
 		  const confirmed = confirm("Weet je zeker dat je deze bijeenkomst wilt verwijderen?");
 		  if (confirmed) {

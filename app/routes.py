@@ -85,16 +85,6 @@ def home():
     return render_template('index.html', meetings=meetings)
 
 
-@app.route("/timer/start")
-@login_required
-def start_timer():
-    # UPDATE: set timer length through form where user can choose the length
-    # UPDATE: set time of starting in db ( this time can later be used to check if a student can join a meeting or if they where to late)
-    session['timer_length'] = 30
-    session['start_time'] = time.time()
-    return str(session['start_time'])
-
-
 @app.route("/timer/update")
 @login_required
 def update_timer():
@@ -174,6 +164,9 @@ def presence(code=None):
 @app.route("/meeting/start/<code>")
 @login_required
 def start_presence(code=None):
+    if (current_user.role == 1):
+        # user is a student
+        abort(404)
     # check if code exists else throw 404 not found error
     exists = db.session.query(
         Meeting.query.filter_by(meeting_code=code).exists()
@@ -398,29 +391,39 @@ def faker():
 
 
 @app.route("/meeting/delete/<id>")
+@login_required
 def delete_meeting(id=None):
+    if (current_user.role == 1):
+        # user is a student
+        abort(404)
+
     Meeting.query.filter_by(id=id).delete()
     db.session.commit()
     flash("meeting verwijderd", "success")
     return redirect(url_for("rooster"))
 
 
+
 @app.route("/lessen/zoeken")
+@login_required
 def search_meetings():
     return render_template("meetings.html")
 
 
 @app.route("/studenten/zoeken")
+@login_required
 def search_students():
     return render_template("students.html")
 
 
 @app.route("/klassen/zoeken")
+@login_required
 def search_groups():
     return render_template("groups.html")
 
 
 @app.route("/klas/<id>")
+@login_required
 def group_detail(id=None):
     group = Group.query.filter_by(id=id).first()
     return render_template("group-detail.html", group=group)
@@ -428,6 +431,7 @@ def group_detail(id=None):
 
 
 @app.route("/docenten/zoeken")
+@login_required
 def search_teachers():
     return render_template("teachers.html")
 
