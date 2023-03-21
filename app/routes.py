@@ -2,7 +2,7 @@ import time
 from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from app import app, db, bcrypt
-from app.models import Answer, Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User, StudentGroup
+from app.models import Answer, Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, TeacherMeeting, User, StudentGroup
 from datetime import datetime
 from random import randint
 from faker import Faker
@@ -337,7 +337,8 @@ def les_overzicht(meeting_code):
 @login_required
 def overview_page(id=None):
     student = Student.query.filter_by(id=id).first()
-    return render_template('overview.html', student=student)
+    student_meetings = StudentMeeting.query.filter_by(student_id=id).all()
+    return render_template('overview.html', student=student, meetings=student_meetings)
 
 
 @app.route("/vraag/<code>", methods=["GET", "POST"])
@@ -368,26 +369,26 @@ def question(code=None):
 
 
 
-@app.route("/faker")
-def faker():
-    fake = Faker()
-    for _ in range(5):
-        student = Student(first_name=fake.first_name(),
-                          last_name=fake.last_name(), email=fake.free_email())
-        db.session.add(student)
-        db.session.commit()
+# @app.route("/faker")
+# def faker():
+#     fake = Faker()
+#     for _ in range(5):
+#         student = Student(first_name=fake.first_name(),
+#                           last_name=fake.last_name(), email=fake.free_email())
+#         db.session.add(student)
+#         db.session.commit()
 
-        teacher = Teacher(first_name=fake.first_name(), last_name=fake.last_name(
-        ), email=fake.free_email(), admin=randint(0, 1))
-        db.session.add(teacher)
-        db.session.commit()
+#         teacher = Teacher(first_name=fake.first_name(), last_name=fake.last_name(
+#         ), email=fake.free_email(), admin=randint(0, 1))
+#         db.session.add(teacher)
+#         db.session.commit()
 
-        group = Group(start_date=datetime.now(),
-                      end_date=datetime.now(), name=fake.word())
-        db.session.add(group)
-        db.session.commit()
+#         group = Group(start_date=datetime.now(),
+#                       end_date=datetime.now(), name=fake.word())
+#         db.session.add(group)
+#         db.session.commit()
 
-    return "Data toegevoegd aan de database"
+#     return "Data toegevoegd aan de database"
 
 
 @app.route("/meeting/delete/<id>")
@@ -398,8 +399,13 @@ def delete_meeting(id=None):
         abort(404)
 
     Meeting.query.filter_by(id=id).delete()
+    # delete data of meeting in all other tables
+    GroupMeeting.query.filter_by(meeting_id=id).delete()
+    StudentMeeting.query.filter_by(meeting_id=id).delete()
+    TeacherMeeting.query.filter_by(meeting_id=id).delete()
+
     db.session.commit()
-    flash("meeting verwijderd", "success")
+    flash("Bijeenkomst verwijderd", "success")
     return redirect(url_for("rooster"))
 
 
@@ -460,8 +466,9 @@ def add_students_to_group():
         db.session.add(student_group)
 
     db.session.commit()
-
-    flash('Students added to group successfully!', 'success')
+    count = len(student_ids)
+    group = Group.query.filter_by(id=group_id).first()
+    flash(f'{count} Student(en) aan "{group.name}" toegevoegd', 'success')
     return redirect(url_for('admin'))
 
 
