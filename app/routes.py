@@ -315,7 +315,7 @@ def login():
             login_user(user)
             if next_url:
                url = next_url[1:]
-               return redirect(url_for(url))
+               return redirect(url)
             return redirect(url_for("home"))
         else:
             flash("Gebruikersnaam of wachtwoord onjuist. Probeer opnieuw.", 'error')
@@ -330,7 +330,7 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/les_overzicht/<meeting_code>")
+@app.route("/les/overzicht/<meeting_code>")
 @login_required
 def les_overzicht(meeting_code):
     meeting = Meeting.query.filter_by(meeting_code=meeting_code).first()
@@ -418,6 +418,13 @@ def search_students():
 @app.route("/klassen/zoeken")
 def search_groups():
     return render_template("groups.html")
+
+
+@app.route("/klas/<id>")
+def group_detail(id=None):
+    group = Group.query.filter_by(id=id).first()
+    return render_template("group-detail.html", group=group)
+
 
 
 @app.route("/docenten/zoeken")
