@@ -1383,3 +1383,7 @@ span.select2 {
     font-weight: bold;
 }
 
+.admin-student-group-select.custom-selectboxit + .selectboxit-container .selectboxit {
+    width: 2000px;
+}
+

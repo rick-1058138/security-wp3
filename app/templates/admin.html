@@ -107,13 +107,14 @@
                   </select>
               </label>
               <label for="admin-student-to-group-group" class="admin-input-label">Klas
-                  <br> <br>
-                  <select name="group_id" class="admin-student-group-select">
-                      {% for group in group_list %}
-                      <option value="{{ group.id }}">{{ group.name }}</option>
-                      {% endfor %}
-                  </select>
-              </label>
+                <br> <br>
+                <select id="my-select-box" name="group_id" class="admin-student-group-select custom-selectboxit">
+                    {% for group in group_list %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            
               <div class="admin-button-container">
                   <input class="admin-save-button" type="submit" value="Opslaan" />
               </div>
@@ -163,5 +164,10 @@
         adminStudentForGroupForm.style.display = "";
       }
       
+      $(document).ready(function() {
+        // Initialize the SelectBoxIt plugin
+        $("#my-select-box").selectBoxIt();
+    });
+    
     </script>
 {% endblock %}
