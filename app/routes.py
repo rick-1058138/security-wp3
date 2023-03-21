@@ -185,23 +185,21 @@ def start_presence(code=None):
         # update status in db
         meeting = Meeting.query.filter_by(meeting_code=code).first()
         meeting.status = 1
-        # meeting.checkin_date = datetime.now()
-        # meeting.present = False
         db.session.commit()
 
-        # UDPATE: loop through all groups added to meeting
+        # Delete old record of same meeting if it was started before ( for testing )
+        StudentMeeting.query.filter_by(meeting_id=meeting.id).delete()
+        
         # loop through all students in each group
         for group in meeting.groups:
-            print(group.group.students)
+            # print(group.group.students)
             # loop through all students in group
             for student in group.group.students:
-                # print(student.id)
-                student = StudentMeeting(student_id=student.id, meeting_id=meeting.id, checkin_date=datetime.now(), present=False)
+                # print(student.student.id)
+                student = StudentMeeting(student_id=student.student.id, meeting_id=meeting.id, checkin_date=datetime.now(), present=False)
                 db.session.add(student)
                 db.session.commit()
 
-
-        # UPDATE: insert all students with presence false
 
         return redirect(url_for('presence', code=code))
     else:
