@@ -17,6 +17,9 @@ def page_not_found(e):
 @app.route("/admin")
 @login_required
 def admin():
+    if current_user.admin == 0:
+        flash("Je hebt geen toegang tot deze pagina.", "error")
+        return redirect(url_for("home"))
     students = Student.query.all()
     groups = Group.query.all()
     #groups = db.session.query(Group).all()
@@ -386,13 +389,17 @@ def faker():
         db.session.add(student)
         db.session.commit()
 
-        teacher = Teacher(first_name=fake.first_name(), last_name=fake.last_name(
-        ), email=fake.free_email(), admin=randint(0, 1))
-        db.session.add(teacher)
-        db.session.commit()
+    teacher = Teacher(first_name="Mark", last_name="Otting", email="m.otting@hr.nl", admin=1)
+    db.session.add(teacher)
+    db.session.commit()
 
+    groups = [
+            "SWD1A", "SWD1B", "SWD1C", "SWD1D"
+        ]
+
+    for group in groups:
         group = Group(start_date=datetime.now(),
-                      end_date=datetime.now(), name=fake.word())
+                      end_date=datetime.now(), name=group)
         db.session.add(group)
         db.session.commit()
 
