@@ -43,6 +43,7 @@ def create_teacher_form():
                       last_name=lastname, email=email, admin=admin)
     db.session.add(teacher)
     db.session.commit()
+    flash('Docent toegevoegd!', 'success')
     return redirect(url_for("admin"))
 
 
@@ -60,6 +61,7 @@ def create_student_form():
     student_group = StudentGroup(student_id=student.id, group_id=group)
     db.session.add(student_group)
     db.session.commit()
+    flash('Student toegevoegd!', 'success')
     return redirect(url_for("admin"))
 
 
@@ -74,6 +76,7 @@ def create_group_form():
                   end_date=formatted_enddate)
     db.session.add(group)
     db.session.commit()
+    flash('Klas toegevoegd!', 'success')
     return redirect(url_for("admin"))
 
 
@@ -398,7 +401,7 @@ def add_students_to_group():
 
     db.session.commit()
 
-    flash('Students added to group successfully!', 'success')
+    flash('Studenten aan klas toegevoegd!', 'success')
     return redirect(url_for('admin'))
 
 
