@@ -71,18 +71,19 @@
     <div class="rooster-wrapper"> 
         <section class="rooster-container">
         
-            <a href="{{url_for('search_meetings')}}" class="rooster-btn">Les zoeken</a>
 
             {% if current_user.role == 0 %}
             <!-- only show if user is a teacher -->
             <div class="rooster-extra">
+                <a href="{{url_for('search_meetings')}}" class="rooster-btn">Les zoeken</a>
+
                 <a id="new-meeting-btn" class="rooster-btn">+ Bijeenkomst toevoegen</a>
-                <div class="filter-box">
+                <!-- <div class="filter-box">
                     <p class="filter-text">Filteren op klas:</p>
                     <select class="group-select" name="group" id="group-filter">
                         
                     </select>
-                </div>
+                </div> -->
             </div>
             {% endif %}
             <div class="date-selection-row">
