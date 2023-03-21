@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}{{group.name}}{% endblock %}
+{% block content %}
+
+<div class="overview-search-top">
+    <h1>Studenten</h1>
+    <h2> {{group.name}}</h2>
+</div>
+<div class="overview-search-container">
+    <table class="search-table">
+        <thead>
+            <tr>
+                <th>Student nummer</th>
+                <th>Voornaam</th>
+                <th>Achternaam</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in group.students %}
+            <tr>
+                <td><a class="student-link" href="/overzicht/{{student.student.id}}">{{student.student.student_number}}</a></td>
+                <td>{{student.student.first_name}}</td>
+                <td>{{student.student.last_name}}</td>
+            </tr>
+            {%endfor%}
+
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}
