@@ -85,7 +85,7 @@ def meetings_filter(filter):
     teacher_dict = []
 
     try:
-        result = Meeting.query.filter(Meeting.name.like(f'{filter}%')).all()
+        result = Meeting.query.filter(Meeting.name.like(f'{filter}%')).order_by(Meeting.date).all()
         # add groups for each meeting to group dictionary
         for row in result:
             groups = []
@@ -128,7 +128,7 @@ def meetings_limit(limit):
     group_dict = []
     teacher_dict = []
     try:
-        result = Meeting.query.filter(Meeting.date >= datetime.today().date()).limit(limit).all()
+        result = Meeting.query.filter(Meeting.date >= datetime.today().date()).order_by(Meeting.date).limit(limit).all()
         
         # add groups for each meeting to group dictionary
         for row in result:
@@ -179,8 +179,9 @@ def handle_studentmeeting(code=None):
         meeting = Meeting.query.filter_by(meeting_code=code).first()
         result = meeting.students
 
-        # loop through students objects that are in the meeting and add them to student_dict
-        for row in meeting.students:
+        # loop through students objects that are present in the meeting and add them to student_dict
+        present_students = StudentMeeting.query.filter_by(meeting_id=meeting.id, present=True).all()
+        for row in present_students:
             student_dict.append(row.student)
 
         error = ""
