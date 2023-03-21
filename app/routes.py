@@ -4,7 +4,6 @@ from flask_login import login_user, current_user, login_required, logout_user
 from app import app, db, bcrypt
 from app.models import Answer, Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User, StudentGroup
 from datetime import datetime
-
 from random import randint
 from faker import Faker
 
@@ -18,15 +17,18 @@ def page_not_found(e):
 @app.route("/admin")
 @login_required
 def admin():
-    groups = db.session.query(Group).all()
-    group_list = []
-    for group in groups:
-        print(group.name)
-        group_list.append({
-            "name": group.name,
-            "id": group.id
-        })
-    return render_template("admin.html", group_list=group_list)
+    students = Student.query.all()
+    groups = Group.query.all()
+    #groups = db.session.query(Group).all()
+    #group_list = []
+    # for group in groups:
+    #     print(group.name)
+    #     group_list.append({
+    #         "name": group.name,
+    #         "id": group.id
+    #     })
+    return render_template("admin.html", student_list=students, group_list=groups, #group_list=group_list
+    )
 
 
 @app.route("/admin/create-teacher", methods=['POST'])
@@ -423,3 +425,41 @@ def search_groups():
 @app.route("/docenten/zoeken")
 def search_teachers():
     return render_template("teachers.html")
+
+# @app.route("/admin/add-student-to-group", methods=['POST'])
+# @login_required
+# def add_student_to_group_form():
+#     group_id = request.form["admin-student-to-group-group"]
+#     student_id = request.form["admin-student-to-group-student"]
+    
+#     student_group = StudentGroup(student_id=student_id, group_id=group_id)
+#     db.session.add(student_group)
+#     db.session.commit()
+#     return redirect(url_for("admin"))
+
+@app.route('/admin/add-students-to-group', methods=['POST'])
+@login_required
+def add_students_to_group():
+    if not current_user.admin:
+        return redirect(url_for('index'))
+
+    student_ids = request.form.getlist('student_ids[]')
+    group_id = request.form['group_id']
+
+    for student_id in student_ids:
+        student_group = StudentGroup(student_id=student_id, group_id=group_id)
+        db.session.add(student_group)
+
+    db.session.commit()
+
+    flash('Students added to group successfully!', 'success')
+    return redirect(url_for('admin'))
+
+
+
+
+
+
+
+
+

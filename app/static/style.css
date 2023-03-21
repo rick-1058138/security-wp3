@@ -1364,8 +1364,22 @@ span.select2 {
 }
 
 
+.table-header-style{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.group-select {
+    width: auto;
+    min-width: 200px;
+}
+
+
 .student-link {
     color: #d30f4c;
     text-decoration: underline;
     font-weight: bold;
 }
+

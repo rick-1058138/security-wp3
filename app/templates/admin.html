@@ -12,6 +12,9 @@
           <div id="admin-add-group-toggle" class="admin-toggle" onclick="showGroupForm()">
             <p>Klas toevoegen</p>
           </div>
+          <div id="admin-add-students-to-group-toggle" class="admin-toggle" onclick="showStudentForGroupForm()">
+            <p>Studenten aan klas toevoegen</p>
+          </div>
         </div>
         
         <div id="admin-student-form" class="container-middle-right">
@@ -88,36 +91,77 @@
             </div>
           </form>
         </div>
+        
+        <div id="admin-student-for-group-form" class="container-middle-right">
+          <div class="admin-title">
+              <h1 class="admin-title">Student aan klas toevoegen</h1>
+          </div>
+          <br> <br>
+          <form class="admin-form" method="POST" action="/admin/add-students-to-group">
+              <label for="admin-students-to-group-students" class="admin-input-label">Students
+                  <br> <br>
+                  <select name="student_ids[]" class="admin-student-group-select" multiple>
+                      {% for student in student_list %}
+                      <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</option>
+                      {% endfor %}
+                  </select>
+              </label>
+              <label for="admin-student-to-group-group" class="admin-input-label">Klas
+                  <br> <br>
+                  <select name="group_id" class="admin-student-group-select">
+                      {% for group in group_list %}
+                      <option value="{{ group.id }}">{{ group.name }}</option>
+                      {% endfor %}
+                  </select>
+              </label>
+              <div class="admin-button-container">
+                  <input class="admin-save-button" type="submit" value="Opslaan" />
+              </div>
+          </form>
+      </div>
+      
+              
+      </div>
+    </div>
 
-      </div>
-    </div>
-      </div>
-    </div>
     <script type="text/javascript">
       const adminStudentForm = document.getElementById("admin-student-form");
       const adminTeacherForm = document.getElementById("admin-teacher-form");
       const adminGroupForm = document.getElementById("admin-group-form");
+      const adminStudentForGroupForm = document.getElementById("admin-student-for-group-form");
+
       
       adminTeacherForm.style.display = "none";
       adminGroupForm.style.display = "none";
+      adminStudentForGroupForm.style.display = "none";
 
       function showStudentForm(){
         adminStudentForm.style.display = "";
         adminTeacherForm.style.display = "none";
         adminGroupForm.style.display = "none";
+        adminStudentForGroupForm.style.display = "none";
       }
 
       function showTeacherForm(){
         adminStudentForm.style.display = "none";
         adminTeacherForm.style.display = "";
         adminGroupForm.style.display = "none";
+        adminStudentForGroupForm.style.display = "none";
       }
 
-        function showGroupForm(){
+      function showGroupForm(){
         adminStudentForm.style.display = "none";
         adminTeacherForm.style.display = "none";
         adminGroupForm.style.display = "";
-        }
+        adminStudentForGroupForm.style.display = "none";
+      }
 
+      function showStudentForGroupForm() {
+        adminStudentForm.style.display = "none";
+        adminTeacherForm.style.display = "none";
+        adminGroupForm.style.display = "none";
+        adminStudentForGroupForm.style.display = "";
+      }
+      
     </script>
 {% endblock %}
