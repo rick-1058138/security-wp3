@@ -97,23 +97,24 @@
               <h1 class="admin-title">Student aan klas toevoegen</h1>
           </div>
           <br> <br>
-          <form class="admin-form" method="POST" action="/admin/add-students-to-group">
-              <label for="admin-students-to-group-students" class="admin-input-label">Students
-                  <br> <br>
-                  <select name="student_ids[]" class="admin-student-group-select" multiple>
-                      {% for student in student_list %}
-                      <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</option>
-                      {% endfor %}
-                  </select>
-              </label>
-              <label for="admin-student-to-group-group" class="admin-input-label">Klas
-                  <br> <br>
-                  <select name="group_id" class="admin-student-group-select">
-                      {% for group in group_list %}
-                      <option value="{{ group.id }}">{{ group.name }}</option>
-                      {% endfor %}
-                  </select>
-              </label>
+          <form class="admin-form" method="POST" action="{{ url_for('add_students_to_group') }}">
+            <label for="admin-students-to-group-students" class="admin-input-label">Students
+                <br> <br>
+                <select id="student-select-box" name="student_ids[]" class="admin-student-group-select select2-container select2-student" multiple>
+                    {% for student in student_list %}
+                    <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label for="admin-student-to-group-group" class="admin-input-label">Klas
+                <br> <br>
+                <select id="group-select-box" name="group_id" class="select2-container select2-group">
+                    {% for group in group_list %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            
               <div class="admin-button-container">
                   <input class="admin-save-button" type="submit" value="Opslaan" />
               </div>
@@ -162,6 +163,16 @@
         adminGroupForm.style.display = "none";
         adminStudentForGroupForm.style.display = "";
       }
-      
+
     </script>
+
+    <script>
+      $(document).ready(function() {
+          $("#student-select-box").select2({
+              closeOnSelect: false
+          });
+          $("#group-select-box").select2();
+      });
+  </script>
+  
 {% endblock %}

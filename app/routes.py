@@ -46,6 +46,7 @@ def create_teacher_form():
                       last_name=lastname, email=email, admin=admin)
     db.session.add(teacher)
     db.session.commit()
+    flash('Docent toegevoegd!', 'success')
     return redirect(url_for("admin"))
 
 
@@ -63,6 +64,7 @@ def create_student_form():
     student_group = StudentGroup(student_id=student.id, group_id=group)
     db.session.add(student_group)
     db.session.commit()
+    flash('Student toegevoegd!', 'success')
     return redirect(url_for("admin"))
 
 
@@ -77,6 +79,7 @@ def create_group_form():
                   end_date=formatted_enddate)
     db.session.add(group)
     db.session.commit()
+    flash('Klas toegevoegd!', 'success')
     return redirect(url_for("admin"))
 
 
@@ -463,7 +466,7 @@ def search_teachers():
 @login_required
 def add_students_to_group():
     if not current_user.admin:
-        return redirect(url_for('index'))
+        return redirect(url_for('admin'))
 
     student_ids = request.form.getlist('student_ids[]')
     group_id = request.form['group_id']
@@ -473,6 +476,7 @@ def add_students_to_group():
         db.session.add(student_group)
 
     db.session.commit()
+    
     count = len(student_ids)
     group = Group.query.filter_by(id=group_id).first()
     flash(f'{count} Student(en) aan "{group.name}" toegevoegd', 'success')

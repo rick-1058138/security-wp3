@@ -1426,6 +1426,64 @@ span.select2 {
 }
 
 
+
+.select2-container {
+    margin-bottom: 20px;
+}
+
+.select2-student {
+    width: 300px !important;
+}
+
+.select2-group {
+    width: 150px !important;
+    text-align: center;
+}
+
+
+.select2-container .select2-choice,
+.select2-container .select2-selection {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 12px; 
+    background-color: #fff;
+}
+
+
+.select2-container.select2-container--focus .select2-selection,
+.select2-container.select2-container--focus .select2-choice {
+    border-color: #66afe9;
+    outline: none;
+}
+
+
+.select2-container .select2-selection__arrow {
+    width: 20px;
+}
+
+
+.select2-container .select2-results {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+.select2-container .select2-results__option {
+    padding: 6px 12px;
+}
+
+
+.select2-container .select2-results__option--highlighted {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+
 .meeting-detail-container{
     display: flex;
 }
