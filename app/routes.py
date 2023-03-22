@@ -444,7 +444,7 @@ def search_teachers():
 @login_required
 def add_students_to_group():
     if not current_user.admin:
-        return redirect(url_for('index'))
+        return redirect(url_for('admin'))
 
     student_ids = request.form.getlist('student_ids[]')
     group_id = request.form['group_id']
