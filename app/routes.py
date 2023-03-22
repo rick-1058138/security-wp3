@@ -2,7 +2,7 @@ import time
 from flask import Response, abort, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_login import login_user, current_user, login_required, logout_user
 from app import app, db, bcrypt
-from app.models import Answer, Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, User, StudentGroup
+from app.models import Answer, Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, TeacherMeeting, User, StudentGroup
 from datetime import datetime
 from random import randint
 from faker import Faker
@@ -17,6 +17,9 @@ def page_not_found(e):
 @app.route("/admin")
 @login_required
 def admin():
+    if current_user.admin == 0:
+        flash("Je hebt geen toegang tot deze pagina.", "error")
+        return redirect(url_for("home"))
     students = Student.query.all()
     groups = Group.query.all()
     #groups = db.session.query(Group).all()
@@ -86,16 +89,6 @@ def home():
     meetings = Meeting.query.filter(
         Meeting.date >= datetime.today().date()).order_by(Meeting.date).limit(5).all()
     return render_template('index.html', meetings=meetings)
-
-
-@app.route("/timer/start")
-@login_required
-def start_timer():
-    # UPDATE: set timer length through form where user can choose the length
-    # UPDATE: set time of starting in db ( this time can later be used to check if a student can join a meeting or if they where to late)
-    session['timer_length'] = 30
-    session['start_time'] = time.time()
-    return str(session['start_time'])
 
 
 @app.route("/timer/update")
@@ -177,6 +170,9 @@ def presence(code=None):
 @app.route("/meeting/start/<code>")
 @login_required
 def start_presence(code=None):
+    if (current_user.role == 1):
+        # user is a student
+        abort(404)
     # check if code exists else throw 404 not found error
     exists = db.session.query(
         Meeting.query.filter_by(meeting_code=code).exists()
@@ -188,23 +184,21 @@ def start_presence(code=None):
         # update status in db
         meeting = Meeting.query.filter_by(meeting_code=code).first()
         meeting.status = 1
-        # meeting.checkin_date = datetime.now()
-        # meeting.present = False
         db.session.commit()
 
-        # UDPATE: loop through all groups added to meeting
+        # Delete old record of same meeting if it was started before ( for testing )
+        StudentMeeting.query.filter_by(meeting_id=meeting.id).delete()
+        
         # loop through all students in each group
         for group in meeting.groups:
-            print(group.group.students)
+            # print(group.group.students)
             # loop through all students in group
             for student in group.group.students:
-                # print(student.id)
-                student = StudentMeeting(student_id=student.id, meeting_id=meeting.id, checkin_date=datetime.now(), present=False)
+                # print(student.student.id)
+                student = StudentMeeting(student_id=student.student.id, meeting_id=meeting.id, checkin_date=datetime.now(), present=False)
                 db.session.add(student)
                 db.session.commit()
 
-
-        # UPDATE: insert all students with presence false
 
         return redirect(url_for('presence', code=code))
     else:
@@ -320,7 +314,7 @@ def login():
             login_user(user)
             if next_url:
                url = next_url[1:]
-               return redirect(url_for(url))
+               return redirect(url)
             return redirect(url_for("home"))
         else:
             flash("Gebruikersnaam of wachtwoord onjuist. Probeer opnieuw.", 'error')
@@ -335,7 +329,7 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/les_overzicht/<meeting_code>")
+@app.route("/les/overzicht/<meeting_code>")
 @login_required
 def les_overzicht(meeting_code):
     meeting = Meeting.query.filter_by(meeting_code=meeting_code).first()
@@ -349,7 +343,8 @@ def les_overzicht(meeting_code):
 @login_required
 def overview_page(id=None):
     student = Student.query.filter_by(id=id).first()
-    return render_template('overview.html', student=student)
+    student_meetings = StudentMeeting.query.filter_by(student_id=id).all()
+    return render_template('overview.html', student=student, meetings=student_meetings)
 
 
 @app.route("/vraag/<code>", methods=["GET", "POST"])
@@ -389,13 +384,17 @@ def faker():
         db.session.add(student)
         db.session.commit()
 
-        teacher = Teacher(first_name=fake.first_name(), last_name=fake.last_name(
-        ), email=fake.free_email(), admin=randint(0, 1))
-        db.session.add(teacher)
-        db.session.commit()
+    teacher = Teacher(first_name="Mark", last_name="Otting", email="m.otting@hr.nl", admin=1)
+    db.session.add(teacher)
+    db.session.commit()
 
+    groups = [
+            "SWD1A", "SWD1B", "SWD1C", "SWD1D"
+        ]
+
+    for group in groups:
         group = Group(start_date=datetime.now(),
-                      end_date=datetime.now(), name=fake.word())
+                      end_date=datetime.now(), name=group)
         db.session.add(group)
         db.session.commit()
 
@@ -403,29 +402,52 @@ def faker():
 
 
 @app.route("/meeting/delete/<id>")
+@login_required
 def delete_meeting(id=None):
+    if (current_user.role == 1):
+        # user is a student
+        abort(404)
+
     Meeting.query.filter_by(id=id).delete()
+    # delete data of meeting in all other tables
+    GroupMeeting.query.filter_by(meeting_id=id).delete()
+    StudentMeeting.query.filter_by(meeting_id=id).delete()
+    TeacherMeeting.query.filter_by(meeting_id=id).delete()
+
     db.session.commit()
-    flash("meeting verwijderd", "success")
+    flash("Bijeenkomst verwijderd", "success")
     return redirect(url_for("rooster"))
 
 
+
 @app.route("/lessen/zoeken")
+@login_required
 def search_meetings():
     return render_template("meetings.html")
 
 
 @app.route("/studenten/zoeken")
+@login_required
 def search_students():
     return render_template("students.html")
 
 
 @app.route("/klassen/zoeken")
+@login_required
 def search_groups():
     return render_template("groups.html")
 
 
+@app.route("/klas/<id>")
+@login_required
+def group_detail(id=None):
+    group = Group.query.filter_by(id=id).first()
+    return render_template("group-detail.html", group=group)
+
+
+
 @app.route("/docenten/zoeken")
+@login_required
 def search_teachers():
     return render_template("teachers.html")
 
@@ -454,8 +476,10 @@ def add_students_to_group():
         db.session.add(student_group)
 
     db.session.commit()
-
-    flash('Studenten aan klas toegevoegd!', 'success')
+    
+    count = len(student_ids)
+    group = Group.query.filter_by(id=group_id).first()
+    flash(f'{count} Student(en) aan "{group.name}" toegevoegd', 'success')
     return redirect(url_for('admin'))
 
 

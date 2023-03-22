@@ -66,7 +66,7 @@ def handle_meeting(id=None):
         return jsonify({"result": result, "error": error})
 
     else:
-        return "INVALID!"
+        return jsonify({"result": "error", "error": "invalid method"})
     
 @app.route("/api/meeting/between/<start>/<end>")
 def meetings_between(start, end):
@@ -160,7 +160,7 @@ def meetings_limit(limit):
                 "teachers": teachers
             }
             teacher_dict.append(meeting_teachers)
-            print(teacher_dict)
+            # print(teacher_dict)
 
 
         error = ""
