@@ -2,53 +2,37 @@
 {% block title %}Overview{% endblock %}
 
 {% block content %}
-    <div class="container-window"> 
-    <div class="container-header"> 
-        <button class="header-logo-button">
-          <img
-            class="header-logo"
-            src="../static/images/logo.png"
-            alt="Hogeschool Rotterdam"
-          />
-        </button>
-      </div>
+<div class="container-window"> 
     <table class= "table-my-overview" cellspacing="25" cellpadding="0">
         <tbody>
             <tr>
-        <td> 
-            <span class="name"> Naam:</span>
-        </td>
-        <td> 
-            <span class="name_input"> {{student.full_name}}</span>
-        </td>
-    </tr>
-</tr>
-        <td> 
-            <span class="studentnumber"> Studentnummer:</span>
-        </td>
-        <td> 
-            <span class="studentnumber_input"> {{student.student_number}}</span>
-        </td>
-    </tr>
-</tr>
-        <td> 
-            <span class="class"> Klas:</span>
-        </td>
-        <td> 
-            {% for group in student.groups%}
-            <span> {{group.group.name}} </span>
-            {% endfor%}
-        </td>
-    </tr>
-</tr>
-        <td> 
-            <span class="e-mail"> E-mailadres:</span>
-        </td>
-        <td> 
-            <span class="mail_input"> {{student.user.email}}</span>
-        </td>
-    </tr>
-    </tbody>
+                <td><span class="name"> Naam:</span></td>
+                <td><span class="name_input"> {{student.full_name}}</span></td>
+            </tr>
+            <tr>
+                <td><span class="studentnumber"> Studentnummer:</span></td>
+                <td><span class="studentnumber_input"> {{student.student_number}}</span></td>
+            </tr>
+            <tr>
+                <td><span class="class"> Klas:</span></td>
+                <td> 
+                    {% for group in student.groups%}
+                    <span> {{group.group.name}} </span>
+                    {% endfor%}
+                </td>
+            </tr>
+            <tr>
+                <td> 
+                    <span class="e-mail"> E-mailadres:</span>
+                </td>
+                <td> 
+                    <span class="mail_input"> {{student.user.email}}</span>
+                </td>
+            </tr>
+            <tr>
+                <td><a class="student-link" href="{{ url_for('profile')}}">Naar profiel</a></td>
+            </tr>
+        </tbody>
     </table>
     <div class="presence-stats">
         <div class="chart-container">
@@ -65,27 +49,26 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script >
+    <script>
+        const chartData = {
+            labels: ["Aanwezig", "Afwezig"],
+            data: [80, 20],
+        }
 
-const chartData = {
-    labels: ["Aanwezig", "Afwezig"],
-    data: [80, 20],
-}
+        const myChart = document.querySelector(".my-chart");
 
-const myChart = document.querySelector(".my-chart");
-
-new Chart(myChart, {
-    type: "doughnut",
-    data: {
-        labels: chartData.labels,
-        datasets: [
-            {
-                label: "Mijn Aanwezigheid",
-                data: chartData.data,
+        new Chart(myChart, {
+            type: "doughnut",
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: "Mijn Aanwezigheid",
+                        data: chartData.data,
+                    }
+                ]
             }
-        ]
-    }
-});
+        });
     </script>
 </div>
 {% endblock %}

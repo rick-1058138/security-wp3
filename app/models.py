@@ -189,6 +189,14 @@ class User(UserMixin, db.Model):
         self.password = bcrypt.generate_password_hash(password)
         db.session.commit()
 
+    def reset_password_code(self):
+        # create random password and password code
+        characters = string.ascii_letters + string.digits
+        password_code = ''.join(random.choice(characters) for i in range(15))
+        self.password_code = password_code
+        db.session.commit()
+
+
     def remove_password_code(self):
         self.password_code = None
         db.session.commit()

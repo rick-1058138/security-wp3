@@ -90,6 +90,11 @@ def home():
         Meeting.date >= datetime.today().date()).order_by(Meeting.date).limit(5).all()
     return render_template('index.html', meetings=meetings)
 
+@app.route("/profiel")
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
+
 
 @app.route("/timer/update")
 @login_required
@@ -141,11 +146,19 @@ def set_password(code=None):
         # form validation
         print(request.form)
         if (request.form.get('password') == request.form.get('password_confirm')):
-            user = User.query.filter_by(password_code=code).first()
+            exists = db.session.query(
+                User.query.filter_by(password_code=code).exists()
+            ).scalar()
+            if exists:
+                user = User.query.filter_by(password_code=code).first()
+            else:
+                flash("Je kunt je wachtwoord niet veranderen", 'error')
+                return redirect(url_for('home'))
+
             # Update password in db
             user.update_password(request.form.get('password'))
-            # Remove password code so password cant be changed again with the same code
-            user.remove_password_code()
+            # reset password code so password cant be changed again with the same code
+            user.reset_password_code()
             login_user(user)
             flash("Je wachtwoord is aangepast!", 'success')
             return redirect(url_for('home'))
