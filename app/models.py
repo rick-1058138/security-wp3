@@ -47,6 +47,7 @@ class StudentMeeting(db.Model):
         db.Integer, db.ForeignKey('meeting.id'), nullable=False)
     checkin_date: str = db.Column(db.DateTime)
     present: bool = db.Column(db.Boolean, nullable=False)
+    signed_off: bool = db.Column(db.Boolean, nullable=False)
 
     student = db.relationship('Student', back_populates='meetings')
     meeting = db.relationship('Meeting', back_populates='students')
@@ -195,7 +196,6 @@ class User(UserMixin, db.Model):
         password_code = ''.join(random.choice(characters) for i in range(15))
         self.password_code = password_code
         db.session.commit()
-
 
     def remove_password_code(self):
         self.password_code = None
