@@ -90,9 +90,13 @@
 								<td>{{ student.checkin_date.strftime('%H:%M') if student.checkin_date else '' }}</td>
 
 							{% else %}
-								<td class="afwezig">Afwezig</td>
-								<td>-</td>
-
+								{% if student.signed_off  %}
+								    <td class="afwezig">Afgemeld</td>
+									<td>-</td>
+								{% else %}
+									<td class="afwezig">Afwezig</td>
+									<td>-</td>
+								{% endif %}
 							{% endif %}
 						</tr>
 					{% else %}
@@ -118,6 +122,68 @@
 		<a class="start-btn" href="{{url_for('start_presence', code = meeting.meeting_code)}}" target="_blank">Start</a>
 	</div>
 	{% endif %}
+
+
+	{% if current_user.role == 1%}
+
+	<div id="popup" class="popup" style="display: none">
+        <div class="popup-container">
+            <h1>Reden van afwezigheid</h1>
+            <form id="user" action="/afmelden/" method="POST">
+                <div class="form-row">
+					<input type="hidden" name="meeting_code" value="{{meeting.meeting_code}}">
+                    <textarea class="form-input" type="text" name="absence" id="absence-input"></textarea>
+					<input class="form-submit" type="submit" value="Opslaan" id="absence-submit">
+            </form>
+                </div>
+				</div>
+				</div>
+
+
+	{% endif %}
+				
+
+
+
+	{% if current_user.role == 1 %}
+
+		{% for student in meeting.students %}
+			 {% if student.id == current_user.student[0].id %}
+				{% if student.signed_off  %}
+				signed_off
+				{% else %}
+				not signed_off
+				{% endif %}
+			{% endif %}
+
+		{% endfor %}
+
+
+		<div class="absence-reason">
+			<a id="absence-btn" class="absencebutton small-btn" >Afwezig Melden</a>
+		</div>
+		
+	{% endif %}
+
+				<script type="application/javascript">
+
+					function toggleAbsenceReasonPopup(){
+						$('#popup').toggle();
+					}
+			
+					$('#absence-btn').click(function(){
+						toggleAbsenceReasonPopup()
+					})
+			
+					$('#popup').click(function(e){
+						// check if the click is on the background or the popup 
+						if (e.target == this){
+							toggleAbsenceReasonPopup()
+						}
+					})
+				</script>
+
+	
 
 
 	<script>

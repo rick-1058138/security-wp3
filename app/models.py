@@ -41,6 +41,7 @@ class Group(db.Model):
 @dataclass
 class StudentMeeting(db.Model):
     id: int = db.Column(db.Integer, primary_key=True)
+
     student_id: int = db.Column(
         db.Integer, db.ForeignKey('student.id'), nullable=False)
     meeting_id: int = db.Column(
@@ -52,6 +53,14 @@ class StudentMeeting(db.Model):
     student = db.relationship('Student', back_populates='meetings')
     meeting = db.relationship('Meeting', back_populates='students')
     # meetings = db.relationship('Meeting', backref='student', lazy=True)
+
+    def __init__(self, student_id, meeting_id, checkin_date, present, signed_off=False):
+        self.student_id = student_id
+        self.meeting_id = meeting_id
+        self.checkin_date = checkin_date
+        self.present = present
+        self.signed_off = signed_off
+
 
 # many to many relationship for groups and meetings
 
