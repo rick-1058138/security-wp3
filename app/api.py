@@ -1,6 +1,6 @@
 from flask import jsonify, request, url_for
 from app import app, db
-from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, TeacherMeeting, User
+from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, TeacherMeeting, User, StudentGroup
 from datetime import datetime
 
 from random import randint
@@ -217,12 +217,23 @@ def get_students():
 # add a student
 @app.route('/api/student', methods=['POST'])
 def create_student():
-    name = request.json['name']
-    student = Student(name=name)
+    data = request.get_json()
+    student_number = data["studentNumber"]
+    first_name = data["studentFirstName"]
+    last_name = data["studentLastName"]
+    email = data["studentEmail"]
+    student_group = data["studentGroup"]
+    student = Student(student_number=student_number, first_name=first_name,
+                      last_name=last_name, email=email)
     db.session.add(student)
     db.session.commit()
-    url = url_for('set_password', code=student.password_code, _external=True)
-    return jsonify({'id': student.id, 'name': student.name, 'link': url})
+
+    student_group = StudentGroup(student_id=student.id, group_id=student_group)
+    db.session.add(student_group)
+    db.session.commit()
+    return {
+        "status": "Student aangemaakt"
+    }
 
 
 # show a specific student
