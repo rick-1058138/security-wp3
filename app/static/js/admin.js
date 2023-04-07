@@ -137,6 +137,3 @@ groupForm.addEventListener("submit", (event) => {
       alert("Sommige informatie bestaat al");
     });
 });
-
-// const studentForGroupForm = document.getElementById("student-for-group-form");
-// const studentForGroupFormData = new FormData(studentForGroupForm);
