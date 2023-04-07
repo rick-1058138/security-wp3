@@ -112,5 +112,31 @@ teacherForm.addEventListener("submit", (event) => {
 const groupForm = document.getElementById("group-form");
 const groupFormData = new FormData(groupForm);
 
-const studentForGroupForm = document.getElementById("student-for-group-form");
-const studentForGroupFormData = new FormData(studentForGroupForm);
+groupForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const groupFormData = new FormData(groupForm);
+  let groupEntries = [...groupFormData.entries()];
+  let groupInformation = {
+    groupName: groupEntries[0][1],
+    groupStartDate: groupEntries[1][1],
+    groupEndDate: groupEntries[2][1]
+  };
+  console.log(groupFormData);
+  console.log(groupInformation);
+  fetch("/api/group", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(groupInformation),
+  })
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .then(() => groupForm.reset())
+    .catch((error) => {
+      alert("Sommige informatie bestaat al");
+    });
+});
+
+// const studentForGroupForm = document.getElementById("student-for-group-form");
+// const studentForGroupFormData = new FormData(studentForGroupForm);

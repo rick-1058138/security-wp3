@@ -415,13 +415,19 @@ def get_group():
 
 @app.route('/api/group', methods=['POST'])
 def create_group():
-    body = request.json
-    group = Group(start_date=body["start_date"],
-                  end_date=body["end_date"], name=body["name"])
+    data = request.get_json()
+    name = data["groupName"]
+    start_date = data["groupStartDate"]
+    end_date = data["groupEndDate"]
+    formatted_startdate = datetime.strptime(start_date, "%Y-%m-%d")
+    formatted_enddate = datetime.strptime(end_date, "%Y-%m-%d")
+    group = Group(name=name, start_date=formatted_startdate,
+                  end_date=formatted_enddate)
     db.session.add(group)
     db.session.commit()
-    result = "OK"
-    return jsonify({"result": result})
+    return {
+        "status": "Klas aangemaakt"
+    }
 
 
 @app.route('/api/group/<id>', methods=['PATCH'])

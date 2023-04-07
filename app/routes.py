@@ -26,38 +26,6 @@ def admin():
     )
 
 
-@app.route("/admin/create-teacher", methods=['POST'])
-def create_teacher_form():
-    firstname = request.form["admin-teacher-firstname"]
-    lastname = request.form["admin-teacher-lastname"]
-    email = request.form["admin-teacher-email"]
-    admin = False
-    if request.form.getlist("admin-teacher-admin-true"):
-        admin = True
-    teacher = Teacher(first_name=firstname,
-                      last_name=lastname, email=email, admin=admin)
-    db.session.add(teacher)
-    db.session.commit()
-    flash('Docent toegevoegd!', 'success')
-    return redirect(url_for("admin"))
-
-
-
-@app.route("/admin/create-group", methods=['POST'])
-def create_group_form():
-    name_group = request.form["admin-group-id"]
-    start_date = request.form["admin-group-start"]
-    end_date = request.form["admin-group-end"]
-    formatted_startdate = datetime.strptime(start_date, "%Y-%m-%d")
-    formatted_enddate = datetime.strptime(end_date, "%Y-%m-%d")
-    group = Group(name=name_group, start_date=formatted_startdate,
-                  end_date=formatted_enddate)
-    db.session.add(group)
-    db.session.commit()
-    flash('Klas toegevoegd!', 'success')
-    return redirect(url_for("admin"))
-
-
 @app.route("/home")
 @login_required
 def home():
