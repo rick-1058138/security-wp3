@@ -42,9 +42,6 @@ function showStudentForGroupForm() {
 // Fetch for form handling
 
 const studentForm = document.getElementById("student-form");
-const teacherForm = document.getElementById("teacher-form");
-const groupForm = document.getElementById("group-form");
-const studentForGroupForm = document.getElementById("student-for-group-form");
 
 studentForm.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -68,14 +65,52 @@ studentForm.addEventListener("submit", (event) => {
   })
     .then((response) => response.json())
     .then((data) => console.log(data))
-    .then(() =>  studentForm.reset())
+    .then(() => studentForm.reset())
     .catch((error) => {
       alert("Sommige informatie bestaat al");
     });
 });
 
-const teacherFormData = new FormData(teacherForm);
+const teacherForm = document.getElementById("teacher-form");
 
+const teacherFormData = new FormData(teacherForm);
+teacherForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const teacherFormData = new FormData(teacherForm);
+  let teacherEntries = [...teacherFormData.entries()];
+  let teacherInformation = {};
+  if (teacherEntries[3]) {
+    teacherInformation = {
+      teacherFirstName: teacherEntries[0][1],
+      teacherLastName: teacherEntries[1][1],
+      teacherEmail: teacherEntries[2][1],
+      teacherAdmin: teacherEntries[3][1],
+    };
+  } else {
+    teacherInformation = {
+      teacherFirstName: teacherEntries[0][1],
+      teacherLastName: teacherEntries[1][1],
+      teacherEmail: teacherEntries[2][1],
+    };
+  }
+
+  fetch("/api/teacher", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(teacherInformation),
+  })
+    .then((response) => response.json())
+    .then((data) => console.log(data))
+    .then(() => teacherForm.reset())
+    .catch((error) => {
+      alert("Sommige informatie bestaat al");
+    });
+});
+
+const groupForm = document.getElementById("group-form");
 const groupFormData = new FormData(groupForm);
 
+const studentForGroupForm = document.getElementById("student-for-group-form");
 const studentForGroupFormData = new FormData(studentForGroupForm);

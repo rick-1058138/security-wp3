@@ -324,11 +324,19 @@ def get_teachers():
 # Add teacher
 @app.route('/api/teacher', methods=['POST'])
 def create_teacher():
-    name = request.json['name']
-    teacher = Teacher(name=name)
+    data = request.get_json()
+    first_name = data["teacherFirstName"]
+    last_name = data["teacherLastName"]
+    email = data["teacherEmail"]
+    admin = False
+    if "teacherAdmin" in data:
+        admin = True
+    teacher = Teacher(first_name=first_name, last_name=last_name,email=email, admin=admin)
     db.session.add(teacher)
     db.session.commit()
-    return jsonify({'id': teacher.id, 'name': teacher.name})
+    return {
+        "status": "Docent aangemaakt"
+    }
 
 # Show specific teacher
 
