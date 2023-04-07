@@ -31,6 +31,7 @@
             </tr>
             <tr>
                 <td><a class="student-link" href="{{ url_for('profile')}}">Naar profiel</a></td>
+                <td><a class="student-link" href="{{ url_for('student_history', student_number=student.student_number)}}">Naar aanwezigheid</a></td>
             </tr>
         </tbody>
     </table>
