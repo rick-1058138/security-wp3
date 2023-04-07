@@ -33,7 +33,21 @@ def handle_meeting(id=None):
 
     elif request.method == "PUT":
         # update whole row
-        return "PUT"
+        try:
+            meeting = Meeting.query.get_or_404(id)
+            meeting.name = request.json['name']
+            meeting.start_time = request.json['start_time']
+            meeting.end_time = request.json['end_time']
+            meeting.date = datetime.strptime(request.json['date'], '%Y-%m-%d').date()
+            meeting.description = request.json['description']
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            error = str(e)
+
+        return jsonify({'result': result, "error": error})
     elif request.method == "PATCH":
         # update part of row
         body = request.json

@@ -4,3 +4,4 @@ Flask-QRcode
 flask-login
 Faker
 flask_bcrypt
+flask-swagger-ui

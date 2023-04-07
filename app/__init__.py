@@ -5,16 +5,28 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_qrcode import QRcode
 from flask_login import LoginManager
 
-
+from flask_swagger_ui import get_swaggerui_blueprint
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# https://www.digitalocean.com/community/tutorials/how-to-use-flask-sqlalchemy-to-interact-with-databases-in-a-flask-application
 
-# app.config['SQLALCHEMY_DATABASE_URI'] =\
-#     'sqlite:///' + os.path.join(basedir, 'databases/aanwezigheidstool.db')
 
 app = Flask(__name__)
+
+# API documentation 
+SWAGGER_URL = '/api/docs'  
+API_URL = '/static/swagger.json' 
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,  
+    API_URL,
+    config={  # Swagger UI config overrides
+        'app_name': "Aanwezigheidstool"
+    }
+    
+)
+app.register_blueprint(swaggerui_blueprint)
+
+
 app.config['SECRET_KEY'] = 'Alien Software'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///aanwezigheidstool.db'
 app.app_context().push()

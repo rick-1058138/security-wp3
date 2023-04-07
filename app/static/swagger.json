@@ -1,0 +1,1476 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the documentation for the aanwezigheidstool API.",
+        "version": "v1.0.0",
+        "title": "Aanwezigheidstool",
+        "license": {
+            "name": "Our github",
+            "url": "https://github.com/Rac-Software-Development/werkplaats-3-rest-alien-software"
+        }
+    },
+    "host": "127.0.0.1:81",
+    "basePath": "/api",
+    "tags": [
+        {
+            "name": "meeting",
+            "description": "Operations for meeting"
+        },
+        {
+            "name": "studentmeeting",
+            "description": "Operations between related students and meetings"
+        },
+        {
+            "name": "groupmeeting",
+            "description": "Operations between related groups and meetings"
+        },
+        {
+            "name": "student",
+            "description": "Operations for students"
+        },
+        {
+            "name": "teachermeeting",
+            "description": "Operations between related teachers and meetings"
+        },
+        {
+            "name": "teacher",
+            "description": "Operations for teachers"
+        },
+        {
+            "name": "group",
+            "description": "Operations for groups"
+        },
+        {
+            "name": "question",
+            "description": "Operations for questions"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/meeting": {
+            "get": {
+                "tags": [
+                    "meeting"
+                ],
+                "summary": "get all meetings",
+                "description": "",
+                "operationId": "getMeetings",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            },
+            "post": {
+                "tags": [
+                    "meeting"
+                ],
+                "summary": "create a new meeting",
+                "description": "",
+                "operationId": "createMeetings",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "date",
+                        "in": "path",
+                        "description": "A date",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "A name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "path",
+                        "description": "A description",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "start_time",
+                        "in": "path",
+                        "description": "A start time",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "end_time",
+                        "in": "path",
+                        "description": "A end time",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/meeting/{id}": {
+            "get": {
+                "tags": [
+                    "meeting"
+                ],
+                "summary": "get a specific meeting",
+                "description": "",
+                "operationId": "findMeetingById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of meeting to retrieve",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            },
+            "delete": {
+                "tags": [
+                    "meeting"
+                ],
+                "summary": "delete a specific meeting",
+                "description": "",
+                "operationId": "deleteMeetingById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of meeting to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            },
+            "put": {
+                "tags": [
+                    "meeting"
+                ],
+                "summary": "put a specific meeting",
+                "description": "",
+                "operationId": "UpdateMeetingById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of meeting to put",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "date",
+                        "in": "body",
+                        "description": "a date",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "body",
+                        "description": "a name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "body",
+                        "description": "a description",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "start_time",
+                        "in": "body",
+                        "description": "a start time",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "end_time",
+                        "in": "body",
+                        "description": "an end time",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            },
+            "patch": {
+                "tags": [
+                    "meeting"
+                ],
+                "summary": "patch a specific meeting",
+                "description": "",
+                "operationId": "UpdateMeetingById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of meeting to patch",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "date",
+                        "in": "body",
+                        "description": "a date",
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "body",
+                        "description": "a name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "description",
+                        "in": "body",
+                        "description": "a description",
+                        "type": "string"
+                    },
+                    {
+                        "name": "start_time",
+                        "in": "body",
+                        "description": "a start time",
+                        "type": "string"
+                    },
+                    {
+                        "name": "end_time",
+                        "in": "body",
+                        "description": "an end time",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/meeting/between/{start}/{end}": {
+            "get": {
+                "tags": [
+                    "meeting"
+                ],
+                "summary": "get a specific meetings between a start and end date",
+                "description": "",
+                "operationId": "findMeetingById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "path",
+                        "description": "begin date of meetings between two dates",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "end",
+                        "in": "path",
+                        "description": "end date of meetings between two dates",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/meeting/filter/{filter}": {
+            "get": {
+                "tags": [
+                    "meeting"
+                ],
+                "summary": "get list of meetings by name",
+                "description": "",
+                "operationId": "findMeetingByName",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "in": "path",
+                        "description": "a part of a name of a meeting",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/meeting/limit/{limit}": {
+            "get": {
+                "tags": [
+                    "meeting"
+                ],
+                "summary": "get a list of meetings from today or later limited by a number",
+                "description": "",
+                "operationId": "findMeetingByName",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "description": "a limit for the amount of returned meetings",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/studentmeeting/{code}": {
+            "get": {
+                "tags": [
+                    "studentmeeting"
+                ],
+                "summary": "returns list of students that are present to the meeting of this meeting code",
+                "description": "",
+                "operationId": "studentsOfMeeting",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "meeting_code of a meeting",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/groupmeeting": {
+            "post": {
+                "tags": [
+                    "groupmeeting"
+                ],
+                "summary": "add a group to a meeting",
+                "description": "",
+                "operationId": "groupToMeeting",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "group_id",
+                        "in": "body",
+                        "description": "id of a group",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "meeting_id",
+                        "in": "body",
+                        "description": "id of a meeting",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/student": {
+            "get": {
+                "tags": [
+                    "student"
+                ],
+                "summary": "returns list of students",
+                "description": "",
+                "operationId": "getStudents",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "student"
+                ],
+                "summary": "add a new student",
+                "description": "",
+                "operationId": "getStudents",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "first_name",
+                        "in": "path",
+                        "description": "first name of a student",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "path",
+                        "description": "last name of a student",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "email of a student",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "student_number",
+                        "in": "path",
+                        "description": "student number of a student",
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/student/{id}": {
+            "get": {
+                "tags": [
+                    "student"
+                ],
+                "summary": "get a student by id",
+                "description": "",
+                "operationId": "getStudentById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of student",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "student"
+                ],
+                "summary": "delete student by id",
+                "description": "",
+                "operationId": "deleteStudent",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of student to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/student/filter/{filter}": {
+            "get": {
+                "tags": [
+                    "student"
+                ],
+                "summary": "get a list of students where the filter is in the first_name, last_name or student_number",
+                "description": "",
+                "operationId": "getStudentsByFilter",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "in": "path",
+                        "description": "filter for first_name, last_name and student_number",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/student/limit/{limit}": {
+            "get": {
+                "tags": [
+                    "student"
+                ],
+                "summary": "get a list of students limited by the parameter",
+                "description": "",
+                "operationId": "getStudentsByLimit",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "description": "limit for returned students",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/teachermeeting/": {
+            "post": {
+                "tags": [
+                    "teachermeeting"
+                ],
+                "summary": "add a teacher to a meeting",
+                "description": "",
+                "operationId": "teacherToMeeting",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "meeting_id",
+                        "in": "body",
+                        "description": "id of a meeting",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "teacher_id",
+                        "in": "body",
+                        "description": "id of a teacher",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        }
+        ,"/teachermeeting/{meeting_id}": {
+            "get": {
+                "tags": [
+                    "teachermeeting"
+                ],
+                "summary": "get teachers of a meeting",
+                "description": "",
+                "operationId": "teacherToMeeting",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "meeting_id",
+                        "in": "path",
+                        "description": "id of a meeting",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/teacher": {
+            "get": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "returns list of teachers",
+                "description": "",
+                "operationId": "getTeachers",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "add a new teacher",
+                "description": "",
+                "operationId": "addTeacher",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "first_name",
+                        "in": "body",
+                        "description": "first name of a teacher",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "body",
+                        "description": "last name of a teacher",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "body",
+                        "description": "email of a teacher",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/teacher/{id}": {
+            "get": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "get a teacher by id",
+                "description": "",
+                "operationId": "getTeacherById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of teacher",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "delete teacher by id",
+                "description": "",
+                "operationId": "deleteTeacher",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of teacher to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            },
+            "put": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "put teacher by id",
+                "description": "",
+                "operationId": "putTeacher",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of teacher to put",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "body",
+                        "description": "first name of teacher",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "body",
+                        "description": "last name of teacher",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "body",
+                        "description": "email of teacher",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/teacher/filter/{filter}": {
+            "get": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "get a list of teachers where the filter is in the first_name or last_name",
+                "description": "",
+                "operationId": "getTeachersByFilter",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "in": "path",
+                        "description": "filter for first_name or last_name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/limit/{limit}": {
+            "get": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "get a list of teachers limited by the parameter",
+                "description": "",
+                "operationId": "getStudentsByLimit",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "description": "limit for returned teachers",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/group": {
+            "get": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "returns list of groups",
+                "description": "",
+                "operationId": "getGroups",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "add a new group",
+                "description": "",
+                "operationId": "addGroup",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "body",
+                        "description": "start date of the group",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "body",
+                        "description": "end date of the group",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "body",
+                        "description": "name of the group",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/group/{id}": {
+            "patch": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "patch a group by id",
+                "description": "",
+                "operationId": "patchGroupById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of student",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "body",
+                        "description": "start date of the group",
+                        "type": "string"
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "body",
+                        "description": "end date of the group",
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "in": "body",
+                        "description": "name of the group",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "delete group by id",
+                "description": "",
+                "operationId": "deleteGroup",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of group to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/group/filter/{filter}": {
+            "get": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "get a list of groups where the filter is in the group name",
+                "description": "",
+                "operationId": "getGroupsByFilter",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "in": "path",
+                        "description": "filter for group name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/group/limit/{limit}": {
+            "get": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "get a list of groups limited by the parameter",
+                "description": "",
+                "operationId": "getGroupsByLimit",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "path",
+                        "description": "limit for returned groups",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/question": {
+            "post": {
+                "tags": [
+                    "question"
+                ],
+                "summary": "add a new question",
+                "description": "",
+                "operationId": "addQuestion",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "text",
+                        "in": "body",
+                        "description": "the question",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "meeting_id",
+                        "in": "body",
+                        "description": "the id of the meeting it is needs to be connected to",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        },
+        "/question/{id}": {
+            "get": {
+                "tags": [
+                    "question"
+                ],
+                "summary": "get a question by id",
+                "description": "",
+                "operationId": "getQuestionById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of question",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "question"
+                ],
+                "summary": "delete question by id",
+                "description": "",
+                "operationId": "deleteQuestion",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of question to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            },
+            "put": {
+                "tags": [
+                    "question"
+                ],
+                "summary": "put question by id",
+                "description": "",
+                "operationId": "putQuestion",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of teacher to put",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "meeting_id",
+                        "in": "body",
+                        "description": "id of meeting the question is related to",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "text",
+                        "in": "body",
+                        "description": "the question",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                }
+ 
+            }
+        }
+    },
+    
+    "definitions": {
+        "ApiResponse": {
+            "type": "object",
+            "properties": {
+                "result": {
+                    "type": "array",
+                    "example": []
+                },
+                "error": {
+                    "type": "string",
+                    "example": ""
+                }
+            }
+        },
+        "Meeting": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "start_time": {
+                    "type": "string"
+                },
+                "end_time": {
+                    "type": "string"
+                },
+                "meeting_code": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            },
+            "xml": {
+                "name": "Meeting"
+            }
+        },
+        "Question": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "meeting_id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "text": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Question"
+            }
+        },
+        "Group": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "start_date": {
+                    "type": "string"
+                },
+                "end_date": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Group"
+            }
+        },
+        "Teacher": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "xml": {
+                "name": "Teacher"
+            }
+        },
+        "Student": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "student_number": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "user_id": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            },
+            "xml": {
+                "name": "Student"
+            }
+        }
+    }
+}
