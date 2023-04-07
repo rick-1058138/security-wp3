@@ -14,7 +14,7 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@app.route("/admin")
+@app.route("/admin", methods=["GET", "POST"])
 @login_required
 def admin():
     if current_user.admin == 0:
@@ -22,65 +22,8 @@ def admin():
         return redirect(url_for("home"))
     students = Student.query.all()
     groups = Group.query.all()
-    #groups = db.session.query(Group).all()
-    #group_list = []
-    # for group in groups:
-    #     print(group.name)
-    #     group_list.append({
-    #         "name": group.name,
-    #         "id": group.id
-    #     })
     return render_template("admin.html", student_list=students, group_list=groups, #group_list=group_list
     )
-
-
-@app.route("/admin/create-teacher", methods=['POST'])
-def create_teacher_form():
-    firstname = request.form["admin-teacher-firstname"]
-    lastname = request.form["admin-teacher-lastname"]
-    email = request.form["admin-teacher-email"]
-    admin = False
-    if request.form.getlist("admin-teacher-admin-true"):
-        admin = True
-    teacher = Teacher(first_name=firstname,
-                      last_name=lastname, email=email, admin=admin)
-    db.session.add(teacher)
-    db.session.commit()
-    flash('Docent toegevoegd!', 'success')
-    return redirect(url_for("admin"))
-
-
-@app.route("/admin/create-student", methods=['POST'])
-def create_student_form():
-    student_number = request.form["admin-student-number"]
-    firstname = request.form["admin-student-firstname"]
-    lastname = request.form["admin-student-lastname"]
-    email = request.form["admin-student-email"]
-    student = Student(student_number=student_number, first_name=firstname,
-                      last_name=lastname, email=email)
-    db.session.add(student)
-    db.session.commit()
-    group = request.form["admin-student-group"]
-    student_group = StudentGroup(student_id=student.id, group_id=group)
-    db.session.add(student_group)
-    db.session.commit()
-    flash('Student toegevoegd!', 'success')
-    return redirect(url_for("admin"))
-
-
-@app.route("/admin/create-group", methods=['POST'])
-def create_group_form():
-    name_group = request.form["admin-group-id"]
-    start_date = request.form["admin-group-start"]
-    end_date = request.form["admin-group-end"]
-    formatted_startdate = datetime.strptime(start_date, "%Y-%m-%d")
-    formatted_enddate = datetime.strptime(end_date, "%Y-%m-%d")
-    group = Group(name=name_group, start_date=formatted_startdate,
-                  end_date=formatted_enddate)
-    db.session.add(group)
-    db.session.commit()
-    flash('Klas toegevoegd!', 'success')
-    return redirect(url_for("admin"))
 
 
 @app.route("/home")

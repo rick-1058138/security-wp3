@@ -22,7 +22,7 @@
             <h1 class="admin-title">Student toevoegen</h1>
           </div>
           <br> <br>
-          <form class="admin-form" method="POST" action="/admin/create-student">
+          <form id="student-form" class="admin-form" method="POST">
             <label for="admin-student-number" class="admin-input-label">Student nummer
               <input type="text" name="admin-student-number" class="admin-input-field" required>
             </label>
@@ -53,7 +53,7 @@
           <div class="admin-title">
             <h1 class="admin-title">Docent toevoegen</h1>
           </div>
-          <form class="admin-form" method="POST" action="/admin/create-teacher">
+          <form id="teacher-form" class="admin-form" method="POST">
             <label for="admin-teacher-firstname" class="admin-input-label">Voornaam docent
               <input type="text" name="admin-teacher-firstname" class="admin-input-field" required>
             </label>
@@ -76,7 +76,7 @@
           <div class="admin-title">
             <h1 class="admin-title">Klas toevoegen</h1>
           </div>
-          <form class="admin-form" method="POST" action="/admin/create-group">
+          <form id="group-form" class="admin-form" method="POST">
             <label for="admin-group-id" class="admin-input-label">Naam klas
               <input type="text" name="admin-group-id" class="admin-input-field" required>
             </label>
@@ -97,7 +97,7 @@
               <h1 class="admin-title">Student aan klas toevoegen</h1>
           </div>
           <br> <br>
-          <form class="admin-form" method="POST" action="{{ url_for('add_students_to_group') }}">
+          <form id="student-for-group-form" class="admin-form" method="POST">
             <label for="admin-students-to-group-students" class="admin-input-label">Students
                 <br> <br>
                 <select id="student-select-box" name="student_ids[]" class="admin-student-group-select select2-container select2-student" multiple>
@@ -119,53 +119,11 @@
                   <input class="admin-save-button" type="submit" value="Opslaan" />
               </div>
           </form>
-      </div>
-      
-              
+        </div>
       </div>
     </div>
-
-    <script type="text/javascript">
-      const adminStudentForm = document.getElementById("admin-student-form");
-      const adminTeacherForm = document.getElementById("admin-teacher-form");
-      const adminGroupForm = document.getElementById("admin-group-form");
-      const adminStudentForGroupForm = document.getElementById("admin-student-for-group-form");
-
-      
-      adminTeacherForm.style.display = "none";
-      adminGroupForm.style.display = "none";
-      adminStudentForGroupForm.style.display = "none";
-
-      function showStudentForm(){
-        adminStudentForm.style.display = "";
-        adminTeacherForm.style.display = "none";
-        adminGroupForm.style.display = "none";
-        adminStudentForGroupForm.style.display = "none";
-      }
-
-      function showTeacherForm(){
-        adminStudentForm.style.display = "none";
-        adminTeacherForm.style.display = "";
-        adminGroupForm.style.display = "none";
-        adminStudentForGroupForm.style.display = "none";
-      }
-
-      function showGroupForm(){
-        adminStudentForm.style.display = "none";
-        adminTeacherForm.style.display = "none";
-        adminGroupForm.style.display = "";
-        adminStudentForGroupForm.style.display = "none";
-      }
-
-      function showStudentForGroupForm() {
-        adminStudentForm.style.display = "none";
-        adminTeacherForm.style.display = "none";
-        adminGroupForm.style.display = "none";
-        adminStudentForGroupForm.style.display = "";
-      }
-
+    <script type="text/javascript" src="../static/js/admin.js">
     </script>
-
     <script>
       $(document).ready(function() {
           $("#student-select-box").select2({
