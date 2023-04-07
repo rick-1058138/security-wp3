@@ -1529,3 +1529,18 @@ span.select2 {
     margin-top: 10px;
     margin-bottom: 3px;
 }
+
+.centered {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .student-name-history {
+    text-align: center;
+  }
+  
+  .student-history-table-container {
+    display: flex;
+    justify-content: center;
+  }
+  
