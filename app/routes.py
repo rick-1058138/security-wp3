@@ -514,10 +514,11 @@ def absence():
         student_meeting = StudentMeeting.query.filter_by(
             student_id=current_user.student[0].id, meeting_id=meeting.id).first()
         student_meeting.signed_off = True
+        student_meeting.reason = absence
         db.session.commit()
     else:
         student = StudentMeeting(student_id=current_user.student[0].id, meeting_id=meeting.id,
-                                 checkin_date=datetime.now(), present=False, signed_off=True)
+                                 checkin_date=datetime.now(), present=False, signed_off=True, reason=absence)
         db.session.add(student)
         db.session.commit()
     return redirect(url_for('home'))

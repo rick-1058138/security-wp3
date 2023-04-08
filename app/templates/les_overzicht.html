@@ -76,6 +76,7 @@
 						<th onclick="sortTable(1)" ><div class="table-header">Student nr.<span class="sort-arrow sort-arrow-down"></span></div></th>
 						<th onclick="sortTable(2)" ><div class="table-header">Aanwezigheid<span class="sort-arrow sort-arrow-down"></span></div></th>
 						<th onclick="sortTable(3)" ><div class="table-header">Aanmeldtijd<span class="sort-arrow sort-arrow-down"></span></div></th>
+						<th onclick="sortTable(4)" ><div class="table-header">Reden Afwezigheid<span class="sort-arrow sort-arrow-down"></span></div></th>
 					</tr>
 				</thead>
 				
@@ -93,8 +94,10 @@
 								{% if student.signed_off  %}
 								    <td class="afwezig">Afgemeld</td>
 									<td>-</td>
+									<td> {{student.reason}} </td>
 								{% else %}
 									<td class="afwezig">Afwezig</td>
+									<td>-</td>
 									<td>-</td>
 								{% endif %}
 							{% endif %}

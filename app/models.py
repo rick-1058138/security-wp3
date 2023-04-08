@@ -49,17 +49,19 @@ class StudentMeeting(db.Model):
     checkin_date: str = db.Column(db.DateTime)
     present: bool = db.Column(db.Boolean, nullable=False)
     signed_off: bool = db.Column(db.Boolean, nullable=False)
+    reason: str = db.Column(db.String(500), nullable=False)
 
     student = db.relationship('Student', back_populates='meetings')
     meeting = db.relationship('Meeting', back_populates='students')
     # meetings = db.relationship('Meeting', backref='student', lazy=True)
 
-    def __init__(self, student_id, meeting_id, checkin_date, present, signed_off=False):
+    def __init__(self, student_id, meeting_id, checkin_date, present, reason, signed_off=False):
         self.student_id = student_id
         self.meeting_id = meeting_id
         self.checkin_date = checkin_date
         self.present = present
         self.signed_off = signed_off
+        self.reason = reason
 
 
 # many to many relationship for groups and meetings
