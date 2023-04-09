@@ -448,3 +448,28 @@ def add_students_to_group():
     group = Group.query.filter_by(id=group_id).first()
     flash(f'{count} Student(en) aan "{group.name}" toegevoegd', 'success')
     return redirect(url_for('admin'))
+
+
+@app.route("/afmelden/", methods=["POST"])
+@login_required
+def absence():
+    current_user
+    meeting_code = request.form["meeting_code"]
+    absence = request.form["absence"]
+    meeting = Meeting.query.filter_by(meeting_code=meeting_code).first()
+    exists = db.session.query(
+        StudentMeeting.query.filter_by(
+            student_id=current_user.student[0].id, meeting_id=meeting.id).exists()
+    ).scalar()
+    if exists:
+        student_meeting = StudentMeeting.query.filter_by(
+            student_id=current_user.student[0].id, meeting_id=meeting.id).first()
+        student_meeting.signed_off = True
+        student_meeting.reason = absence
+        db.session.commit()
+    else:
+        student = StudentMeeting(student_id=current_user.student[0].id, meeting_id=meeting.id,
+                                 checkin_date=datetime.now(), present=False, signed_off=True, reason=absence)
+        db.session.add(student)
+        db.session.commit()
+    return redirect(url_for('home'))
