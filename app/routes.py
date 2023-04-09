@@ -450,6 +450,23 @@ def add_students_to_group():
     return redirect(url_for('admin'))
 
 
+@app.route('/student_history/<student_number>')
+@login_required
+def student_history(student_number):
+    # Get the student based on student_number
+    student = Student.query.filter_by(student_number=student_number).first()
+
+    # Check if the student exists
+    if not student:
+        abort(404)
+
+    # Query the presence data
+    presence_data = StudentMeeting.query.filter_by(student_id=student.id).all()
+
+    # Pass the data to the template
+    return render_template('student_history.html', presence_data=presence_data, student=student)
+
+
 @app.route("/afmelden/", methods=["POST"])
 @login_required
 def absence():
