@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Profiel{% endblock %}
+
+{% block content %}
+    <div class="container-window">
+        <div class="container-middle">
+            <h1 class="profile-header">Profiel</h1>
+            <div class="profile-container">
+                <h3>
+                    {%if user.role == 0%}
+                    Docent
+                    {%elif user.role == 1%}
+                    Student
+                    {%endif%}
+                </h3>
+              
+                <h4>Naam</h4>
+                <p>
+                    {%if user.role == 0%}
+                        {{user.teacher[0].full_name}}
+                    {%elif user.role == 1%}
+                        {{user.student[0].full_name}}
+                    {%endif%}
+                </p>
+                <h4>Email</h4>
+                <p>{{user.email}}</p>
+                {%if user.role == 1%}
+                    <h4>Studentnummer</h4>
+                    <p> {{user.student[0].student_number}}</p>
+                {%endif%}
+                
+                <form class="profile-form" action="/wachtwoord/nieuw/{{user.password_code}}" method="POST">
+                    <h3>Wachtwoord veranderen</h3>
+                    <input type="hidden" name="code" value="{{ user.password_code }}">
+                    <p>Nieuw wachtwoord</p>
+                    <input class="form-input" type="password" name="password" required />
+    
+                    <p>Herhaal nieuwe wachtwoord</p>
+                    <input class="form-input" type="password" name="password_confirm" required/>
+                    
+                    <input class="small-btn" type="submit" value="Opslaan" />
+        
+                </form>
+            </div> 
+
+
+        </div>
+    </div>
+{% endblock %}

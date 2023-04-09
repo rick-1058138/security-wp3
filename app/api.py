@@ -1,6 +1,6 @@
 from flask import jsonify, request, url_for
 from app import app, db
-from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, TeacherMeeting, User
+from app.models import Question, Student, Group, Meeting, StudentMeeting, Teacher, GroupMeeting, TeacherMeeting, User, StudentGroup
 from datetime import datetime
 
 from random import randint
@@ -33,7 +33,21 @@ def handle_meeting(id=None):
 
     elif request.method == "PUT":
         # update whole row
-        return "PUT"
+        try:
+            meeting = Meeting.query.get_or_404(id)
+            meeting.name = request.json['name']
+            meeting.start_time = request.json['start_time']
+            meeting.end_time = request.json['end_time']
+            meeting.date = datetime.strptime(request.json['date'], '%Y-%m-%d').date()
+            meeting.description = request.json['description']
+            db.session.commit()
+            result = "ok"
+            error = ""
+        except Exception as e:
+            result = "error"
+            error = str(e)
+
+        return jsonify({'result': result, "error": error})
     elif request.method == "PATCH":
         # update part of row
         body = request.json
@@ -217,12 +231,23 @@ def get_students():
 # add a student
 @app.route('/api/student', methods=['POST'])
 def create_student():
-    name = request.json['name']
-    student = Student(name=name)
+    data = request.get_json()
+    student_number = data["studentNumber"]
+    first_name = data["studentFirstName"]
+    last_name = data["studentLastName"]
+    email = data["studentEmail"]
+    student_group = data["studentGroup"]
+    student = Student(student_number=student_number, first_name=first_name,
+                      last_name=last_name, email=email)
     db.session.add(student)
     db.session.commit()
-    url = url_for('set_password', code=student.password_code, _external=True)
-    return jsonify({'id': student.id, 'name': student.name, 'link': url})
+
+    student_group = StudentGroup(student_id=student.id, group_id=student_group)
+    db.session.add(student_group)
+    db.session.commit()
+    return {
+        "status": "Student aangemaakt"
+    }
 
 
 # show a specific student
@@ -313,11 +338,19 @@ def get_teachers():
 # Add teacher
 @app.route('/api/teacher', methods=['POST'])
 def create_teacher():
-    name = request.json['name']
-    teacher = Teacher(name=name)
+    data = request.get_json()
+    first_name = data["teacherFirstName"]
+    last_name = data["teacherLastName"]
+    email = data["teacherEmail"]
+    admin = False
+    if "teacherAdmin" in data:
+        admin = True
+    teacher = Teacher(first_name=first_name, last_name=last_name,email=email, admin=admin)
     db.session.add(teacher)
     db.session.commit()
-    return jsonify({'id': teacher.id, 'name': teacher.name})
+    return {
+        "status": "Docent aangemaakt"
+    }
 
 # Show specific teacher
 
@@ -396,13 +429,19 @@ def get_group():
 
 @app.route('/api/group', methods=['POST'])
 def create_group():
-    body = request.json
-    group = Group(start_date=body["start_date"],
-                  end_date=body["end_date"], name=body["name"])
+    data = request.get_json()
+    name = data["groupName"]
+    start_date = data["groupStartDate"]
+    end_date = data["groupEndDate"]
+    formatted_startdate = datetime.strptime(start_date, "%Y-%m-%d")
+    formatted_enddate = datetime.strptime(end_date, "%Y-%m-%d")
+    group = Group(name=name, start_date=formatted_startdate,
+                  end_date=formatted_enddate)
     db.session.add(group)
     db.session.commit()
-    result = "OK"
-    return jsonify({"result": result})
+    return {
+        "status": "Klas aangemaakt"
+    }
 
 
 @app.route('/api/group/<id>', methods=['PATCH'])

@@ -41,16 +41,28 @@ class Group(db.Model):
 @dataclass
 class StudentMeeting(db.Model):
     id: int = db.Column(db.Integer, primary_key=True)
+
     student_id: int = db.Column(
         db.Integer, db.ForeignKey('student.id'), nullable=False)
     meeting_id: int = db.Column(
         db.Integer, db.ForeignKey('meeting.id'), nullable=False)
     checkin_date: str = db.Column(db.DateTime)
     present: bool = db.Column(db.Boolean, nullable=False)
+    signed_off: bool = db.Column(db.Boolean, nullable=False)
+    reason: str = db.Column(db.String(500), nullable=False)
 
     student = db.relationship('Student', back_populates='meetings')
     meeting = db.relationship('Meeting', back_populates='students')
     # meetings = db.relationship('Meeting', backref='student', lazy=True)
+
+    def __init__(self, student_id, meeting_id, checkin_date, present, reason, signed_off=False):
+        self.student_id = student_id
+        self.meeting_id = meeting_id
+        self.checkin_date = checkin_date
+        self.present = present
+        self.signed_off = signed_off
+        self.reason = reason
+
 
 # many to many relationship for groups and meetings
 
@@ -187,6 +199,13 @@ class User(UserMixin, db.Model):
 
     def update_password(self, password):
         self.password = bcrypt.generate_password_hash(password)
+        db.session.commit()
+
+    def reset_password_code(self):
+        # create random password and password code
+        characters = string.ascii_letters + string.digits
+        password_code = ''.join(random.choice(characters) for i in range(15))
+        self.password_code = password_code
         db.session.commit()
 
     def remove_password_code(self):

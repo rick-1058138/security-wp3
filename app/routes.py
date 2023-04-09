@@ -14,7 +14,7 @@ def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@app.route("/admin")
+@app.route("/admin", methods=["GET", "POST"])
 @login_required
 def admin():
     if current_user.admin == 0:
@@ -22,62 +22,16 @@ def admin():
         return redirect(url_for("home"))
     students = Student.query.all()
     groups = Group.query.all()
-    #groups = db.session.query(Group).all()
-    #group_list = []
+    # groups = db.session.query(Group).all()
+    # group_list = []
     # for group in groups:
     #     print(group.name)
     #     group_list.append({
     #         "name": group.name,
     #         "id": group.id
     #     })
-    return render_template("admin.html", student_list=students, group_list=groups, #group_list=group_list
-    )
-
-
-@app.route("/admin/create-teacher", methods=['POST'])
-def create_teacher_form():
-    firstname = request.form["admin-teacher-firstname"]
-    lastname = request.form["admin-teacher-lastname"]
-    email = request.form["admin-teacher-email"]
-    admin = False
-    if request.form.getlist("admin-teacher-admin-true"):
-        admin = True
-    teacher = Teacher(first_name=firstname,
-                      last_name=lastname, email=email, admin=admin)
-    db.session.add(teacher)
-    db.session.commit()
-    return redirect(url_for("admin"))
-
-
-@app.route("/admin/create-student", methods=['POST'])
-def create_student_form():
-    student_number = request.form["admin-student-number"]
-    firstname = request.form["admin-student-firstname"]
-    lastname = request.form["admin-student-lastname"]
-    email = request.form["admin-student-email"]
-    student = Student(student_number=student_number, first_name=firstname,
-                      last_name=lastname, email=email)
-    db.session.add(student)
-    db.session.commit()
-    group = request.form["admin-student-group"]
-    student_group = StudentGroup(student_id=student.id, group_id=group)
-    db.session.add(student_group)
-    db.session.commit()
-    return redirect(url_for("admin"))
-
-
-@app.route("/admin/create-group", methods=['POST'])
-def create_group_form():
-    name_group = request.form["admin-group-id"]
-    start_date = request.form["admin-group-start"]
-    end_date = request.form["admin-group-end"]
-    formatted_startdate = datetime.strptime(start_date, "%Y-%m-%d")
-    formatted_enddate = datetime.strptime(end_date, "%Y-%m-%d")
-    group = Group(name=name_group, start_date=formatted_startdate,
-                  end_date=formatted_enddate)
-    db.session.add(group)
-    db.session.commit()
-    return redirect(url_for("admin"))
+    return render_template("admin.html", student_list=students, group_list=groups,  # group_list=group_list
+                           )
 
 
 @app.route("/home")
@@ -86,6 +40,12 @@ def home():
     meetings = Meeting.query.filter(
         Meeting.date >= datetime.today().date()).order_by(Meeting.date).limit(5).all()
     return render_template('index.html', meetings=meetings)
+
+
+@app.route("/profiel")
+@login_required
+def profile():
+    return render_template('profile.html', user=current_user)
 
 
 @app.route("/timer/update")
@@ -138,11 +98,19 @@ def set_password(code=None):
         # form validation
         print(request.form)
         if (request.form.get('password') == request.form.get('password_confirm')):
-            user = User.query.filter_by(password_code=code).first()
+            exists = db.session.query(
+                User.query.filter_by(password_code=code).exists()
+            ).scalar()
+            if exists:
+                user = User.query.filter_by(password_code=code).first()
+            else:
+                flash("Je kunt je wachtwoord niet veranderen", 'error')
+                return redirect(url_for('home'))
+
             # Update password in db
             user.update_password(request.form.get('password'))
-            # Remove password code so password cant be changed again with the same code
-            user.remove_password_code()
+            # reset password code so password cant be changed again with the same code
+            user.reset_password_code()
             login_user(user)
             flash("Je wachtwoord is aangepast!", 'success')
             return redirect(url_for('home'))
@@ -185,17 +153,17 @@ def start_presence(code=None):
 
         # Delete old record of same meeting if it was started before ( for testing )
         StudentMeeting.query.filter_by(meeting_id=meeting.id).delete()
-        
+
         # loop through all students in each group
         for group in meeting.groups:
             # print(group.group.students)
             # loop through all students in group
             for student in group.group.students:
                 # print(student.student.id)
-                student = StudentMeeting(student_id=student.student.id, meeting_id=meeting.id, checkin_date=datetime.now(), present=False)
+                student = StudentMeeting(
+                    student_id=student.student.id, meeting_id=meeting.id, checkin_date=datetime.now(), present=False)
                 db.session.add(student)
                 db.session.commit()
-
 
         return redirect(url_for('presence', code=code))
     else:
@@ -219,7 +187,7 @@ def presence_code():
         else:
             flash("Je kunt niet meedoen aan deze bijeenkomst", 'error')
             return redirect(url_for("home"))
-        
+
         exists = db.session.query(
             Meeting.query.filter_by(meeting_code=code).exists()
         ).scalar()
@@ -228,17 +196,18 @@ def presence_code():
         else:
             flash("Deze les code bestaat niet", 'error')
             return redirect(url_for('presence_code'))
-        
 
         # check if student is invited for meeting ( checks in studentmeeting table if they exist here)
         exists = db.session.query(
-            StudentMeeting.query.filter_by(student_id=id, meeting_id=meeting.id).exists()
+            StudentMeeting.query.filter_by(
+                student_id=id, meeting_id=meeting.id).exists()
         ).scalar()
         if not exists:
             flash("Je bent niet uitgenodigd voor deze bijeenkomst", 'error')
             return redirect(url_for('presence_code'))
 
-        student = StudentMeeting.query.filter_by(student_id=id, meeting_id=meeting.id).first()
+        student = StudentMeeting.query.filter_by(
+            student_id=id, meeting_id=meeting.id).first()
 
         print(student)
         if student.present:
@@ -276,23 +245,23 @@ def setpresence(code=None):
 
     # check if student is invited for meeting ( checks in studentmeeting table if they exist here)
     exists = db.session.query(
-        StudentMeeting.query.filter_by(student_id=id, meeting_id=meeting.id).exists()
+        StudentMeeting.query.filter_by(
+            student_id=id, meeting_id=meeting.id).exists()
     ).scalar()
     if not exists:
         flash("Je bent niet uitgenodigd voor deze bijeenkomst", 'error')
         return redirect(url_for('presence_code'))
-        
 
-    student = StudentMeeting.query.filter_by(student_id=id, meeting_id=meeting.id).first()
+    student = StudentMeeting.query.filter_by(
+        student_id=id, meeting_id=meeting.id).first()
 
     print(student)
     if student.present:
         # student is already present return to home, with message
         flash("Je was al aangemeld voor deze les", 'error')
         return redirect('/')
-    
-    return redirect(url_for('question', code=code))
 
+    return redirect(url_for('question', code=code))
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -310,8 +279,8 @@ def login():
         if user and bcrypt.check_password_hash(user.password, password):
             login_user(user)
             if next_url:
-               url = next_url[1:]
-               return redirect(url)
+                url = next_url[1:]
+                return redirect(url)
             return redirect(url_for("home"))
         else:
             flash("Gebruikersnaam of wachtwoord onjuist. Probeer opnieuw.", 'error')
@@ -332,7 +301,8 @@ def les_overzicht(meeting_code):
     meeting = Meeting.query.filter_by(meeting_code=meeting_code).first()
     question = Question.query.filter_by(meeting_id=meeting.id).first()
     group_meetings = meeting.groups
-    group_names = [group_meeting.group.name for group_meeting in group_meetings]
+    group_names = [
+        group_meeting.group.name for group_meeting in group_meetings]
     return render_template("les_overzicht.html", meeting_code=meeting_code, meeting=meeting, question=question, groups=group_names)
 
 
@@ -356,20 +326,19 @@ def question(code=None):
         answer = Answer(text=request.form["answer"], question_id=question.id)
         db.session.add(answer)
         db.session.commit()
-    
+
         # update student presence in db
         student_id = current_user.student[0].id
-        #update presence of student in meeting
-        studentmeeting = StudentMeeting.query.filter_by(student_id=student_id, meeting_id=meeting.id).first()
+        # update presence of student in meeting
+        studentmeeting = StudentMeeting.query.filter_by(
+            student_id=student_id, meeting_id=meeting.id).first()
         studentmeeting.checkin_date = datetime.now()
-        studentmeeting.present=True
+        studentmeeting.present = True
         db.session.commit()
 
         # student is added so return to home, with a message
         flash("Je bent aangemeld in de les!", 'success')
         return redirect('/')
-
-
 
 
 @app.route("/faker")
@@ -381,13 +350,14 @@ def faker():
         db.session.add(student)
         db.session.commit()
 
-    teacher = Teacher(first_name="Mark", last_name="Otting", email="m.otting@hr.nl", admin=1)
+    teacher = Teacher(first_name="Mark", last_name="Otting",
+                      email="m.otting@hr.nl", admin=1)
     db.session.add(teacher)
     db.session.commit()
 
     groups = [
-            "SWD1A", "SWD1B", "SWD1C", "SWD1D"
-        ]
+        "SWD1A", "SWD1B", "SWD1C", "SWD1D"
+    ]
 
     for group in groups:
         group = Group(start_date=datetime.now(),
@@ -416,7 +386,6 @@ def delete_meeting(id=None):
     return redirect(url_for("rooster"))
 
 
-
 @app.route("/lessen/zoeken")
 @login_required
 def search_meetings():
@@ -442,28 +411,29 @@ def group_detail(id=None):
     return render_template("group-detail.html", group=group)
 
 
-
 @app.route("/docenten/zoeken")
 @login_required
 def search_teachers():
     return render_template("teachers.html")
+
 
 # @app.route("/admin/add-student-to-group", methods=['POST'])
 # @login_required
 # def add_student_to_group_form():
 #     group_id = request.form["admin-student-to-group-group"]
 #     student_id = request.form["admin-student-to-group-student"]
-    
+
 #     student_group = StudentGroup(student_id=student_id, group_id=group_id)
 #     db.session.add(student_group)
 #     db.session.commit()
 #     return redirect(url_for("admin"))
 
+
 @app.route('/admin/add-students-to-group', methods=['POST'])
 @login_required
 def add_students_to_group():
     if not current_user.admin:
-        return redirect(url_for('index'))
+        return redirect(url_for('admin'))
 
     student_ids = request.form.getlist('student_ids[]')
     group_id = request.form['group_id']
@@ -473,16 +443,50 @@ def add_students_to_group():
         db.session.add(student_group)
 
     db.session.commit()
+
     count = len(student_ids)
     group = Group.query.filter_by(id=group_id).first()
     flash(f'{count} Student(en) aan "{group.name}" toegevoegd', 'success')
     return redirect(url_for('admin'))
 
 
+@app.route('/student_history/<student_number>')
+@login_required
+def student_history(student_number):
+    # Get the student based on student_number
+    student = Student.query.filter_by(student_number=student_number).first()
+
+    # Check if the student exists
+    if not student:
+        abort(404)
+
+    # Query the presence data
+    presence_data = StudentMeeting.query.filter_by(student_id=student.id).all()
+
+    # Pass the data to the template
+    return render_template('student_history.html', presence_data=presence_data, student=student)
 
 
-
-
-
-
-
+@app.route("/afmelden/", methods=["POST"])
+@login_required
+def absence():
+    current_user
+    meeting_code = request.form["meeting_code"]
+    absence = request.form["absence"]
+    meeting = Meeting.query.filter_by(meeting_code=meeting_code).first()
+    exists = db.session.query(
+        StudentMeeting.query.filter_by(
+            student_id=current_user.student[0].id, meeting_id=meeting.id).exists()
+    ).scalar()
+    if exists:
+        student_meeting = StudentMeeting.query.filter_by(
+            student_id=current_user.student[0].id, meeting_id=meeting.id).first()
+        student_meeting.signed_off = True
+        student_meeting.reason = absence
+        db.session.commit()
+    else:
+        student = StudentMeeting(student_id=current_user.student[0].id, meeting_id=meeting.id,
+                                 checkin_date=datetime.now(), present=False, signed_off=True, reason=absence)
+        db.session.add(student)
+        db.session.commit()
+    return redirect(url_for('home'))

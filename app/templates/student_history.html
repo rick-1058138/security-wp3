@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Student aanwezigheid geschiedenis{% endblock %}
+
+{% block content %}
+    <h2 class="student-name-history">{{ student.full_name }}</h2>
+    <div class="student-history-table-container">
+        <table class="table-style">
+            <thead>
+                <tr>
+                    <th>Les</th>
+                    <th>Datum</th>
+                    <th>Aanwezigheid</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in presence_data %}
+                <tr>
+                    <td>{{ item.meeting.name }}</td>
+                    <td>{{ item.checkin_date.strftime('%d-%m-%Y') }}</td>
+                    <td class="{{ 'aanwezig' if item.present else 'afwezig' }}">{{ 'Aanwezig' if item.present else 'Afwezig' }}</td>
+                </tr>
+            {% endfor %}
+            
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
