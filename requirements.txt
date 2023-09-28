@@ -5,3 +5,4 @@ flask-login
 Faker
 flask_bcrypt
 flask-swagger-ui
+Flask-WTF

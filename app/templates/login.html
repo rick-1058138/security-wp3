@@ -10,6 +10,7 @@
       </div>
       <div class="container-middle">
         <form method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
           <div class="login-field">
             <label for="username" class="label-login">Gebruikersnaam</label>
             <input class="login-input" type="text" name="username" required />

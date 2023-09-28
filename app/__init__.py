@@ -7,11 +7,14 @@ from flask_login import LoginManager
 
 from flask_swagger_ui import get_swaggerui_blueprint
 
+from flask_wtf.csrf import CSRFProtect
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-
-
 app = Flask(__name__)
+
+
+csrf = CSRFProtect(app)
 
 # API documentation 
 SWAGGER_URL = '/api/docs'  
