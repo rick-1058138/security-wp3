@@ -276,7 +276,7 @@ def login():
         password = request.form["password"]
         user = db.session.query(User).filter(
             User.email == username.lower()).first()
-        if user and bcrypt.check_password_hash(user.password, password):
+        if user and bcrypt.check_password_hash(user.password, (password+user.salt)):
             login_user(user)
             if next_url:
                 url = next_url[1:]

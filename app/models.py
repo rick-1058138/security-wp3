@@ -174,6 +174,7 @@ class User(UserMixin, db.Model):
     id: int = db.Column(db.Integer, primary_key=True)
     email: str = db.Column(db.String(255), unique=True, nullable=False)
     password: str = db.Column(db.String(255), nullable=False)
+    salt: str = db.Column(db.String(255), nullable=False)
     password_code: str = db.Column(db.String(255))
     admin: bool = db.Column(db.Boolean, nullable=False)
     # role: 0 = teacher, 1 = student
@@ -189,13 +190,16 @@ class User(UserMixin, db.Model):
         # create random password and password code
         characters = string.ascii_letters + string.digits
         # password = ''.join(random.choice(characters) for i in range(60))
-        password = bcrypt.generate_password_hash("werkplaats3")
+        salt = ''.join(random.choice(characters) for i in range(8))
+        password = "werkplaats3"+salt
+        password = bcrypt.generate_password_hash(password)
         password_code = ''.join(random.choice(characters) for i in range(15))
 
         self.role = role
         self.password = password
         self.password_code = password_code
         self.admin = admin
+        self.salt = salt
 
     def update_password(self, password):
         self.password = bcrypt.generate_password_hash(password)
